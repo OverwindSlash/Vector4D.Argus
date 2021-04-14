@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Argus.Calibration", "Argus.Calibration\Argus.Calibration.csproj", "{ABDC3845-40B5-4B74-9379-1B757EC418F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Argus.StereoCalibration", "Argus.StereoCalibration\Argus.StereoCalibration.csproj", "{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABDC3845-40B5-4B74-9379-1B757EC418F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABDC3845-40B5-4B74-9379-1B757EC418F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABDC3845-40B5-4B74-9379-1B757EC418F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABDC3845-40B5-4B74-9379-1B757EC418F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

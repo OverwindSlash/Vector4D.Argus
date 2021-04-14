@@ -1,0 +1,13 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:Argus.Calibration"
+             x:Class="Argus.Calibration.App">
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <FluentTheme Mode="Dark"/>
+        <StyleInclude Source="avares://Argus.Calibration/Icons.axaml" />
+    </Application.Styles>
+</Application>

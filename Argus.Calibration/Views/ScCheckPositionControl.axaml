@@ -1,0 +1,33 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Argus.Calibration.Views.ScCheckPositionControl">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
+            <Label HorizontalAlignment="Stretch" Content="请确认下方左右目图像中标定板所有角点可见并被识别"></Label>            
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10">
+                <Image Name="LeftImage" Width="600" Height="450" Source="{Binding LeftImage}" Margin="5"></Image>
+                <Label Content="左目图像" HorizontalAlignment="Center"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10">
+                <Image Name="RightImage" Width="600" Height="450" Source="{Binding RightImage}" Margin="5"></Image>
+                <Label Content="右目图像" HorizontalAlignment="Center"></Label>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
+            <Button x:Name="OK" HorizontalContentAlignment="Center" Content="确认" Width="100" Height="30" Margin="20" Click="OK_OnClick"></Button>
+            <Label Content="" Width="100"></Label>
+            <Button x:Name="Cancel" HorizontalContentAlignment="Center" Content="取消" Width="100" Height="30" Margin="20" Click="Cancel_OnClick"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

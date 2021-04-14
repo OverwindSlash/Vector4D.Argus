@@ -1,0 +1,70 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Argus.Calibration.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:Argus.Calibration.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Argus.Calibration.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Argus 视觉终端标定工具" Height="768" Width="1536"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent"
+        CanResize="False">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.65" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel x:Name="Menubar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
+                <Menu>
+                    <MenuItem Header="双目标定">
+                        <MenuItem Name="CheckPosition" Header="检查标定位置"></MenuItem>
+                        <MenuItem Name="CalibrateStereo" Header="自动双目标定"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="手眼标定">
+                        <MenuItem Name="CalibrateLeftArm" Header="自动左臂标定"></MenuItem>
+                        <MenuItem Name="CalibrateRightArm" Header="自动右臂标定"></MenuItem>
+                    </MenuItem>
+                </Menu>
+            </StackPanel>
+            <StackPanel x:Name="Toolbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1">
+                <Button Width="32" Height="32" Margin="5,2,2,2" Click="ShowCheckPositionControl">
+                    <PathIcon Data="{StaticResource check_position}" />
+                </Button>
+                <Button Width="32" Height="32" Margin="2" IsEnabled="{Binding PositionChecked}" Click="ShowCalibrateStereoControl">
+                    <PathIcon Data="{StaticResource calibrate_stereo}" />
+                </Button>
+                <Button Width="32" Height="32" Margin="5,2,2,2">
+                    <PathIcon Data="{StaticResource calibrate_leftarm}" />
+                </Button>
+                <Button Width="32" Height="32" Margin="2">
+                    <PathIcon Data="{StaticResource calibrate_rightarm}" />
+                </Button>
+            </StackPanel>
+            <StackPanel x:Name="WorkArea" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
+            </StackPanel>
+            <StackPanel x:Name="Statusbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="3">
+                <Image Margin="5,2,2,2"></Image>
+                <Label>准备就绪</Label>
+            </StackPanel>
+        </Grid>
+    </Panel>
+</Window>

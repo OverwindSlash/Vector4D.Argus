@@ -1,0 +1,41 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Argus.Calibration.Views.ScCalibrateStereoControl">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.RowSpan="4" Grid.Column="0" Margin="8">
+            <Label DockPanel.Dock="Top">图像一览</Label>
+            <ListBox Items="{Binding StereoImageFiles}" SelectedIndex="{Binding SelectedImagePareIndex}"></ListBox>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1">
+            <Label HorizontalAlignment="Stretch" Content="请确认下方左右目图像中标定板所有角点可见并被识别"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Image Width="600" Height="450" Source="{Binding SelectedLeftImage}" Margin="5"></Image>
+                <Label Content="左目图像" HorizontalAlignment="Center"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1">
+                <Image Width="600" Height="450" Source="{Binding SelectedRightImage}" Margin="5"></Image>
+                <Label Content="右目图像" HorizontalAlignment="Center"></Label>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1">
+            <Button x:Name="Calibrate" Content="双目标定" HorizontalContentAlignment="Center" Width="100" Height="30" Margin="20"></Button>
+            <Label Content="" Width="100"></Label>
+            <Button x:Name="Cancel" Content="取消" HorizontalContentAlignment="Center" Width="100" Height="30" Margin="20"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>
