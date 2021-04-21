@@ -5,7 +5,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Models\" />
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
@@ -16,5 +15,20 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Argus.StereoCalibration\Argus.StereoCalibration.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <AvaloniaXaml Remove="Models\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Remove="Models\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Remove="Models\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Models\**" />
+      <None Update="calib-config.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

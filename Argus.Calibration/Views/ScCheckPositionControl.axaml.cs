@@ -27,7 +27,7 @@ namespace Argus.Calibration.Views
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
             windowViewModel.PositionChecked = result;
             
-            window.CloseCheckPositionControl();
+            window.CloseWorkAreaControl();
         }
 
         private void Cancel_OnClick(object? sender, RoutedEventArgs e)
@@ -36,7 +36,7 @@ namespace Argus.Calibration.Views
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
             windowViewModel.PositionChecked = false;
             
-            window.CloseCheckPositionControl();
+            window.CloseWorkAreaControl();
         }
     }
 }

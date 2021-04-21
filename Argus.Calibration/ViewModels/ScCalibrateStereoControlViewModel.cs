@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
+using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using JetBrains.Annotations;
+using OpenCvSharp;
 using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
 {
-    public class ScCalibrateStereoControlViewModel : ReactiveObject
+    public class ScCalibrateStereoControlViewModel : ViewModelBase
     {
-        private static string _imageBaseDir = "StereoImages";
-        
         [NotNull] private List<string> _stereoImagePairFiles;
         private int _selectedStereoImagePairIndex;
         
@@ -21,9 +20,66 @@ namespace Argus.Calibration.ViewModels
 
         [CanBeNull] private string? _selectedLeftImagePath;
         [CanBeNull] private string? _selectedRightImagePath;
-        
+
         public List<string> LeftImageFiles => _leftImageFiles;
         public List<string> RightImageFiles => _rightImageFiles;
+
+        private bool _isBusy;
+        private string _status;
+        private string _leftRms;
+        private string _rightRms;
+        private string _stereoRms;
+        private string _leftYaml;
+        private string _rightYaml;
+        private string _xml;
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => this.RaiseAndSetIfChanged(ref _isBusy, value);
+        }
+        
+        public string Status
+        {
+            get => _status;
+            set => this.RaiseAndSetIfChanged(ref _status, value);
+        }
+
+        public string LeftRms
+        {
+            get => _leftRms;
+            set => this.RaiseAndSetIfChanged(ref _leftRms, value);
+        }
+
+        public string RightRms
+        {
+            get => _rightRms;
+            set => this.RaiseAndSetIfChanged(ref _rightRms, value);
+        }
+
+        public string StereoRms
+        {
+            get => _stereoRms;
+            set => this.RaiseAndSetIfChanged(ref _stereoRms, value);
+        }
+        
+        public string LeftYaml
+        {
+            get => _leftYaml;
+            set => this.RaiseAndSetIfChanged(ref _leftYaml, value);
+        }
+
+        public string RightYaml
+        {
+            get => _rightYaml;
+            set => this.RaiseAndSetIfChanged(ref _rightYaml, value);
+        }
+
+        public string Xml
+        {
+            get => _xml;
+            set => this.RaiseAndSetIfChanged(ref _xml, value);
+        }
 
         public List<string> StereoImageFiles
         {
@@ -48,29 +104,72 @@ namespace Argus.Calibration.ViewModels
 
         public ScCalibrateStereoControlViewModel()
         {
-            string leftImgDir = Path.Combine(_imageBaseDir, "left");
-            string rightImgDir = Path.Combine(_imageBaseDir, "right");
+            string imageBaseDir = CalibConfig.StereoImagesDir;
+            string leftImgDir = Path.Combine(imageBaseDir, "left");
+            string rightImgDir = Path.Combine(imageBaseDir, "right");
             
-            var leftFis = StereoCalibrator.GetImageFilesInFolder(leftImgDir);
-            var rightFis = StereoCalibrator.GetImageFilesInFolder(rightImgDir);
-
-            _leftImageFiles = new List<string>();
-            var leftFiles = leftFis.Select(fi => fi.FullName);
-            LeftImageFiles.AddRange(leftFiles);
-
-            _rightImageFiles = new List<string>();
-            var rightFiles = rightFis.Select(fi => fi.FullName);
-            RightImageFiles.AddRange(rightFiles);
+            _leftImageFiles = FsHelper.GetImageFilesInFolder(leftImgDir);
+            _rightImageFiles = FsHelper.GetImageFilesInFolder(rightImgDir);
 
             _stereoImagePairFiles = new List<string>();
-            for (int i = 0; i < leftFis.Count; i++)
+            for (int i = 0; i < _leftImageFiles.Count; i++)
             {
-                string content = $"{i}: {leftFis[i].Name} <--> {rightFis[i].Name}";
+                FileInfo leftFi = new FileInfo(_leftImageFiles[i]);
+                FileInfo rightFi = new FileInfo(_rightImageFiles[i]);
+                
+                string content = $"{i}: {leftFi.Name} <--> {rightFi.Name}";
                 _stereoImagePairFiles.Add(content);
             }
             this.RaisePropertyChanged(nameof(StereoImageFiles));
 
             SelectedImagePareIndex = 0;
+
+            LeftRms = "左目图像";
+            RightRms = "右目图像";
+            StereoRms = string.Empty;
+            LeftYaml = string.Empty;
+            LeftYaml = "_左目内参Yaml："; 
+            RightYaml = "_右目内参Yaml：";
+            Xml = "识别用Xml：";
+        }
+
+        public async void CalibrateStereo()
+        {
+            IsBusy = true;
+            Status = "双目标定中，请稍候……";
+            LeftRms = "左目图像";
+            RightRms = "右目图像";
+            LeftYaml = "_左目内参Yaml："; 
+            RightYaml = "_右目内参Yaml：";
+            Xml = "识别用Xml：";
+
+            await Task.Run(() =>
+            {
+                var result = CameraCalibrator.CalibrateStereoCamera(_leftImageFiles, _rightImageFiles);
+                LeftRms = $"左目图像 重投影误差：{result.LeftRms}";
+                RightRms = $"右目图像 重投影误差：{result.RightRms}";
+                Status = $"双目标定完毕 重投影误差：{result.StereoRms}";
+
+                string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyCameraName}_left", result.ImageSize,
+                    result.LeftCameraMatrix, result.LeftDistCoeffs, result.R1, result.P1);
+
+                string rightYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyCameraName}_right", result.ImageSize,
+                    result.RightCameraMatrix, result.RightDistCoeffs, result.R2, result.P2);
+
+                string xmlFile = CameraCalibrator.GenerateXmlFile(CalibConfig.XmlFileDir, $"{CalibConfig.BodyCameraName}",
+                    result.LeftCameraMatrix, result.LeftDistCoeffs, result.RightCameraMatrix, result.RightDistCoeffs,
+                    result.Rotation, result.Translation, result.Essential, result.Fundamental);
+
+                FileInfo leftYamlFi = new FileInfo(leftYamlFile);
+                FileInfo rightYamlFi = new FileInfo(rightYamlFile);
+                FileInfo xmlFi = new FileInfo(xmlFile);
+
+                LeftYaml = $"_左目内参Yaml：{leftYamlFi.FullName}"; 
+                RightYaml = $"_右目内参Yaml：{rightYamlFi.FullName}";
+                Xml = $"识别用Xml：{xmlFi.FullName}";
+            });
+            
+            IsBusy = false;
         }
     }
 }

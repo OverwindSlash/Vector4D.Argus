@@ -1,0 +1,6 @@
+{
+  "StereoImagesDir": "StereoImages",
+  "BodyCameraName": "body",
+  "YamlFileDir": "CalibrationResults",
+  "XmlFileDir": "CalibrationResults"  
+}

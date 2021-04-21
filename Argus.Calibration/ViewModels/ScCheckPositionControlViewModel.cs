@@ -7,7 +7,7 @@ using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
 {
-    public class ScCheckPositionControlViewModel : ReactiveObject
+    public class ScCheckPositionControlViewModel : ViewModelBase
     {
         private const string SnapshotsDir = "PositionCheckSnapshots";
 
@@ -53,8 +53,8 @@ namespace Argus.Calibration.ViewModels
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "right");
 
-            FoundCornersInLeftImage = StereoCalibrator.CheckAndDrawCorners(LeftImagePath);
-            FoundCornersInRightImage = StereoCalibrator.CheckAndDrawCorners(RightImagePath);
+            FoundCornersInLeftImage = CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
+            FoundCornersInRightImage = CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
         }
     }
 }

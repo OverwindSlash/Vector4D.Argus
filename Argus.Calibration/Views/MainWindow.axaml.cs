@@ -30,7 +30,7 @@ namespace Argus.Calibration.Views
             _workArea.Children.Add(new ScCheckPositionControl());
         }
 
-        public void CloseCheckPositionControl()
+        public void CloseWorkAreaControl()
         {
             _workArea.Children.Clear();
         }
