@@ -34,9 +34,14 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Margin="10, 20, 10, 10">
-            <Button x:Name="Calibrate" Content="双目标定" HorizontalContentAlignment="Center" Width="100" Height="30" Margin="20" Click="Calibrate_OnClick" ></Button>
+            <Button x:Name="Capture" Content="获取标定图像" HorizontalContentAlignment="Center" Width="120" Height="30" Margin="20" Click="Capture_OnClick"
+                    IsEnabled="{Binding NotInCalibration}"></Button>
             <Label Content="" Width="100"></Label>
-            <Button x:Name="Close" Content="关闭" HorizontalContentAlignment="Center" Width="100" Height="30" Margin="20" Click="Close_OnClick"></Button>
+            <Button x:Name="Calibrate" Content="双目标定" HorizontalContentAlignment="Center" Width="120" Height="30" Margin="20" Click="Calibrate_OnClick" 
+                    IsEnabled="{Binding CanPerformCalibration}"></Button>
+            <Label Content="" Width="100"></Label>
+            <Button x:Name="Close" Content="关闭" HorizontalContentAlignment="Center" Width="120" Height="30" Margin="20" Click="Close_OnClick"
+                    IsEnabled="{Binding NotInCalibration}"></Button>
         </StackPanel>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1">
             <Label Name="LeftYamlFile" Content="{Binding LeftYaml}"></Label>

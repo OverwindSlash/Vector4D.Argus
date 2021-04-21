@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
 using Avalonia.Media.Imaging;
 using JetBrains.Annotations;
-using OpenCvSharp;
 using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
@@ -15,8 +15,8 @@ namespace Argus.Calibration.ViewModels
         [NotNull] private List<string> _stereoImagePairFiles;
         private int _selectedStereoImagePairIndex;
         
-        [NotNull] private readonly List<string> _leftImageFiles;
-        [NotNull] private readonly List<string> _rightImageFiles;
+        [NotNull] private List<string> _leftImageFiles;
+        [NotNull] private List<string> _rightImageFiles;
 
         [CanBeNull] private string? _selectedLeftImagePath;
         [CanBeNull] private string? _selectedRightImagePath;
@@ -32,6 +32,8 @@ namespace Argus.Calibration.ViewModels
         private string _leftYaml;
         private string _rightYaml;
         private string _xml;
+        private bool _canPerformCalibration;
+        private bool _notInCalibration;
 
         public bool IsBusy
         {
@@ -102,12 +104,47 @@ namespace Argus.Calibration.ViewModels
         public Bitmap SelectedLeftImage => new Bitmap(_selectedLeftImagePath);
         public Bitmap SelectedRightImage => new Bitmap(_selectedRightImagePath);
 
+        public bool CanPerformCalibration
+        {
+            get => _canPerformCalibration;
+            set => this.RaiseAndSetIfChanged(ref _canPerformCalibration, value);
+        }
+
+        public bool NotInCalibration
+        {
+            get => _notInCalibration;
+            set => this.RaiseAndSetIfChanged(ref _notInCalibration, value);
+        }
+
         public ScCalibrateStereoControlViewModel()
+        {
+            CanPerformCalibration = false;
+            NotInCalibration = true;
+
+            LeftRms = "左目图像";
+            RightRms = "右目图像";
+            StereoRms = string.Empty;
+            LeftYaml = string.Empty;
+            LeftYaml = "_左目内参Yaml："; 
+            RightYaml = "_右目内参Yaml：";
+            Xml = "识别用Xml：";
+        }
+        
+        public async void CaptureStereoImages()
         {
             string imageBaseDir = CalibConfig.StereoImagesDir;
             string leftImgDir = Path.Combine(imageBaseDir, "left");
             string rightImgDir = Path.Combine(imageBaseDir, "right");
-            
+
+            FsHelper.PurgeDirectory(leftImgDir);
+            FsHelper.PurgeDirectory(rightImgDir);
+
+            var bash1Task = $"cp Assets/left/* {leftImgDir}".Bash();
+            var bash2Task = $"cp Assets/right/* {rightImgDir}".Bash();
+
+            bash1Task.Wait();
+            bash2Task.Wait();
+
             _leftImageFiles = FsHelper.GetImageFilesInFolder(leftImgDir);
             _rightImageFiles = FsHelper.GetImageFilesInFolder(rightImgDir);
 
@@ -124,13 +161,10 @@ namespace Argus.Calibration.ViewModels
 
             SelectedImagePareIndex = 0;
 
-            LeftRms = "左目图像";
-            RightRms = "右目图像";
-            StereoRms = string.Empty;
-            LeftYaml = string.Empty;
-            LeftYaml = "_左目内参Yaml："; 
-            RightYaml = "_右目内参Yaml：";
-            Xml = "识别用Xml：";
+            if (_leftImageFiles.Count > 10)
+            {
+                CanPerformCalibration = true;
+            }
         }
 
         public async void CalibrateStereo()
@@ -142,6 +176,9 @@ namespace Argus.Calibration.ViewModels
             LeftYaml = "_左目内参Yaml："; 
             RightYaml = "_右目内参Yaml：";
             Xml = "识别用Xml：";
+
+            CanPerformCalibration = false;
+            NotInCalibration = false;
 
             await Task.Run(() =>
             {
@@ -170,6 +207,8 @@ namespace Argus.Calibration.ViewModels
             });
             
             IsBusy = false;
+            NotInCalibration = true;
+            CanPerformCalibration = true;
         }
     }
 }

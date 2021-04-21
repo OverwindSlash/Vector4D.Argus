@@ -42,7 +42,7 @@ namespace Argus.Calibration.Helper
 
             try
             {
-                process.Start();
+                var start = process.Start();
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
 using Avalonia.Media.Imaging;
@@ -45,10 +46,11 @@ namespace Argus.Calibration.ViewModels
             
             FsHelper.PurgeDirectory(SnapshotsDir);
 
-            "cp ../../../Assets/Left.jpg PositionCheckSnapshots/".Bash();
-            "cp ../../../Assets/Right.jpg PositionCheckSnapshots/".Bash();
+            Task<int> bash1Task = "cp Assets/Left.jpg PositionCheckSnapshots/".Bash();
+            Task<int> bash2Task = "cp Assets/Right.jpg PositionCheckSnapshots/".Bash();
 
-            Thread.Sleep(500);
+            bash1Task.Wait();
+            bash2Task.Wait();
 
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "right");

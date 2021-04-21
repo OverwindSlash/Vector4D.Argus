@@ -17,6 +17,12 @@ namespace Argus.Calibration.Views
         {
             AvaloniaXamlLoader.Load(this);
         }
+        
+        private void Capture_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
+            viewModel.CaptureStereoImages();
+        }
 
         private void Calibrate_OnClick(object? sender, RoutedEventArgs e)
         {
