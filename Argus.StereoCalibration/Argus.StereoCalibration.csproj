@@ -17,4 +17,10 @@
       <PackageReference Include="YamlDotNet" Version="11.1.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="cb-config.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

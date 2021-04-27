@@ -71,10 +71,13 @@ namespace Argus.StereoCalibration
                 found = Cv2.FindChessboardCorners(image, _patternSize, imageCorners,
                     ChessboardFlags.AdaptiveThresh | ChessboardFlags.FilterQuads);
 
-                Point2f[] subPixCorners = Cv2.CornerSubPix(grayImage, imageCorners.ToArray(), new Size(5, 5), new Size(-1, -1),
-                    new TermCriteria(CriteriaTypes.Eps | CriteriaTypes.MaxIter, 30, 0.1));
+                if (found)
+                {
+                    Point2f[] subPixCorners = Cv2.CornerSubPix(grayImage, imageCorners.ToArray(), new Size(5, 5), new Size(-1, -1),
+                        new TermCriteria(CriteriaTypes.Eps | CriteriaTypes.MaxIter, 30, 0.1));
 
-                imageCorners = Mat.FromArray(subPixCorners);
+                    imageCorners = Mat.FromArray(subPixCorners);
+                }
             }
 
             return (found, imageCorners);
