@@ -44,8 +44,31 @@ namespace Argus.Calibration.ViewModels
             }
         }
 
-        public Bitmap SelectedLeftImage => new Bitmap(_selectedLeftImagePath);
-        public Bitmap SelectedRightImage => new Bitmap(_selectedRightImagePath);
+        public Bitmap SelectedLeftImage
+        {
+            get
+            {
+                if (_selectedLeftImagePath != null)
+                {
+                    new Bitmap(_selectedLeftImagePath);
+                }
+
+                return null;
+            }
+        }
+
+        public Bitmap SelectedRightImage
+        {
+            get
+            {
+                if (_selectedRightImagePath != null)
+                {
+                    new Bitmap(_selectedRightImagePath);
+                }
+
+                return null;
+            }
+        }
 
 
         public ScGetStereoImagesControlViewModel()
@@ -75,8 +98,14 @@ namespace Argus.Calibration.ViewModels
                 {
                     // TODO: Change to real script
                     Thread.Sleep(2000);
-                    var moveArmTask = $"cp Assets/left/Left{i}.jpg {leftImgDir}/Left{i:D2}.jpg".Bash();
-                    var snapshotTask = $"cp Assets/right/Right{i}.jpg {rightImgDir}/Right{i:D2}.jpg".Bash();
+                    string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
+                    string leftSrc = Path.Combine(curDir, "Assets", "left", $"Left{i}.jpg");
+                    string leftDest = Path.Combine(curDir, leftImgDir, $"Left{i:D2}.jpg");
+                    string rightSrc = Path.Combine(curDir, "Assets", "right", $"Right{i}.jpg");
+                    string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
+
+                    var moveArmTask = $"cp {leftSrc} {leftDest}".Bash();
+                    var snapshotTask = $"cp {rightSrc} {rightDest}".Bash();
 
                     moveArmTask.Wait();
                     snapshotTask.Wait();

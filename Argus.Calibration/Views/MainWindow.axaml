@@ -30,7 +30,9 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <StackPanel x:Name="Menubar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
@@ -95,9 +97,13 @@
                     <Image Source="{StaticResource lidar}" />
                 </Button>
             </StackPanel>
-            <StackPanel x:Name="WorkArea" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
+            <Border Grid.Row="2" Background="Gray" BorderThickness="1" Margin="2">
+            </Border>
+            <StackPanel x:Name="WorkArea" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3">
             </StackPanel>
-            <StackPanel x:Name="Statusbar" Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="3" Height="150">
+            <Border Grid.Row="4" Background="Gray" BorderThickness="1" Margin="2">
+            </Border>
+            <StackPanel x:Name="Statusbar" Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="5" Height="150">
                 <Label Margin="5,2,2,2">运行日志:</Label>
                 <TextBlock Margin="5,2,2,2"></TextBlock>
             </StackPanel>

@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Argus.Calibration", "Argus.Calibration\Argus.Calibration.csproj", "{ABDC3845-40B5-4B74-9379-1B757EC418F9}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.109
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Argus.Calibration", "Argus.Calibration\Argus.Calibration.csproj", "{ABDC3845-40B5-4B74-9379-1B757EC418F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Argus.StereoCalibration", "Argus.StereoCalibration\Argus.StereoCalibration.csproj", "{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Argus.StereoCalibration", "Argus.StereoCalibration\Argus.StereoCalibration.csproj", "{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +21,11 @@ Global
 		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D6BDBE4-26FE-4AC3-AE63-52EC3543D617}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C56E72B8-4AD9-494D-9959-3E9309FFC1A7}
 	EndGlobalSection
 EndGlobal
