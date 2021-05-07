@@ -24,10 +24,10 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public void ShowCheckPositionControl(object? sender, RoutedEventArgs e)
+        public void ShowGetStereoImagesControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-            _workArea.Children.Add(new ScCheckPositionControl());
+            _workArea.Children.Add(new ScGetStereoImagesControl());
         }
 
         public void CloseWorkAreaControl()

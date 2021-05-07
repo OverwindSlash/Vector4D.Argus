@@ -25,7 +25,7 @@ namespace Argus.Calibration.Views
 
             var window = (MainWindow) this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
-            windowViewModel.PositionChecked = result;
+            windowViewModel.ImagesCaptured = result;
             
             window.CloseWorkAreaControl();
         }
@@ -34,7 +34,7 @@ namespace Argus.Calibration.Views
         {
             var window = (MainWindow) this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
-            windowViewModel.PositionChecked = false;
+            windowViewModel.ImagesCaptured = false;
             
             window.CloseWorkAreaControl();
         }

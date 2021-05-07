@@ -19,8 +19,6 @@ namespace Argus.StereoCalibration
         
         private static Size _imageSize;
         
-        private readonly ILog _logger;
-
         static CameraCalibrator()
         {
             InitializeChessboardConfiguration();

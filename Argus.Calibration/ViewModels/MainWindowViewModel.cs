@@ -4,13 +4,13 @@ namespace Argus.Calibration.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private bool _positionChecked;
+        private bool _imagesCaptured;
         private bool _stereoCalibrated;
 
-        public bool PositionChecked
+        public bool ImagesCaptured
         {
-            get => _positionChecked;
-            set => this.RaiseAndSetIfChanged(ref _positionChecked, value);
+            get => _imagesCaptured;
+            set => this.RaiseAndSetIfChanged(ref _imagesCaptured, value);
         }
 
         public bool StereoCalibrated
@@ -21,7 +21,7 @@ namespace Argus.Calibration.ViewModels
 
         public MainWindowViewModel()
         {
-            PositionChecked = false;
+            ImagesCaptured = false;
             StereoCalibrated = false;
         }
     }

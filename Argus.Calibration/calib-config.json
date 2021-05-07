@@ -1,6 +1,7 @@
 {
   "StereoImagesDir": "StereoImages",
   "BodyCameraName": "body",
+  "ArmPositionFile": "stereo_calib_arm_move_data.txt",
   "YamlFileDir": "CalibrationResults",
   "XmlFileDir": "CalibrationResults"  
 }

@@ -8,6 +8,7 @@ namespace Argus.Calibration.Config
     {
         public string StereoImagesDir { get; set; }
         public string BodyCameraName { get; set; }
+        public string ArmPositionFile { get; set; }
         public string YamlFileDir { get; set; }
         public string XmlFileDir { get; set; }
 
@@ -22,6 +23,7 @@ namespace Argus.Calibration.Config
 
                 StereoImagesDir = calibConfig.StereoImagesDir;
                 BodyCameraName = calibConfig.BodyCameraName;
+                ArmPositionFile = calibConfig.ArmPositionFile;
                 YamlFileDir = calibConfig.YamlFileDir;
                 XmlFileDir = calibConfig.XmlFileDir;
             }

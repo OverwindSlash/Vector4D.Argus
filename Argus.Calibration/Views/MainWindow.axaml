@@ -36,8 +36,8 @@
             <StackPanel x:Name="Menubar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
                 <Menu>
                     <MenuItem Header="机载双目标定">
-                        <MenuItem Name="CheckPosition" Header="检查标定位置" Click="ShowCheckPositionControl"></MenuItem>
-                        <MenuItem Name="CalibrateStereo" IsEnabled="{Binding PositionChecked}" Header="自动机载双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
+                        <MenuItem Name="GetStereoImages" Header="获取标定图像" Click="ShowGetStereoImagesControl"></MenuItem>
+                        <MenuItem Name="CalibrateStereo" IsEnabled="{Binding ImagesCaptured}" Header="自动机载双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="机载手眼标定">
                         <MenuItem Name="CalibrateEobLeftArm" IsEnabled="{Binding StereoCalibrated}" Header="自动左臂机载手眼标定"></MenuItem>
@@ -59,10 +59,10 @@
                 </Menu>
             </StackPanel>
             <StackPanel x:Name="Toolbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1">
-                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowCheckPositionControl">
+                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowGetStereoImagesControl">
                     <PathIcon Data="{StaticResource check_position}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding PositionChecked}" Click="ShowCalibrateStereoControl">
+                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding ImagesCaptured}" Click="ShowCalibrateStereoControl">
                     <Image Source="{StaticResource stereo}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="8,2,2,2" IsEnabled="{Binding StereoCalibrated}">
@@ -97,9 +97,9 @@
             </StackPanel>
             <StackPanel x:Name="WorkArea" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
             </StackPanel>
-            <StackPanel x:Name="Statusbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="3">
-                <Image Margin="5,2,2,2"></Image>
-                <Label>准备就绪</Label>
+            <StackPanel x:Name="Statusbar" Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="3" Height="150">
+                <Label Margin="5,2,2,2">运行日志:</Label>
+                <TextBlock Margin="5,2,2,2"></TextBlock>
             </StackPanel>
         </Grid>
     </Panel>
