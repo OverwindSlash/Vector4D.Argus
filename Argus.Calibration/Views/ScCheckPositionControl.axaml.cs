@@ -1,4 +1,5 @@
-﻿using Argus.Calibration.ViewModels;
+﻿using System;
+using Argus.Calibration.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -18,25 +19,28 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void OK_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var controlViewModel = (ScCheckPositionControlViewModel)DataContext!;
-            bool result = controlViewModel is {FoundCornersInLeftImage: true, FoundCornersInRightImage: true};
+        // private void OK_OnClick(object? sender, RoutedEventArgs e)
+        // {
+        //     var controlViewModel = (ScCheckPositionControlViewModel)DataContext!;
+        //     bool result = controlViewModel is {FoundCornersInLeftImage: true, FoundCornersInRightImage: true};
+        //
+        //     var window = (MainWindow) this.Parent.Parent.Parent.Parent;
+        //     var windowViewModel = (MainWindowViewModel)window.DataContext!;
+        //     
+        //     window.CloseWorkAreaControl();
+        // }
+        //
+        // private void Cancel_OnClick(object? sender, RoutedEventArgs e)
+        // {
+        //     var window = (MainWindow) this.Parent.Parent.Parent.Parent;
+        //     var windowViewModel = (MainWindowViewModel)window.DataContext!;
+        //     
+        //     window.CloseWorkAreaControl();
+        // }
 
-            var window = (MainWindow) this.Parent.Parent.Parent.Parent;
-            var windowViewModel = (MainWindowViewModel)window.DataContext!;
-            windowViewModel.ImagesCaptured = result;
-            
-            window.CloseWorkAreaControl();
-        }
-
-        private void Cancel_OnClick(object? sender, RoutedEventArgs e)
+        private void StyledElement_OnInitialized(object? sender, EventArgs e)
         {
-            var window = (MainWindow) this.Parent.Parent.Parent.Parent;
-            var windowViewModel = (MainWindowViewModel)window.DataContext!;
-            windowViewModel.ImagesCaptured = false;
             
-            window.CloseWorkAreaControl();
         }
     }
 }

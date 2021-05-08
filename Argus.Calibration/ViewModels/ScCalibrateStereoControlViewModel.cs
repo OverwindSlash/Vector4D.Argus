@@ -1,191 +1,254 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
 using Avalonia.Media.Imaging;
-using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
 {
     public class ScCalibrateStereoControlViewModel : ViewModelBase
     {
-        [NotNull] private List<string> _stereoImagePairFiles;
+        private ObservableCollection<string> _stereoImagePairFiles;
         private int _selectedStereoImagePairIndex;
-        
-        [NotNull] private List<string> _leftImageFiles;
-        [NotNull] private List<string> _rightImageFiles;
+        private List<string> _leftImageFiles;
+        private List<string> _rightImageFiles;
+        private string _selectedLeftImagePath;
+        private string _selectedRightImagePath;
 
-        [CanBeNull] private string? _selectedLeftImagePath;
-        [CanBeNull] private string? _selectedRightImagePath;
-
-        public List<string> LeftImageFiles => _leftImageFiles;
-        public List<string> RightImageFiles => _rightImageFiles;
-
+        private bool _isInCapture;
+        private bool _isInCalibration;
         private bool _isBusy;
-        private string _status;
-        private string _leftRms;
-        private string _rightRms;
-        private string _stereoRms;
-        private string _leftYaml;
-        private string _rightYaml;
-        private string _xml;
-        private bool _canPerformCalibration;
-        private bool _notInCalibration;
+        private bool _canCapture;
+        private bool _canCalibrate;
+
+        private bool _imagesCaptured;
+
+        private bool _userCancelled;
+
+        public bool IsInCapture
+        {
+            get => _isInCapture;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isInCapture, value);
+                IsBusy = value;
+                CanCapture = value;
+                CanCalibrate = value;
+            }
+        }
+
+        public bool IsInCalibration
+        {
+            get => _isInCalibration;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isInCalibration, value);
+                IsBusy = value;
+                CanCapture = value;
+                CanCalibrate = value;
+            }
+        }
 
         public bool IsBusy
         {
             get => _isBusy;
-            set => this.RaiseAndSetIfChanged(ref _isBusy, value);
-        }
-        
-        public string Status
-        {
-            get => _status;
-            set => this.RaiseAndSetIfChanged(ref _status, value);
+            set
+            {
+                _isBusy = _isInCapture || _isInCalibration;
+                this.RaisePropertyChanged(nameof(IsBusy));
+            }
         }
 
-        public string LeftRms
+        public bool CanCapture
         {
-            get => _leftRms;
-            set => this.RaiseAndSetIfChanged(ref _leftRms, value);
+            get => _canCapture;
+            set
+            {
+                _canCapture = !_isInCapture && !_isInCalibration;
+                this.RaisePropertyChanged(nameof(CanCapture));
+            }
         }
 
-        public string RightRms
+        public bool CanCalibrate
         {
-            get => _rightRms;
-            set => this.RaiseAndSetIfChanged(ref _rightRms, value);
+            get => _canCalibrate;
+            set
+            {
+                _canCalibrate = _imagesCaptured && !_isInCalibration;
+                this.RaisePropertyChanged(nameof(CanCalibrate));
+            }
         }
 
-        public string StereoRms
+        public bool ImagesCaptured
         {
-            get => _stereoRms;
-            set => this.RaiseAndSetIfChanged(ref _stereoRms, value);
-        }
-        
-        public string LeftYaml
-        {
-            get => _leftYaml;
-            set => this.RaiseAndSetIfChanged(ref _leftYaml, value);
+            get => _imagesCaptured;
+            set => this.RaiseAndSetIfChanged(ref _imagesCaptured, value);
         }
 
-        public string RightYaml
-        {
-            get => _rightYaml;
-            set => this.RaiseAndSetIfChanged(ref _rightYaml, value);
-        }
-
-        public string Xml
-        {
-            get => _xml;
-            set => this.RaiseAndSetIfChanged(ref _xml, value);
-        }
-
-        public List<string> StereoImageFiles
+        public ObservableCollection<string> StereoImagePairFiles
         {
             get => _stereoImagePairFiles;
         }
-
+        
         public int SelectedImagePareIndex
         {
             get => _selectedStereoImagePairIndex;
             set
             {
                 _selectedStereoImagePairIndex = value;
-                _selectedLeftImagePath = LeftImageFiles[value];
-                _selectedRightImagePath = RightImageFiles[value];
+                _selectedLeftImagePath = _leftImageFiles[value];
+                _selectedRightImagePath = _rightImageFiles[value];
                 this.RaisePropertyChanged(nameof(SelectedLeftImage));
                 this.RaisePropertyChanged(nameof(SelectedRightImage));
             }
         }
 
-        public Bitmap SelectedLeftImage => new Bitmap(_selectedLeftImagePath);
-        public Bitmap SelectedRightImage => new Bitmap(_selectedRightImagePath);
-
-        public bool CanPerformCalibration
+        public Bitmap SelectedLeftImage
         {
-            get => _canPerformCalibration;
-            set => this.RaiseAndSetIfChanged(ref _canPerformCalibration, value);
+            get
+            {
+                if (_selectedLeftImagePath != null)
+                {
+                    return new Bitmap(_selectedLeftImagePath);
+                }
+
+                return null;
+            }
         }
 
-        public bool NotInCalibration
+        public Bitmap SelectedRightImage
         {
-            get => _notInCalibration;
-            set => this.RaiseAndSetIfChanged(ref _notInCalibration, value);
+            get
+            {
+                if (_selectedRightImagePath != null)
+                {
+                    return new Bitmap(_selectedRightImagePath);
+                }
+
+                return null;
+            }
         }
+
 
         public ScCalibrateStereoControlViewModel()
         {
-            CanPerformCalibration = false;
-            NotInCalibration = true;
-
-            LeftRms = "左目图像";
-            RightRms = "右目图像";
-            StereoRms = string.Empty;
-            LeftYaml = string.Empty;
-            LeftYaml = "_左目内参Yaml："; 
-            RightYaml = "_右目内参Yaml：";
-            Xml = "识别用Xml：";
-        }
-        
-        public async void CaptureStereoImages()
-        {
-            string imageBaseDir = CalibConfig.StereoImagesDir;
-            string leftImgDir = Path.Combine(imageBaseDir, "left");
-            string rightImgDir = Path.Combine(imageBaseDir, "right");
-
-            FsHelper.PurgeDirectory(leftImgDir);
-            FsHelper.PurgeDirectory(rightImgDir);
-
-            var bash1Task = $"cp Assets/left/* {leftImgDir}".Bash();
-            var bash2Task = $"cp Assets/right/* {rightImgDir}".Bash();
-
-            bash1Task.Wait();
-            bash2Task.Wait();
-
-            _leftImageFiles = FsHelper.GetImageFilesInFolder(leftImgDir);
-            _rightImageFiles = FsHelper.GetImageFilesInFolder(rightImgDir);
-
-            _stereoImagePairFiles = new List<string>();
-            for (int i = 0; i < _leftImageFiles.Count; i++)
-            {
-                FileInfo leftFi = new FileInfo(_leftImageFiles[i]);
-                FileInfo rightFi = new FileInfo(_rightImageFiles[i]);
-                
-                string content = $"{i}: {leftFi.Name} <--> {rightFi.Name}";
-                _stereoImagePairFiles.Add(content);
-            }
-            this.RaisePropertyChanged(nameof(StereoImageFiles));
-
-            SelectedImagePareIndex = 0;
-
-            if (_leftImageFiles.Count > 10)
-            {
-                CanPerformCalibration = true;
-            }
+            _leftImageFiles = new List<string>();
+            _rightImageFiles = new List<string>();
+            _stereoImagePairFiles = new ObservableCollection<string>();
+            
+            IsInCapture = false;
+            IsInCalibration = false;
+            ImagesCaptured = false;
+            CanCapture = true;
+            CanCalibrate = false;
         }
 
-        public async void CalibrateStereo()
+        public void CaptureStereoImages(MainWindowViewModel mainWindowVm)
         {
-            IsBusy = true;
-            Status = "双目标定中，请稍候……";
-            LeftRms = "左目图像";
-            RightRms = "右目图像";
-            LeftYaml = "_左目内参Yaml："; 
-            RightYaml = "_右目内参Yaml：";
-            Xml = "识别用Xml：";
-
-            CanPerformCalibration = false;
-            NotInCalibration = false;
-
-            await Task.Run(() =>
+            var task = Task.Run(() => 
             {
+                IsInCapture = true;
+                ImagesCaptured = false;
+
+                _stereoImagePairFiles.Clear();
+
+                string imageBaseDir = CalibConfig.StereoImagesDir;
+                string leftImgDir = Path.Combine(imageBaseDir, "left");
+                string rightImgDir = Path.Combine(imageBaseDir, "right");
+
+                FsHelper.PurgeDirectory(leftImgDir);
+                FsHelper.PurgeDirectory(rightImgDir);
+            
+                string[] positions = File.ReadAllText(CalibConfig.ArmPositionFile).Split("\n");
+                for (int i = 1; i <= positions.Length; i++)
+                {
+                    if (_userCancelled)
+                    {
+                        break;
+                    }
+
+                    mainWindowVm.AddOperationLog($"{i:D2} ��е���ƶ��� {positions[i-1]}");
+
+                    // TODO: Change to real script
+                    Thread.Sleep(500);
+                    
+                    string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
+                    string leftSrc = Path.Combine(curDir, "Assets", "left", $"Left{i}.jpg");
+                    string leftDest = Path.Combine(curDir, leftImgDir, $"Left{i:D2}.jpg");
+                    string rightSrc = Path.Combine(curDir, "Assets", "right", $"Right{i}.jpg");
+                    string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
+
+                    
+                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        var moveArmTask = $"cp -r {leftSrc} {leftDest}".Bash();
+                        var snapshotTask = $"cp -r {rightSrc} {rightDest}".Bash();
+
+                        moveArmTask.Wait();
+                        snapshotTask.Wait();
+                    }
+                    else
+                    {
+                        FileInfo srcLeftFi = new FileInfo(leftSrc);
+                        FileInfo srcRightFi = new FileInfo(rightSrc);
+
+                        srcLeftFi.CopyTo(leftDest);
+                        srcRightFi.CopyTo(rightDest);
+                    }
+
+
+                    FileInfo leftFi = new FileInfo(leftDest);
+                    FileInfo rightFi = new FileInfo(rightDest);
+
+                    mainWindowVm.AddOperationLog($"{i:D2} ��Ŀͼ��{leftFi.FullName}");
+                    mainWindowVm.AddOperationLog($"{i:D2} ��Ŀͼ��{rightFi.FullName}");
+
+                    string content = $"{i}: {leftFi.Name} <--> {rightFi.Name}";
+                    _stereoImagePairFiles.Add(content);
+
+                    _leftImageFiles.Add(leftFi.FullName);
+                    _rightImageFiles.Add(rightFi.FullName);
+
+                    SelectedImagePareIndex = i - 1;
+                }
+
+                ImagesCaptured = true;
+                IsInCapture = false;
+
+                mainWindowVm.AddOperationLog("���˫ĿͼƬ��ȡ");
+            });
+        }
+
+        public void CancelOperation()
+        {
+            this._userCancelled = true;
+
+            Thread.Sleep(1000);
+
+            this._userCancelled = false;
+        }
+
+        public void CalibrateStereo(MainWindowViewModel mainWindowVm)
+        {
+            Task.Run(() =>
+            {
+                IsInCalibration = true;
+
+                CameraCalibrator.SetLogCallback(mainWindowVm.AddOperationLog);
+
                 var result = CameraCalibrator.CalibrateStereoCamera(_leftImageFiles, _rightImageFiles);
-                LeftRms = $"左目图像 重投影误差：{result.LeftRms}";
-                RightRms = $"右目图像 重投影误差：{result.RightRms}";
-                Status = $"双目标定完毕 重投影误差：{result.StereoRms}";
+                string leftRms = $"��Ŀͼ�� ��ͶӰ��{result.LeftRms}";
+                string rightRms = $"��Ŀͼ�� ��ͶӰ��{result.RightRms}";
+                string stereoRms = $"˫Ŀ�궨��� ��ͶӰ��{result.StereoRms}";
+
+                mainWindowVm.AddOperationLog(leftRms);
+                mainWindowVm.AddOperationLog(rightRms);
+                mainWindowVm.AddOperationLog(stereoRms);
 
                 string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyCameraName}_left", result.ImageSize,
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.R1, result.P1);
@@ -201,14 +264,18 @@ namespace Argus.Calibration.ViewModels
                 FileInfo rightYamlFi = new FileInfo(rightYamlFile);
                 FileInfo xmlFi = new FileInfo(xmlFile);
 
-                LeftYaml = $"_左目内参Yaml：{leftYamlFi.FullName}"; 
-                RightYaml = $"_右目内参Yaml：{rightYamlFi.FullName}";
-                Xml = $"识别用Xml：{xmlFi.FullName}";
+                string leftYaml = $"��Ŀ�ڲ�Yaml��{leftYamlFi.FullName}";
+                string rightYaml = $"��Ŀ�ڲ�Yaml��{rightYamlFi.FullName}";
+                string xml = $"ʶ����Xml��{xmlFi.FullName}";
+
+                mainWindowVm.AddOperationLog(leftYaml);
+                mainWindowVm.AddOperationLog(rightYaml);
+                mainWindowVm.AddOperationLog(xml);
+
+                mainWindowVm.AddOperationLog("���˫Ŀ�궨");
+
+                IsInCalibration = false;
             });
-            
-            IsBusy = false;
-            NotInCalibration = true;
-            CanPerformCalibration = true;
         }
     }
 }

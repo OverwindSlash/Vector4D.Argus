@@ -99,13 +99,20 @@
             </StackPanel>
             <Border Grid.Row="2" Background="Gray" BorderThickness="1" Margin="2">
             </Border>
-            <StackPanel x:Name="WorkArea" Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3">
+            <StackPanel x:Name="WorkArea" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="3" Margin="5, 2, 5, 2">
             </StackPanel>
             <Border Grid.Row="4" Background="Gray" BorderThickness="1" Margin="2">
             </Border>
-            <StackPanel x:Name="Statusbar" Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="5" Height="150">
-                <Label Margin="5,2,2,2">运行日志:</Label>
-                <TextBlock Margin="5,2,2,2"></TextBlock>
+            <StackPanel x:Name="Statusbar" Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="5" Height="150" Margin="5, 2, 5, 2">
+                <Label>运行日志:</Label>
+                <ListBox Margin="5" Width="1416" Height="110" Background="DarkGray" Foreground="Black" Items="{Binding Logs}"
+                         SelectedIndex="{Binding NewestLogIndex}" AutoScrollToSelectedItem="True">
+                  <ListBox.ItemTemplate>
+                      <DataTemplate>
+                         <TextBlock FontSize="10" Text="{Binding}" Height="14" Margin="0"></TextBlock>
+                      </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
             </StackPanel>
         </Grid>
     </Panel>

@@ -1,28 +1,35 @@
-﻿using ReactiveUI;
+﻿using System.Collections.ObjectModel;
+using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private bool _imagesCaptured;
-        private bool _stereoCalibrated;
+        protected ObservableCollection<string> _logs;
+        private int _newestLogIndex;
 
-        public bool ImagesCaptured
+        public ObservableCollection<string> Logs
         {
-            get => _imagesCaptured;
-            set => this.RaiseAndSetIfChanged(ref _imagesCaptured, value);
+            get => _logs;
         }
 
-        public bool StereoCalibrated
+        public int NewestLogIndex
         {
-            get => _stereoCalibrated;
-            set => this.RaiseAndSetIfChanged(ref _stereoCalibrated, value);
+            get => _newestLogIndex;
+            set => this.RaiseAndSetIfChanged(ref _newestLogIndex, value);
         }
 
         public MainWindowViewModel()
         {
-            ImagesCaptured = false;
-            StereoCalibrated = false;
+            _logs = new ObservableCollection<string>();
+
+            AddOperationLog("点击菜单栏或者快捷按钮开始操作");
+        }
+
+        public void AddOperationLog(string log)
+        {
+            _logs.Add(log);
+            NewestLogIndex = _logs.Count - 1;
         }
     }
 }

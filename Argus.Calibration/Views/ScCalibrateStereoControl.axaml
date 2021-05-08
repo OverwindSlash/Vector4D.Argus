@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -12,18 +12,25 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <DockPanel Grid.RowSpan="4" Grid.Column="0" Margin="8">
+        <DockPanel Grid.RowSpan="4" Grid.Column="0">
             <Label DockPanel.Dock="Top">图像一览</Label>
-            <ListBox Items="{Binding StereoImageFiles}" SelectedIndex="{Binding SelectedImagePareIndex}"></ListBox>
+            <ListBox Items="{Binding StereoImagePairFiles}" SelectedIndex="{Binding SelectedImagePareIndex}" Margin="5, 0, 0, 0"></ListBox>
         </DockPanel>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1" Height="40">
-            <Label Content="{Binding Status}" HorizontalAlignment="Center"></Label>
-            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" VerticalAlignment="Center" Width="100"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Height="60">
+            <Button x:Name="Capture" Content="获取标定图像" Width="120" Height="30" Margin="20" HorizontalContentAlignment="Center"
+                    IsEnabled="{Binding CanCapture}" Click="Capture_OnClick"></Button>
+            <Button x:Name="CalibrateStereo" Content="进行双目标定" Width="120" Height="30" Margin="20" HorizontalContentAlignment="Center"
+                    IsEnabled="{Binding CanCalibrate}" Click="CalibrateStereo_OnClick"></Button>
+            <Button x:Name="Cancel" Content="取消" Width="120" Height="30" Margin="20" HorizontalContentAlignment="Center"
+                    IsEnabled="{Binding IsBusy}" Click="Cancel_OnClick"></Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="30">
+            <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" VerticalAlignment="Center" Width="400"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <Image Width="600" Height="450" Source="{Binding SelectedLeftImage}" Margin="5"></Image>
                 <Label Name="LeftRms" Content="{Binding LeftRms}" HorizontalAlignment="Center"></Label>
@@ -32,21 +39,6 @@
                 <Image Width="600" Height="450" Source="{Binding SelectedRightImage}" Margin="5"></Image>
                 <Label Name="RightRms" Content="{Binding RightRms}" HorizontalAlignment="Center"></Label>
             </StackPanel>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Margin="10, 20, 10, 10">
-            <Button x:Name="Capture" Content="获取标定图像" HorizontalContentAlignment="Center" Width="120" Height="30" Margin="20" Click="Capture_OnClick"
-                    IsEnabled="{Binding NotInCalibration}"></Button>
-            <Label Content="" Width="100"></Label>
-            <Button x:Name="Calibrate" Content="双目标定" HorizontalContentAlignment="Center" Width="120" Height="30" Margin="20" Click="Calibrate_OnClick" 
-                    IsEnabled="{Binding CanPerformCalibration}"></Button>
-            <Label Content="" Width="100"></Label>
-            <Button x:Name="Close" Content="关闭" HorizontalContentAlignment="Center" Width="120" Height="30" Margin="20" Click="Close_OnClick"
-                    IsEnabled="{Binding NotInCalibration}"></Button>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1">
-            <Label Name="LeftYamlFile" Content="{Binding LeftYaml}"></Label>
-            <Label Name="RightYamlFile" Content="{Binding RightYaml}"></Label>
-            <Label Name="XmlFile" Content="{Binding Xml}"></Label>
         </StackPanel>
     </Grid>
 </UserControl>

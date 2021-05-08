@@ -1,11 +1,9 @@
-using System;
+using Argus.StereoCalibration.config;
+using Argus.StereoCalibration.yaml;
+using OpenCvSharp;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using Argus.StereoCalibration.config;
-using Argus.StereoCalibration.yaml;
-using log4net;
-using OpenCvSharp;
 using YamlDotNet.Serialization;
 
 namespace Argus.StereoCalibration
@@ -18,13 +16,16 @@ namespace Argus.StereoCalibration
         private static Mat<Point3f> _objectCorners;
         
         private static Size _imageSize;
-        
+
+        public delegate void LogCallBack(string log);
+        private static LogCallBack _logCallBack;
+
         static CameraCalibrator()
         {
             InitializeChessboardConfiguration();
             Create3DChessboardCorners();
         }
-        
+
         private static void InitializeChessboardConfiguration()
         {
             _cbConfig = new ChessboardConfig();
@@ -57,8 +58,8 @@ namespace Argus.StereoCalibration
             using Mat image = new Mat(imageFile);
 
             // try find corners using sector based approach.
-            // found = Cv2.FindChessboardCornersSB(image, _patternSize, imageCorners,
-            //     ChessboardFlags.Exhaustive | ChessboardFlags.Accuracy);
+            //found = Cv2.FindChessboardCornersSB(image, _patternSize, imageCorners,
+            //    ChessboardFlags.Exhaustive | ChessboardFlags.Accuracy);
 
             // if not found, try find corners using old approach.
             if (!found)
@@ -79,6 +80,11 @@ namespace Argus.StereoCalibration
             }
 
             return (found, imageCorners);
+        }
+
+        public static void SetLogCallback(LogCallBack callback)
+        {
+            _logCallBack = callback;
         }
 
         public static bool CheckAndDrawConCorners(string imageFile)
@@ -105,14 +111,16 @@ namespace Argus.StereoCalibration
                 FileInfo fi = new FileInfo(imageFile);
                 if (result.found)
                 {
-                    Trace.WriteLine($"Found corners in file: {fi.Name}");
+                    //Trace.WriteLine($"Found corners in file: {fi.Name}");
+                    _logCallBack($"发现角点：{fi.Name}");
 
                     allObjectCorners.Add(_objectCorners);
                     allImageCorners.Add(result.imageCorners);
                 }
                 else
                 {
-                    Trace.WriteLine($"WARNING! Can not find corners in file: {fi.Name}");
+                    //Trace.WriteLine($"WARNING! Can not find corners in file: {fi.Name}");
+                    _logCallBack($"***未发现角点：{fi.Name}");
                 }
             }
 
@@ -224,17 +232,22 @@ namespace Argus.StereoCalibration
                 var leftCornersResult = CheckAndGetCorners(leftImageFile);
                 var rightCornersResult = CheckAndGetCorners(rightImageFile);
 
+                FileInfo leftImageFi = new FileInfo(leftImageFile);
+                FileInfo rightImageFi = new FileInfo(rightImageFile);
+
                 if (leftCornersResult.found && rightCornersResult.found)
                 {
-                    FileInfo leftImageFi = new FileInfo(leftImageFile);
-                    FileInfo rightImageFi = new FileInfo(rightImageFile);
-                    
-                    Trace.WriteLine($"Found corners in both left and right file: " + $"{leftImageFi.Name} | {rightImageFi.Name}");
+                    //Trace.WriteLine($"Found corners in both left and right file: " + $"{leftImageFi.Name} | {rightImageFi.Name}");
+                    _logCallBack($"左右图像中发现角点：" + $"{leftImageFi.Name} | {rightImageFi.Name}");
 
                     allObjectCorners.Add(_objectCorners);
                     leftImageCorners.Add(leftCornersResult.imageCorners);
                     rightImageCorners.Add(rightCornersResult.imageCorners);
-                }                
+                }
+                else
+                {
+                    _logCallBack($"***未能在左右图像中发现角点：" + $"{leftImageFi.Name} | {rightImageFi.Name}");
+                }
             }
 
             List<List<Point3f>> objectPoints = new List<List<Point3f>>();

@@ -27,6 +27,9 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="Models\**" />
+      <Compile Update="Views\ScCalibrateStereoControl.axaml.cs">
+        <DependentUpon>ScCalibrateStereoControl.axaml</DependentUpon>
+      </Compile>
       <None Update="calib-config.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

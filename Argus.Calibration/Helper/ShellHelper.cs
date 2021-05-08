@@ -10,6 +10,7 @@ namespace Argus.Calibration.Helper
         {
             var source = new TaskCompletionSource<int>();
             var escapedArgs = cmd.Replace("\"", "\\\"");
+            escapedArgs = escapedArgs.Replace(@"\", @"\\");
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo

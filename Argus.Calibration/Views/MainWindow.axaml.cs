@@ -1,3 +1,4 @@
+using Argus.Calibration.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -27,7 +28,7 @@ namespace Argus.Calibration.Views
         public void ShowGetStereoImagesControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-            _workArea.Children.Add(new ScGetStereoImagesControl());
+            _workArea.Children.Add(new ScCheckPositionControl());
         }
 
         public void CloseWorkAreaControl()
