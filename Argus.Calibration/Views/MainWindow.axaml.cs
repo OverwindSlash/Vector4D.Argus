@@ -1,3 +1,5 @@
+using System;
+using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
@@ -10,14 +12,21 @@ namespace Argus.Calibration.Views
     public class MainWindow : Window
     {
         [NotNull] private readonly StackPanel _workArea;
+        [NotNull] private readonly MenuItem _toolTypeMenu;
+        [NotNull] private readonly ComboBox _toolTypeCombo;
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
+
 #if DEBUG
             this.AttachDevTools();
 #endif
+
             _workArea = this.FindControl<StackPanel>("WorkArea");
+            _toolTypeMenu = this.FindControl<MenuItem>("SelectToolType");
+            _toolTypeCombo = this.FindControl<ComboBox>("ToolType");
         }
 
         private void InitializeComponent()
@@ -28,7 +37,11 @@ namespace Argus.Calibration.Views
         public void ShowGetStereoImagesControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-            _workArea.Children.Add(new ScCheckPositionControl());
+
+            ScCheckPositionControl control = new ScCheckPositionControl();
+            control.InitDataContext(StereoTypes.BodyStereo);
+
+            _workArea.Children.Add(control);
         }
 
         public void CloseWorkAreaControl()
@@ -40,6 +53,30 @@ namespace Argus.Calibration.Views
         {
             _workArea.Children.Clear();
             _workArea.Children.Add(new ScCalibrateStereoControl());
+        }
+
+        private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (_toolTypeCombo == null)
+            {
+                return;
+            }
+
+            int selectedIndex = _toolTypeCombo.SelectedIndex;
+
+            var viewModel = (MainWindowViewModel)DataContext!;
+            viewModel.SelectedToolType = selectedIndex;
+        }
+
+        private void SelectToolType(int toolType)
+        {
+            var viewModel = (MainWindowViewModel)DataContext!;
+            viewModel.SelectedToolType = toolType;
+        }
+
+        private void SelectToolMenu_OnClick(object? sender, RoutedEventArgs e)
+        {
+            SelectToolType(_toolTypeMenu.SelectedIndex);
         }
     }
 }

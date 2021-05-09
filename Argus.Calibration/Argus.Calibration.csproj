@@ -33,5 +33,11 @@
       <None Update="calib-config.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Movement\stereo_calib_arm_move_data.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Movement\" />
     </ItemGroup>
 </Project>

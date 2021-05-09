@@ -38,19 +38,39 @@
             <StackPanel x:Name="Menubar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
                 <Menu>
                     <MenuItem Header="机载双目标定">
-                        <MenuItem Name="GetStereoImages" Header="获取标定图像" Click="ShowGetStereoImagesControl"></MenuItem>
-                        <MenuItem Name="CalibrateStereo" IsEnabled="{Binding ImagesCaptured}" Header="自动机载双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
+                        <MenuItem Name="GetStereoImages" Header="检查机载标定图像" Click="ShowGetStereoImagesControl"></MenuItem>
+                        <MenuItem Name="CalibrateStereo" Header="自动机载双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="机载手眼标定">
                         <MenuItem Name="CalibrateEobLeftArm" IsEnabled="{Binding StereoCalibrated}" Header="自动左臂机载手眼标定"></MenuItem>
                         <MenuItem Name="CalibrateEobRightArm" IsEnabled="{Binding StereoCalibrated}" Header="自动右臂机载手眼标定"></MenuItem>
                     </MenuItem>
+                    <MenuItem Header="转台标定">
+                        <MenuItem Name="CalibrateTurntable" IsEnabled="{Binding LeftArmCalibrated}" Header="自动转台标定"></MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="手臂工具双目标定">
+                        <MenuItem Name="SelectToolType" Header="选择工具类型...">
+                            <MenuItem Name="ArresterToolLeft" Header="避雷器工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ArresterToolRight" Header="避雷器工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="NutInstallToolLeft" Header="螺母安装工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="NutInstallToolRight" Header="螺母安装工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="NutDestroyToolLeft" Header="螺母破拆工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="NutDestroyToolRight" Header="螺母破拆工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="StripWireToolLeft" Header="剥线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="StripWireToolRight" Header="剥线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ClampWireToolLeft" Header="钳线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ClampWireToolRight" Header="钳线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ClawToolLeft" Header="夹爪工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ClawToolRight" Header="夹爪工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="CutWireToolLeft" Header="断线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="CutWireToolRight" Header="断线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                        </MenuItem>
+                        <MenuItem Name="GetToolStereoImages" Header="获取工具标定图像" Click="ShowGetStereoImagesControl"></MenuItem>
+                        <MenuItem Name="CalibrateToolStereo" Header="自动工具双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
+                    </MenuItem>
                     <MenuItem Header="手臂手眼标定">
                         <MenuItem Name="CalibrateEohLeftArm" Header="自动左臂末端手眼标定"></MenuItem>
                         <MenuItem Name="CalibrateEohRightArm" Header="自动左臂末端手眼标定"></MenuItem>
-                    </MenuItem>
-                    <MenuItem Header="转台标定">
-                        <MenuItem Name="CalibrateTurntable" Header="自动转台标定"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="深度相机双目标定">
                         <MenuItem Name="CalibrateRGBD" Header="自动深度相机标定"></MenuItem>
@@ -61,39 +81,62 @@
                 </Menu>
             </StackPanel>
             <StackPanel x:Name="Toolbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1">
-                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowGetStereoImagesControl">
+                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowGetStereoImagesControl" ToolTip.Tip="检查机载标定图像">
                     <PathIcon Data="{StaticResource check_position}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding ImagesCaptured}" Click="ShowCalibrateStereoControl">
+                <Button Width="36" Height="36" Margin="2" Click="ShowCalibrateStereoControl" ToolTip.Tip="自动机载双目标定">
                     <Image Source="{StaticResource stereo}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2" IsEnabled="{Binding StereoCalibrated}">
+                <Button Width="36" Height="36" Margin="8,2,2,2" IsEnabled="{Binding StereoCalibrated}" 
+                        ToolTip.Tip="自动左臂机载手眼标定">
                     <Image Source="{StaticResource arm}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding StereoCalibrated}">
+                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding StereoCalibrated}" 
+                        ToolTip.Tip="自动右臂机载手眼标定">
                     <Image Source="{StaticResource arm}">
                         <Image.RenderTransform>
                             <ScaleTransform ScaleX="-1"/>
                         </Image.RenderTransform>
                     </Image>
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2">
-                    <Image Source="{StaticResource tool}" />
+                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="自动转台标定" IsEnabled="{Binding LeftArmCalibrated}">
+                    <Image Source="{StaticResource turntable}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="2">
+                <ComboBox Name="ToolType" Width="170" Height="36" Margin="8,2,2,2" 
+                          SelectedIndex="{Binding SelectedToolType}" 
+                          SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+                    <ComboBoxItem>避雷器工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>避雷器工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>螺母安装工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>螺母安装工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>螺母破拆工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>螺母破拆工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>剥线工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>剥线工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>钳线工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>钳线工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>夹爪工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>夹爪工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>断线工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>断线工具 - 右臂</ComboBoxItem>
+                </ComboBox>
+                <Button Width="36" Height="36" Margin="2" ToolTip.Tip="获取工具标定图像">
+                    <PathIcon Data="{StaticResource screenshot_regular}" />
+                </Button>
+                <Button Width="36" Height="36" Margin="2" ToolTip.Tip="自动工具双目标定">
+                    <Image Source="{StaticResource tool}"/>
+                </Button>
+                <Button Width="36" Height="36" Margin="2" ToolTip.Tip="自动工具双目标定">
                     <Image Source="{StaticResource tool}">
                         <Image.RenderTransform>
                             <ScaleTransform ScaleX="-1"/>
                         </Image.RenderTransform>
                     </Image>
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2">
-                    <Image Source="{StaticResource turntable}" />
-                </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2">
+                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="自动深度相机标定">
                     <Image Source="{StaticResource rgbd}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2">
+                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="手动激光雷达标定">
                     <Image Source="{StaticResource lidar}" />
                 </Button>
             </StackPanel>

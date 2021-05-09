@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace Argus.Calibration.Views
@@ -11,13 +10,19 @@ namespace Argus.Calibration.Views
         public ScCheckPositionControl()
         {
             InitializeComponent();
-            DataContext = new ScCheckPositionControlViewModel();
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
         }
+
+        public void InitDataContext(StereoTypes stereoType)
+        {
+            DataContext = new ScCheckPositionControlViewModel(stereoType);
+        }
+
+
 
         // private void OK_OnClick(object? sender, RoutedEventArgs e)
         // {
@@ -37,10 +42,5 @@ namespace Argus.Calibration.Views
         //     
         //     window.CloseWorkAreaControl();
         // }
-
-        private void StyledElement_OnInitialized(object? sender, EventArgs e)
-        {
-            
-        }
     }
 }

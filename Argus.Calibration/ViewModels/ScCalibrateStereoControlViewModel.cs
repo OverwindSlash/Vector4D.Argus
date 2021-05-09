@@ -164,7 +164,7 @@ namespace Argus.Calibration.ViewModels
                 FsHelper.PurgeDirectory(leftImgDir);
                 FsHelper.PurgeDirectory(rightImgDir);
             
-                string[] positions = File.ReadAllText(CalibConfig.ArmPositionFile).Split("\n");
+                string[] positions = File.ReadAllText(CalibConfig.BodyStereoArmPositionFile).Split("\n");
                 for (int i = 1; i <= positions.Length; i++)
                 {
                     if (_userCancelled)
@@ -250,13 +250,13 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog(rightRms);
                 mainWindowVm.AddOperationLog(stereoRms);
 
-                string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyCameraName}_left", result.ImageSize,
+                string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyStereoName}_left", result.ImageSize,
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.R1, result.P1);
 
-                string rightYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyCameraName}_right", result.ImageSize,
+                string rightYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.YamlFileDir, $"{CalibConfig.BodyStereoName}_right", result.ImageSize,
                     result.RightCameraMatrix, result.RightDistCoeffs, result.R2, result.P2);
 
-                string xmlFile = CameraCalibrator.GenerateXmlFile(CalibConfig.XmlFileDir, $"{CalibConfig.BodyCameraName}",
+                string xmlFile = CameraCalibrator.GenerateXmlFile(CalibConfig.XmlFileDir, $"{CalibConfig.BodyStereoName}",
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.RightCameraMatrix, result.RightDistCoeffs,
                     result.Rotation, result.Translation, result.Essential, result.Fundamental);
 
@@ -275,6 +275,8 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog("完成双目标定");
 
                 IsInCalibration = false;
+
+                mainWindowVm.StereoCalibrated = true;
             });
         }
     }
