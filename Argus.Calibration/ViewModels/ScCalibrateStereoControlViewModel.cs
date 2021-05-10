@@ -163,8 +163,9 @@ namespace Argus.Calibration.ViewModels
 
                 FsHelper.PurgeDirectory(leftImgDir);
                 FsHelper.PurgeDirectory(rightImgDir);
-            
-                string[] positions = File.ReadAllText(CalibConfig.BodyStereoArmPositionFile).Split("\n");
+
+                string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile);
+                string[] positions = File.ReadAllText(filepath).Split("\n");
                 for (int i = 1; i <= positions.Length; i++)
                 {
                     if (_userCancelled)
@@ -178,9 +179,9 @@ namespace Argus.Calibration.ViewModels
                     Thread.Sleep(500);
                     
                     string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
-                    string leftSrc = Path.Combine(curDir, "Assets", "left", $"Left{i}.jpg");
+                    string leftSrc = Path.Combine(curDir, "Images", "left", $"Left{i}.jpg");
                     string leftDest = Path.Combine(curDir, leftImgDir, $"Left{i:D2}.jpg");
-                    string rightSrc = Path.Combine(curDir, "Assets", "right", $"Right{i}.jpg");
+                    string rightSrc = Path.Combine(curDir, "Images", "right", $"Right{i}.jpg");
                     string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
 
                     

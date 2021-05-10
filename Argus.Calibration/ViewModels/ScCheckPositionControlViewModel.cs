@@ -1,12 +1,11 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Argus.Calibration.Config;
+﻿using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
 using Avalonia.Media.Imaging;
 using JetBrains.Annotations;
 using ReactiveUI;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
 {
@@ -95,8 +94,8 @@ namespace Argus.Calibration.ViewModels
             _leftImagePath = "PositionCheckSnapshots/Left.jpg";
             _rightImagePath = "PositionCheckSnapshots/Right.jpg";
 
-            Task<int> bash1Task = "cp Assets/Left.jpg PositionCheckSnapshots/".Bash();
-            Task<int> bash2Task = "cp Assets/Right.jpg PositionCheckSnapshots/".Bash();
+            Task<int> bash1Task = "cp Images/Left.jpg PositionCheckSnapshots/".Bash();
+            Task<int> bash2Task = "cp Images/Right.jpg PositionCheckSnapshots/".Bash();
 
             bash1Task.Wait();
             bash2Task.Wait();

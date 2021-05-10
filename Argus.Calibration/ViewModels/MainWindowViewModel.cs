@@ -57,6 +57,7 @@ namespace Argus.Calibration.ViewModels
             StereoCalibrated = false;
             LeftArmCalibrated = false;
             RightArmCalibrated = false;
+            SelectedToolType = 0;
         }
 
         public void AddOperationLog(string log)

@@ -34,7 +34,7 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public void ShowGetStereoImagesControl(object? sender, RoutedEventArgs e)
+        public void ShowCheckStereoImagesControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
 
@@ -77,6 +77,16 @@ namespace Argus.Calibration.Views
         private void SelectToolMenu_OnClick(object? sender, RoutedEventArgs e)
         {
             SelectToolType(_toolTypeMenu.SelectedIndex);
+        }
+
+        private void ShowCheckArmStereoImagesControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+
+            ScCheckPositionControl control = new ScCheckPositionControl();
+            control.InitDataContext((StereoTypes)_toolTypeCombo.SelectedIndex);
+
+            _workArea.Children.Add(control);
         }
     }
 }
