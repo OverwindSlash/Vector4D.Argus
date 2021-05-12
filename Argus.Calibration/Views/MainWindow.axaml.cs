@@ -88,5 +88,14 @@ namespace Argus.Calibration.Views
 
             _workArea.Children.Add(control);
         }
+
+        private void ShowHandEyeCalibrationControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+
+            HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+
+            _workArea.Children.Add(control);
+        }
     }
 }

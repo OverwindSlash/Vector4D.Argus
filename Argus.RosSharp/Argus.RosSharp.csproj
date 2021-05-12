@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Horizon.XmlRpc.Client" Version="2.5.0" />
+    <PackageReference Include="Horizon.XmlRpc.Core" Version="2.5.0" />
+    <PackageReference Include="Horizon.XmlRpc.Server" Version="2.5.0" />
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="System.Reactive" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>

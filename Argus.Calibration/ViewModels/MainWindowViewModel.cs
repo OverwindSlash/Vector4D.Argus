@@ -54,7 +54,7 @@ namespace Argus.Calibration.ViewModels
 
             AddOperationLog("点击菜单栏或者快捷按钮开始操作");
 
-            StereoCalibrated = false;
+            StereoCalibrated = true;
             LeftArmCalibrated = false;
             RightArmCalibrated = false;
             SelectedToolType = 0;

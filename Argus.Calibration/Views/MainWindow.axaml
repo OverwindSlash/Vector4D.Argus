@@ -88,7 +88,7 @@
                     <Image Source="{StaticResource stereo}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="8,2,2,2" IsEnabled="{Binding StereoCalibrated}" 
-                        ToolTip.Tip="自动左臂机载手眼标定">
+                        ToolTip.Tip="自动左臂机载手眼标定" Click="ShowHandEyeCalibrationControl">
                     <Image Source="{StaticResource arm}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding StereoCalibrated}" 
