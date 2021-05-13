@@ -184,10 +184,7 @@ namespace Argus.Calibration.ViewModels
                     mainWindowVm.AddOperationLog($"{i:D2} »úÐµ±ÛÒÆ¶¯ÖÁ {positions[i-1]}");
 
                     // TODO: Change to real script
-                    await Task.Run(() =>
-                    {
-                        "Mock/fake_cmd.sh".RunSync();
-                    });
+                    "Mock/fake_cmd.sh".RunSync();
 
                     string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
                     string leftSrc = Path.Combine(curDir, "Images", "left", $"Left{i}.jpg");
@@ -196,12 +193,9 @@ namespace Argus.Calibration.ViewModels
                     string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
 
                     // TODO: Change to real script
-                    await Task.Run(() =>
-                    {
-                        "Mock/fake_cmd.sh".RunSync();
-                    });
+                    "Mock/fake_cmd.sh".RunSync();
 
-                    SimulateSnapShot(leftSrc, leftDest, rightSrc, rightDest);
+                    await SimulateSnapShotAsync(leftSrc, leftDest, rightSrc, rightDest);
 
                     FileInfo leftFi = new FileInfo(leftDest);
                     FileInfo rightFi = new FileInfo(rightDest);
@@ -225,15 +219,15 @@ namespace Argus.Calibration.ViewModels
             });
         }
 
-        private static void SimulateSnapShot(string leftSrc, string leftDest, string rightSrc, string rightDest)
+        private static async Task SimulateSnapShotAsync(string leftSrc, string leftDest, string rightSrc, string rightDest)
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var copyLeftImageTask = $"cp -r {leftSrc} {leftDest}".Bash();
-                var copyRightImageTask = $"cp -r {rightSrc} {rightDest}".Bash();
-
-                copyLeftImageTask.Wait();
-                copyRightImageTask.Wait();
+                await Task.Run(() =>
+                {
+                    $"cp -r {leftSrc} {leftDest}".RunSync();
+                    $"cp -r {rightSrc} {rightDest}".RunSync();
+                });
             }
             else
             {

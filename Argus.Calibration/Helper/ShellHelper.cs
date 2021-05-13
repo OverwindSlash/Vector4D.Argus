@@ -81,6 +81,8 @@ namespace Argus.Calibration.Helper
 
             process.WaitForExit();
 
+            Trace.WriteLine(process.StandardError.ReadToEnd());
+
             return process.ExitCode;
         }
     }

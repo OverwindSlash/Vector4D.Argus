@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "Fake command"
-#sleep 1
+sleep 1

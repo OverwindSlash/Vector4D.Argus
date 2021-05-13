@@ -1,4 +1,5 @@
-﻿using Argus.Calibration.Config;
+﻿using System.Diagnostics;
+using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
 using Avalonia.Media.Imaging;
@@ -83,7 +84,8 @@ namespace Argus.Calibration.ViewModels
                 // Move left arm to initial position
                 await Task.Run(() =>
                 {
-                    "Mock/fake_cmd.sh".RunSync();
+                    // TODO：Change to real script
+                    "Mock/fake_cmd.sh".RunSync();   // Move left arm
                 });
             }
             else
@@ -92,14 +94,11 @@ namespace Argus.Calibration.ViewModels
                 string[] positions = File.ReadAllText(filepath).Split("\n");
 
                 // Move left and right arm to initial position
-                // TODO：Change to real script
                 await Task.Run(() =>
                 {
-                    "Mock/fake_cmd.sh".RunSync();
-                });
-                await Task.Run(() =>
-                {
-                    "Mock/fake_cmd.sh".RunSync();
+                    // TODO：Change to real script
+                    "Mock/fake_cmd.sh".RunSync();   // Move left arm
+                    "Mock/fake_cmd.sh".RunSync();   // Move right arm
                 });
             }
 
@@ -107,13 +106,13 @@ namespace Argus.Calibration.ViewModels
             FsHelper.PurgeDirectory(SnapshotsDir);
 
             _mainWindowVm.AddOperationLog("请等待抓拍完成......");
-            // TODO：Change to real script
             await Task.Run(() =>
             {
-                "Mock/fake_cmd.sh".RunSync();
+                // TODO：Change to real script
+                "Mock/fake_cmd.sh".RunSync();   // Snapshot
             });
 
-            await SimulateSnapshot();
+            await SimulateSnapshotAsync();
 
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "right");
@@ -131,16 +130,16 @@ namespace Argus.Calibration.ViewModels
             _mainWindowVm.AddOperationLog("抓拍完成");
         }
 
-        private async Task SimulateSnapshot()
+        private async Task SimulateSnapshotAsync()
         {
-            _leftImagePath = "PositionCheckSnapshots/Left.jpg";
-            _rightImagePath = "PositionCheckSnapshots/Right.jpg";
-
             await Task.Run(() =>
             {
                 "cp Images/Left.jpg PositionCheckSnapshots/".RunSync();
                 "cp Images/Right.jpg PositionCheckSnapshots/".RunSync();
             });
+
+            _leftImagePath = "PositionCheckSnapshots/Left.jpg";
+            _rightImagePath = "PositionCheckSnapshots/Right.jpg";
         }
     }
 }
