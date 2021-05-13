@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using Argus.StereoCalibration.config;
 using Argus.StereoCalibration.yaml;
 using OpenCvSharp;
@@ -171,12 +173,15 @@ namespace Argus.StereoCalibration
             Mat<double> p2 = rectifyParams.P2;
             Mat<double> q = rectifyParams.Q;
             
-            // undistort stereo
+            // undistort stereo.
             var undistortParams = UndistortStereo(leftCameraMatrix, leftDistCoeffs, rightCameraMatrix, rightDistCoeffs, r1, r2, p1, p2);
             Mat<float> mapLeftX = undistortParams.mapLeftX;
             Mat<float> mapLeftY = undistortParams.mapLeftY;
             Mat<float> mapRightX = undistortParams.mapRightX;
             Mat<float> mapRightY = undistortParams.mapRightY;
+
+            // Show result.
+            ShowStereoCalibrationResult(leftImages, rightImages, mapLeftX, mapLeftY, mapRightX, mapRightY);
 
             CalibrationResult result = new CalibrationResult()
             {
@@ -309,7 +314,67 @@ namespace Argus.StereoCalibration
 
             return (mapLeftX, mapLeftY, mapRightX, mapRightY);
         }
-        
+
+        private static void ShowStereoCalibrationResult(List<string> leftImageFiles, List<string> rightImageFiles,
+            Mat<float> mapLeftX, Mat<float> mapLeftY, Mat<float> mapRightX, Mat<float> mapRightY)
+        {
+            Mat undistLeftImg = new Mat();
+            Mat undistRightImg = new Mat();
+
+            int[] randomIndex = GenerateNonRepeatedRandom(3, 0, leftImageFiles.Count);
+
+            foreach (var imageIndex in randomIndex)
+            {
+                using Mat leftImage = new Mat(leftImageFiles[imageIndex]);
+                using Mat rightImage = new Mat(rightImageFiles[imageIndex]);
+
+                Cv2.Remap(leftImage, undistLeftImg, mapLeftX, mapLeftY);
+                Cv2.Remap(rightImage, undistRightImg, mapRightX, mapRightY);
+
+                ShowRectifiedStereo(undistLeftImg, undistRightImg);
+            }
+        }
+
+        static int[] GenerateNonRepeatedRandom(int length, int minValue, int maxValue)
+        {
+            Hashtable hashtable = new Hashtable();
+            int seed = Guid.NewGuid().GetHashCode();
+
+            Random random = new Random(seed);
+            for (int i = 0; hashtable.Count < length; i++)
+            {
+                int nValue = random.Next(minValue, maxValue);
+                if (!hashtable.ContainsValue(nValue) && nValue != 0)
+                {
+                    hashtable.Add(i, nValue);
+                }
+            }
+
+            int[] array = new int[hashtable.Count];
+            hashtable.Values.CopyTo(array, 0);
+            return array;
+        }
+
+        private static void ShowRectifiedStereo(Mat undistLeftImg, Mat undistRightImg)
+        {
+            int width, height;
+            double scale = 800.0 / Math.Max(_imageSize.Width, _imageSize.Height);
+            width = (int)Math.Round(_imageSize.Width * scale);
+            height = (int)Math.Round(_imageSize.Height * scale);
+            Mat canvas = new Mat(height, width * 2, MatType.CV_8UC3);
+
+            Mat leftCanvasPart = new Mat(canvas, new Rect(0, 0, width, height));
+            Cv2.Resize(undistLeftImg, leftCanvasPart, leftCanvasPart.Size());
+
+            Mat rightCanvasPart = new Mat(canvas, new Rect(width, 0, width, height));
+            Cv2.Resize(undistRightImg, rightCanvasPart, rightCanvasPart.Size());
+
+            for (int i = 0; i < canvas.Rows; i += 16)
+                Cv2.Line(canvas, new Point(0, i), new Point(canvas.Cols, i), Scalar.Aqua);
+
+            Window.ShowImages(canvas);
+        }
+
         public static string GenerateYamlFile(string yamlDir, string cameraName, Size imageSize, Mat<double> cameraMatrix, Mat<double> cameraDistCoeff, Mat<double> rectMatrix, Mat<double> projMatrix)
         {
             var yamlSerializer = new SerializerBuilder()

@@ -48,8 +48,17 @@ namespace Argus.Calibration.Config
         public string CutWireToolRightStereoName { get; set; }
         public string CutWireToolRightArmPositionFile { get; set; }
 
+        // Helper
         public List<string> ArmToolsNames { get; }
         public List<string> ArmToolsPositionFiles { get; }
+
+        // Ros master and topic
+        public string RosMasterUri { get; set; }
+        public string HostName { get; set; }
+        public string NodeName { get; set; }
+        public string LeftStereoTopic { get; set; }
+        public int TopicTimeout { get; set; }
+        public int XmlRpcTimeout { get; set; }
 
         public string YamlFileDir { get; set; }
         public string XmlFileDir { get; set; }
@@ -146,6 +155,13 @@ namespace Argus.Calibration.Config
                 CutWireToolRightArmPositionFile = calibConfig.CutWireToolRightArmPositionFile;
                 ArmToolsNames.Add(CutWireToolRightStereoName);
                 ArmToolsPositionFiles.Add(CutWireToolRightArmPositionFile);
+
+                RosMasterUri = calibConfig.RosMasterUri;
+                HostName = calibConfig.HostName;
+                NodeName = calibConfig.NodeName;
+                LeftStereoTopic = calibConfig.LeftStereoTopic;
+                TopicTimeout = calibConfig.TopicTimeout;
+                XmlRpcTimeout = calibConfig.XmlRpcTimeout;
 
                 YamlFileDir = calibConfig.YamlFileDir;
                 XmlFileDir = calibConfig.XmlFileDir;

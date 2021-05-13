@@ -1,13 +1,13 @@
+using Argus.Calibration.Helper;
+using Argus.StereoCalibration;
+using Avalonia.Media.Imaging;
+using ReactiveUI;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Argus.Calibration.Helper;
-using Argus.StereoCalibration;
-using Avalonia.Media.Imaging;
-using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
 {
@@ -29,6 +29,8 @@ namespace Argus.Calibration.ViewModels
         private bool _imagesCaptured;
 
         private bool _userCancelled;
+
+        private bool _isStereoCalibrated;
 
         public bool IsInCapture
         {
@@ -82,6 +84,12 @@ namespace Argus.Calibration.ViewModels
                 _canCalibrate = _imagesCaptured && !_isInCalibration;
                 this.RaisePropertyChanged(nameof(CanCalibrate));
             }
+        }
+
+        public bool IsStereoCalibrated
+        {
+            get => _isStereoCalibrated;
+            set => this.RaiseAndSetIfChanged(ref _isStereoCalibrated, value);
         }
 
         public bool ImagesCaptured
@@ -148,9 +156,9 @@ namespace Argus.Calibration.ViewModels
             CanCalibrate = false;
         }
 
-        public void CaptureStereoImages(MainWindowViewModel mainWindowVm)
+        public async Task CaptureStereoImages(MainWindowViewModel mainWindowVm)
         {
-            var task = Task.Run(() => 
+            await Task.Run(async () => 
             {
                 IsInCapture = true;
                 ImagesCaptured = false;
@@ -176,32 +184,24 @@ namespace Argus.Calibration.ViewModels
                     mainWindowVm.AddOperationLog($"{i:D2} 机械臂移动至 {positions[i-1]}");
 
                     // TODO: Change to real script
-                    Thread.Sleep(500);
-                    
+                    await Task.Run(() =>
+                    {
+                        "Mock/fake_cmd.sh".RunSync();
+                    });
+
                     string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
                     string leftSrc = Path.Combine(curDir, "Images", "left", $"Left{i}.jpg");
                     string leftDest = Path.Combine(curDir, leftImgDir, $"Left{i:D2}.jpg");
                     string rightSrc = Path.Combine(curDir, "Images", "right", $"Right{i}.jpg");
                     string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
 
-                    
-                    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    // TODO: Change to real script
+                    await Task.Run(() =>
                     {
-                        var moveArmTask = $"cp -r {leftSrc} {leftDest}".Bash();
-                        var snapshotTask = $"cp -r {rightSrc} {rightDest}".Bash();
+                        "Mock/fake_cmd.sh".RunSync();
+                    });
 
-                        moveArmTask.Wait();
-                        snapshotTask.Wait();
-                    }
-                    else
-                    {
-                        FileInfo srcLeftFi = new FileInfo(leftSrc);
-                        FileInfo srcRightFi = new FileInfo(rightSrc);
-
-                        srcLeftFi.CopyTo(leftDest);
-                        srcRightFi.CopyTo(rightDest);
-                    }
-
+                    SimulateSnapShot(leftSrc, leftDest, rightSrc, rightDest);
 
                     FileInfo leftFi = new FileInfo(leftDest);
                     FileInfo rightFi = new FileInfo(rightDest);
@@ -225,6 +225,26 @@ namespace Argus.Calibration.ViewModels
             });
         }
 
+        private static void SimulateSnapShot(string leftSrc, string leftDest, string rightSrc, string rightDest)
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var copyLeftImageTask = $"cp -r {leftSrc} {leftDest}".Bash();
+                var copyRightImageTask = $"cp -r {rightSrc} {rightDest}".Bash();
+
+                copyLeftImageTask.Wait();
+                copyRightImageTask.Wait();
+            }
+            else
+            {
+                FileInfo srcLeftFi = new FileInfo(leftSrc);
+                FileInfo srcRightFi = new FileInfo(rightSrc);
+
+                srcLeftFi.CopyTo(leftDest);
+                srcRightFi.CopyTo(rightDest);
+            }
+        }
+
         public void CancelOperation()
         {
             this._userCancelled = true;
@@ -239,6 +259,7 @@ namespace Argus.Calibration.ViewModels
             Task.Run(() =>
             {
                 IsInCalibration = true;
+                IsStereoCalibrated = false;
 
                 CameraCalibrator.SetLogCallback(mainWindowVm.AddOperationLog);
 
@@ -276,9 +297,15 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog("完成双目标定");
 
                 IsInCalibration = false;
+                IsStereoCalibrated = true;
 
                 mainWindowVm.StereoCalibrated = true;
             });
+        }
+
+        public void ShowStereoCalibrationResult()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

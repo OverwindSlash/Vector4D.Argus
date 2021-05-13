@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia;
@@ -34,14 +35,15 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public void ShowCheckStereoImagesControl(object? sender, RoutedEventArgs e)
+        public async void ShowCheckStereoImagesControlAsync(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
 
             ScCheckPositionControl control = new ScCheckPositionControl();
-            control.InitDataContext(StereoTypes.BodyStereo);
-
             _workArea.Children.Add(control);
+
+            control.InitDataContext(StereoTypes.BodyStereo);
+            await control.CheckPositionAsync();
         }
 
         public void CloseWorkAreaControl()
@@ -89,11 +91,22 @@ namespace Argus.Calibration.Views
             _workArea.Children.Add(control);
         }
 
-        private void ShowHandEyeCalibrationControl(object? sender, RoutedEventArgs e)
+        private void ShowLeftArmHandEyeCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
 
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+            control.SetArm(RobotArms.LeftArm);
+
+            _workArea.Children.Add(control);
+        }
+
+        private void ShowRightArmHandEyeCalibControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+
+            HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+            control.SetArm(RobotArms.RightArm);
 
             _workArea.Children.Add(control);
         }

@@ -6,7 +6,7 @@ namespace Argus.Calibration.Helper
 {
     public static class ShellHelper
     {
-        public static Task<int> Bash(this string cmd)
+        public static Task<int> Bash(this string cmd, Action action = null)
         {
             var source = new TaskCompletionSource<int>();
             var escapedArgs = cmd.Replace("\"", "\\\"");
@@ -27,6 +27,11 @@ namespace Argus.Calibration.Helper
             
             process.Exited += (sender, args) =>
             {
+                if (action != null)
+                {
+                    action();
+                }
+
                 Trace.WriteLine(process.StandardError.ReadToEnd());
                 Trace.WriteLine(process.StandardOutput.ReadToEnd());
                 if (process.ExitCode == 0)
@@ -51,6 +56,32 @@ namespace Argus.Calibration.Helper
             }
 
             return source.Task;
+        }
+
+        public static int RunSync(this string cmd)
+        {
+            var source = new TaskCompletionSource<int>();
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+            escapedArgs = escapedArgs.Replace(@"\", @"\\");
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "bash",
+                    Arguments = $"-c \"{escapedArgs}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                },
+                EnableRaisingEvents = true
+            };
+
+            var start = process.Start();
+
+            process.WaitForExit();
+
+            return process.ExitCode;
         }
     }
 }

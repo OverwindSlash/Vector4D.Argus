@@ -32,6 +32,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -136,7 +137,10 @@ namespace RosSharp.Topic
         public string TopicName { get; private set; }
 
         public string MessageType { get; private set; }
-        public event Func<string, Task> Disposing = _ => Task.Factory.StartNew(() => { });
+        public event Func<string, Task> Disposing = _ => Task.Factory.StartNew(() =>
+        {
+            
+        });
 
         #endregion
 

@@ -13,6 +13,9 @@ namespace Argus.Calibration.ViewModels
     {
         private const string SnapshotsDir = "PositionCheckSnapshots";
 
+        private StereoTypes _stereoType;
+        private MainWindowViewModel _mainWindowVm;
+
         [NotNull] private string _leftImagePath;
         public string LeftImagePath
         {
@@ -23,7 +26,18 @@ namespace Argus.Calibration.ViewModels
                 this.RaisePropertyChanged(nameof(LeftImage));
             }
         }
-        public Bitmap LeftImage => new Bitmap(_leftImagePath);
+        public Bitmap LeftImage
+        {
+            get
+            {
+                if (_leftImagePath != null)
+                {
+                    return new Bitmap(_leftImagePath);
+                }
+
+                return null;
+            }
+        }
 
         [NotNull] private string _rightImagePath;
         public string RightImagePath
@@ -35,70 +49,98 @@ namespace Argus.Calibration.ViewModels
                 this.RaisePropertyChanged(nameof(RightImage));
             }
         }
-        public Bitmap RightImage => new Bitmap(_rightImagePath);
+        public Bitmap RightImage
+        {
+            get
+            {
+                if (_rightImagePath != null)
+                {
+                    return new Bitmap(_rightImagePath);
+                }
+
+                return null;
+            }
+        }
 
         public bool FoundCornersInLeftImage { get; private set; }
         public bool FoundCornersInRightImage { get; private set; }
 
-        public ScCheckPositionControlViewModel(StereoTypes stereoType)
+        public ScCheckPositionControlViewModel(StereoTypes stereoType, MainWindowViewModel mainWindowVm)
         {
-            if (stereoType == StereoTypes.BodyStereo)
+            _stereoType = stereoType;
+            _mainWindowVm = mainWindowVm;
+        }
+
+        public async Task CheckPositionAsync()
+        {
+            _mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
+
+            if (_stereoType == StereoTypes.BodyStereo)
             {
                 string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile);
-
                 string[] positions = File.ReadAllText(filepath).Split("\n");
 
                 // Move left arm to initial position
-                Task<int> moveLeftArmTask = "ls".Bash();
-                moveLeftArmTask.Wait();
-
-                // Take snapshot
-                FsHelper.PurgeDirectory(SnapshotsDir);
-
-                // TODO：Change to real script
-                Task<int> snapshotTask = "ls".Bash();
-                SimulateSnapshot();
+                await Task.Run(() =>
+                {
+                    "Mock/fake_cmd.sh".RunSync();
+                });
             }
             else
             {
-                string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPositionFiles[(int)stereoType]);
-
+                string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPositionFiles[(int)_stereoType]);
                 string[] positions = File.ReadAllText(filepath).Split("\n");
 
                 // Move left and right arm to initial position
                 // TODO：Change to real script
-                Task<int> moveLeftArmTask = "ls".Bash();
-                Task<int> moveRightArmTask = "ls".Bash();
-
-                moveLeftArmTask.Wait();
-                moveRightArmTask.Wait();
-
-                // Take snapshot
-                FsHelper.PurgeDirectory(SnapshotsDir);
-
-                // TODO：Change to real script
-                Task<int> snapshotTask = "ls".Bash();
-                SimulateSnapshot();
+                await Task.Run(() =>
+                {
+                    "Mock/fake_cmd.sh".RunSync();
+                });
+                await Task.Run(() =>
+                {
+                    "Mock/fake_cmd.sh".RunSync();
+                });
             }
 
+            // Take snapshot
+            FsHelper.PurgeDirectory(SnapshotsDir);
+
+            _mainWindowVm.AddOperationLog("请等待抓拍完成......");
+            // TODO：Change to real script
+            await Task.Run(() =>
+            {
+                "Mock/fake_cmd.sh".RunSync();
+            });
+
+            await SimulateSnapshot();
 
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "right");
 
-            FoundCornersInLeftImage = CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
-            FoundCornersInRightImage = CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
+            _mainWindowVm.AddOperationLog("图像角点识别中......");
+            await Task.Run(() =>
+            {
+                FoundCornersInLeftImage = CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
+                FoundCornersInRightImage = CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
+            });
+
+            this.RaisePropertyChanged(nameof(LeftImage));
+            this.RaisePropertyChanged(nameof(RightImage));
+
+            _mainWindowVm.AddOperationLog("抓拍完成");
         }
 
-        private void SimulateSnapshot()
+        private async Task SimulateSnapshot()
         {
             _leftImagePath = "PositionCheckSnapshots/Left.jpg";
             _rightImagePath = "PositionCheckSnapshots/Right.jpg";
 
-            Task<int> bash1Task = "cp Images/Left.jpg PositionCheckSnapshots/".Bash();
-            Task<int> bash2Task = "cp Images/Right.jpg PositionCheckSnapshots/".Bash();
-
-            bash1Task.Wait();
-            bash2Task.Wait();
+            await Task.Run(() =>
+            {
+                "cp Images/Left.jpg PositionCheckSnapshots/".RunSync();
+                "cp Images/Right.jpg PositionCheckSnapshots/".RunSync();
+            });
         }
     }
 }

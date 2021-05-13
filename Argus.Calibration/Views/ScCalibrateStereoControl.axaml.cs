@@ -2,6 +2,7 @@ using Argus.Calibration.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using System.Threading.Tasks;
 
 namespace Argus.Calibration.Views
 {
@@ -18,13 +19,13 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private void Capture_OnClick(object? sender, RoutedEventArgs e)
+        private async void Capture_OnClick(object? sender, RoutedEventArgs e)
         {
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
 
             var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
-            viewModel.CaptureStereoImages(windowViewModel);
+            await viewModel.CaptureStereoImages(windowViewModel);
         }
 
         private void CalibrateStereo_OnClick(object? sender, RoutedEventArgs e)
@@ -40,6 +41,12 @@ namespace Argus.Calibration.Views
         {
             var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
             viewModel.CancelOperation();
+        }
+
+        private void Result_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
+            viewModel.ShowStereoCalibrationResult();
         }
     }
 }

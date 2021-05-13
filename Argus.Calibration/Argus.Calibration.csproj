@@ -166,6 +166,9 @@
       <None Update="Images\right\Right17.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Mock\fake_cmd.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Movement\leftarm_arrester_calib_arm_move_data.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
@@ -178,6 +181,7 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Movement\" />
+      <Folder Include="Mock\" />
     </ItemGroup>
     <ItemGroup>
       <AvaloniaResource Update="Assets\avalonia-logo.ico">

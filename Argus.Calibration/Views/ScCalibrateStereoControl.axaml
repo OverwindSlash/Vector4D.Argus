@@ -26,6 +26,8 @@
                     IsEnabled="{Binding CanCalibrate}" Click="CalibrateStereo_OnClick"></Button>
             <Button x:Name="Cancel" Content="取消" Width="120" Height="30" Margin="20" HorizontalContentAlignment="Center"
                     IsEnabled="{Binding IsBusy}" Click="Cancel_OnClick"></Button>
+            <!-- <Button x:Name="Result" Content="查看标定结果" Width="120" Height="30" Margin="20" HorizontalContentAlignment="Center" -->
+            <!--         IsEnabled="{Binding IsStereoCalibrated}" Click="Result_OnClick"></Button> -->
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Grid.Column="1" Height="30">
             <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" VerticalAlignment="Center" Width="400"/>

@@ -3,19 +3,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Argus.Calibration.Views.HandEyeCalibrationControl">
+             x:Class="Argus.Calibration.Views.HandEyeCalibrationControl"
+             DetachedFromVisualTree="Visual_OnDetachedFromVisualTree">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition/>
     </Grid.RowDefinitions>
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Margin="0, 8, 0, 0">
-      <Label HorizontalAlignment="Stretch" Content="自动手眼标定图像"></Label>
+    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0, 8, 0, 0">
+      <Label HorizontalAlignment="Left" Content="自动手眼标定图像" Margin="400, 5, 0, 5"></Label>
     </StackPanel>
-    <StackPanel Grid.Row="1">
-        <Image Name="LeftImage" Width="600" Height="450" Source="{Binding LeftImage}" Margin="5"></Image>
+    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 8, 0, 0">
+        <Image VerticalAlignment ="Top" Name="LeftImage" Width="800" Height="600" Source="{Binding LeftImage}" Margin="5"></Image>
+        <StackPanel Orientation="Vertical">
+            <Button Name="HandEyeCalibrate" Width="120" HorizontalContentAlignment="Center" Content="开始手眼标定" Click="HandEyeCalibrate_OnClick"
+                    Margin="270, 180, 0, 0" IsEnabled="{Binding !IsInCalibration}"></Button>
+            <TextBlock Text="{Binding Message}" Width="300" TextAlignment="Center" Margin="180, 20, 0, 0"></TextBlock>
+        </StackPanel>
     </StackPanel>
   </Grid>
 </UserControl>

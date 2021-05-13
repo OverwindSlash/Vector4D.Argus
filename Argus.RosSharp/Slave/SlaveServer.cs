@@ -85,8 +85,15 @@ namespace RosSharp.Slave
             {
                 while (!stop)
                 {
-                    var context = listener.GetContext();
-                    that.ProcessRequest(context);
+                    try
+                    {
+                        var context = listener.GetContext();
+                        that.ProcessRequest(context);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(e.Message);
+                    }
                 }
             }).Start();
             SlaveUri = new Uri(url);

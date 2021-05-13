@@ -1,4 +1,6 @@
-﻿using Argus.Calibration.Config;
+﻿using System;
+using System.Threading.Tasks;
+using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -7,6 +9,8 @@ namespace Argus.Calibration.Views
 {
     public class ScCheckPositionControl : UserControl
     {
+        private MainWindowViewModel? _windowViewModel;
+
         public ScCheckPositionControl()
         {
             InitializeComponent();
@@ -17,30 +21,21 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public void InitDataContext(StereoTypes stereoType)
+        private void StyledElement_OnInitialized(object? sender, EventArgs e)
         {
-            DataContext = new ScCheckPositionControlViewModel(stereoType);
+            var window = (MainWindow)this.Parent.Parent.Parent.Parent;
+            _windowViewModel = (MainWindowViewModel)window.DataContext!;
         }
 
+        public void InitDataContext(StereoTypes stereoType)
+        {
+            DataContext = new ScCheckPositionControlViewModel(stereoType, _windowViewModel);
+        }
 
-
-        // private void OK_OnClick(object? sender, RoutedEventArgs e)
-        // {
-        //     var controlViewModel = (ScCheckPositionControlViewModel)DataContext!;
-        //     bool result = controlViewModel is {FoundCornersInLeftImage: true, FoundCornersInRightImage: true};
-        //
-        //     var window = (MainWindow) this.Parent.Parent.Parent.Parent;
-        //     var windowViewModel = (MainWindowViewModel)window.DataContext!;
-        //     
-        //     window.CloseWorkAreaControl();
-        // }
-        //
-        // private void Cancel_OnClick(object? sender, RoutedEventArgs e)
-        // {
-        //     var window = (MainWindow) this.Parent.Parent.Parent.Parent;
-        //     var windowViewModel = (MainWindowViewModel)window.DataContext!;
-        //     
-        //     window.CloseWorkAreaControl();
-        // }
+        public async Task CheckPositionAsync()
+        {
+            var viewModel = (ScCheckPositionControlViewModel) DataContext!;
+            await viewModel.CheckPositionAsync();
+        }
     }
 }

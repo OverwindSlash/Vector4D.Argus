@@ -38,7 +38,7 @@
             <StackPanel x:Name="Menubar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="0">
                 <Menu>
                     <MenuItem Header="机载双目标定">
-                        <MenuItem Name="GetStereoImages" Header="检查机载标定图像" Click="ShowCheckStereoImagesControl"></MenuItem>
+                        <MenuItem Name="GetStereoImages" Header="检查机载标定图像" Click="ShowCheckStereoImagesControlAsync"></MenuItem>
                         <MenuItem Name="CalibrateStereo" Header="自动机载双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="机载手眼标定">
@@ -65,7 +65,7 @@
                             <MenuItem Name="CutWireToolLeft" Header="断线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
                             <MenuItem Name="CutWireToolRight" Header="断线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
                         </MenuItem>
-                        <MenuItem Name="GetToolStereoImages" Header="获取工具标定图像" Click="ShowCheckStereoImagesControl"></MenuItem>
+                        <MenuItem Name="GetToolStereoImages" Header="获取工具标定图像" Click="ShowCheckStereoImagesControlAsync"></MenuItem>
                         <MenuItem Name="CalibrateToolStereo" Header="自动工具双目标定" Click="ShowCalibrateStereoControl"></MenuItem>
                     </MenuItem>
                     <MenuItem Header="手臂手眼标定">
@@ -81,18 +81,18 @@
                 </Menu>
             </StackPanel>
             <StackPanel x:Name="Toolbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1">
-                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowCheckStereoImagesControl" ToolTip.Tip="检查机载标定图像">
+                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowCheckStereoImagesControlAsync" ToolTip.Tip="检查机载标定图像">
                     <PathIcon Data="{StaticResource check_position}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="2" Click="ShowCalibrateStereoControl" ToolTip.Tip="自动机载双目标定">
                     <Image Source="{StaticResource stereo}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="8,2,2,2" IsEnabled="{Binding StereoCalibrated}" 
-                        ToolTip.Tip="自动左臂机载手眼标定" Click="ShowHandEyeCalibrationControl">
+                        ToolTip.Tip="自动左臂机载手眼标定" Click="ShowLeftArmHandEyeCalibControl">
                     <Image Source="{StaticResource arm}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding StereoCalibrated}" 
-                        ToolTip.Tip="自动右臂机载手眼标定">
+                        ToolTip.Tip="自动右臂机载手眼标定" Click="ShowRightArmHandEyeCalibControl">
                     <Image Source="{StaticResource arm}">
                         <Image.RenderTransform>
                             <ScaleTransform ScaleX="-1"/>
