@@ -7,6 +7,7 @@ using RosSharp;
 using RosSharp.sensor_msgs;
 using RosSharp.Topic;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -79,22 +80,42 @@ namespace Argus.Calibration.ViewModels
             _operationArm = arm;
         }
 
-        public void CalibrateHandEye()
+        public async Task CalibrateHandEye(MainWindowViewModel mainWindowVm)
         {
+            string handEyeBaseDir = @"~/.ros/easyhandeye";
+
+            string leftArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_leftarm_eye_on_base.yaml");
+            string rightArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_rightarm_eye_on_base.yaml");
+
+            string handEyeDestDir = @"CalibResult";
+
             if (_operationArm == RobotArms.LeftArm)
             {
-                Message = "左臂自动手眼标定中，请耐心等待完成";
+                Message = "手眼标定环境配置中......";
 
-                var moveLeftArmTask = Task.Run(() =>
+                await Task.Run(() =>
                 {
                     IsInCalibration = true;
 
                     // TODO: Change to real script
-                    "Mock/fake_cmd.sh".Bash(() =>
-                    {
-                        IsInCalibration = false;
-                        Message = "左臂自动手眼标定完成";
-                    });
+                    // calibrate_lucid_body_stereo_left_arm.sh
+                    "Mock/fake_cmd.sh".RunSync();
+                    Message = "左臂自动手眼标定中......";
+
+                    // TODO: Change to real script
+                    // calibrate_body_stereo_handfree.sh
+                    "Mock/fake_cmd.sh".RunSync();
+                    Message = "左臂自动手眼标定完成";
+
+                    // TODO: Change to real script
+                    // Copy calibration result to dest folder.
+                    "Mock/fake_cmd.sh".RunSync();
+                    FileInfo leftArmCalibFi = new FileInfo(leftArmCalibFile);
+                    string leftYaml = $"左臂手眼参数：{leftArmCalibFi.FullName}";
+
+                    mainWindowVm.AddOperationLog(leftArmCalibFile);
+
+                    IsInCalibration = false;
                 });
             }
             else
@@ -113,8 +134,6 @@ namespace Argus.Calibration.ViewModels
                     });
                 });
             }
-
-            
         }
     }
 }

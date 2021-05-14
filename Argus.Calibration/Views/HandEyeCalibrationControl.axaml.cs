@@ -10,8 +10,6 @@ namespace Argus.Calibration.Views
 {
     public partial class HandEyeCalibrationControl : UserControl
     {
-        
-
         public HandEyeCalibrationControl()
         {
             InitializeComponent();
@@ -37,8 +35,11 @@ namespace Argus.Calibration.Views
 
         private void HandEyeCalibrate_OnClick(object? sender, RoutedEventArgs e)
         {
+            var window = (MainWindow)this.Parent.Parent.Parent.Parent;
+            var windowViewModel = (MainWindowViewModel)window.DataContext!;
+
             var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
-            viewModel.CalibrateHandEye();
+            viewModel.CalibrateHandEye(windowViewModel);
         }
     }
 }
