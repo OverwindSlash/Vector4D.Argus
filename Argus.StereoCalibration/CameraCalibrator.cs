@@ -114,7 +114,7 @@ namespace Argus.StereoCalibration
                 if (result.found)
                 {
                     //Trace.WriteLine($"Found corners in file: {fi.Name}");
-                    _logCallBack($"·¢ÏÖ½Çµã£º{fi.Name}");
+                    _logCallBack($"å‘ç°è§’ç‚¹ï¼š{fi.Name}");
 
                     allObjectCorners.Add(_objectCorners);
                     allImageCorners.Add(result.imageCorners);
@@ -122,7 +122,7 @@ namespace Argus.StereoCalibration
                 else
                 {
                     //Trace.WriteLine($"WARNING! Can not find corners in file: {fi.Name}");
-                    _logCallBack($"***Î´·¢ÏÖ½Çµã£º{fi.Name}");
+                    _logCallBack($"***æœªå‘ç°è§’ç‚¹ï¼š{fi.Name}");
                 }
             }
 
@@ -243,7 +243,7 @@ namespace Argus.StereoCalibration
                 if (leftCornersResult.found && rightCornersResult.found)
                 {
                     //Trace.WriteLine($"Found corners in both left and right file: " + $"{leftImageFi.Name} | {rightImageFi.Name}");
-                    _logCallBack($"×óÓÒÍ¼ÏñÖĞ·¢ÏÖ½Çµã£º" + $"{leftImageFi.Name} | {rightImageFi.Name}");
+                    _logCallBack($"å·¦å³å›¾åƒä¸­å‘ç°è§’ç‚¹ï¼š" + $"{leftImageFi.Name} | {rightImageFi.Name}");
 
                     allObjectCorners.Add(_objectCorners);
                     leftImageCorners.Add(leftCornersResult.imageCorners);
@@ -251,7 +251,7 @@ namespace Argus.StereoCalibration
                 }
                 else
                 {
-                    _logCallBack($"***Î´ÄÜÔÚ×óÓÒÍ¼ÏñÖĞ·¢ÏÖ½Çµã£º" + $"{leftImageFi.Name} | {rightImageFi.Name}");
+                    _logCallBack($"***æœªèƒ½åœ¨å·¦å³å›¾åƒä¸­å‘ç°è§’ç‚¹ï¼š" + $"{leftImageFi.Name} | {rightImageFi.Name}");
                 }
             }
 
@@ -373,6 +373,8 @@ namespace Argus.StereoCalibration
                 Cv2.Line(canvas, new Point(0, i), new Point(canvas.Cols, i), Scalar.Aqua);
 
             Window.ShowImages(canvas);
+
+            Window.WaitKey();
         }
 
         public static string GenerateYamlFile(string yamlDir, string cameraName, Size imageSize, Mat<double> cameraMatrix, Mat<double> cameraDistCoeff, Mat<double> rectMatrix, Mat<double> projMatrix)

@@ -1,4 +1,4 @@
-﻿using Argus.Calibration.Config;
+using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Avalonia.Media.Imaging;
 using OpenCvSharp;

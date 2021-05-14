@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
