@@ -166,6 +166,11 @@ namespace Argus.Calibration.ViewModels
                 _stereoImagePairFiles.Clear();
 
                 string imageBaseDir = CalibConfig.StereoImagesDir;
+                if (!Directory.Exists(imageBaseDir))
+                {
+                    Directory.CreateDirectory(imageBaseDir);
+                }
+
                 string leftImgDir = Path.Combine(imageBaseDir, "left");
                 string rightImgDir = Path.Combine(imageBaseDir, "right");
 
@@ -181,7 +186,7 @@ namespace Argus.Calibration.ViewModels
                         break;
                     }
 
-                    mainWindowVm.AddOperationLog($"{i:D2} 机械臂移动至 {positions[i-1]}");
+                    mainWindowVm.AddOperationLog($"{i:D2} 鏈烘鑷傜Щ鍔ㄨ嚦 {positions[i-1]}");
 
                     // TODO: Change to real script
                     "Mock/fake_cmd.sh".RunSync();
@@ -200,8 +205,8 @@ namespace Argus.Calibration.ViewModels
                     FileInfo leftFi = new FileInfo(leftDest);
                     FileInfo rightFi = new FileInfo(rightDest);
 
-                    mainWindowVm.AddOperationLog($"{i:D2} 左目图像：{leftFi.FullName}");
-                    mainWindowVm.AddOperationLog($"{i:D2} 右目图像：{rightFi.FullName}");
+                    mainWindowVm.AddOperationLog($"{i:D2} 宸︾洰鍥惧儚锛歿leftFi.FullName}");
+                    mainWindowVm.AddOperationLog($"{i:D2} 鍙崇洰鍥惧儚锛歿rightFi.FullName}");
 
                     string content = $"{i}: {leftFi.Name} <--> {rightFi.Name}";
                     _stereoImagePairFiles.Add(content);
@@ -215,7 +220,7 @@ namespace Argus.Calibration.ViewModels
                 ImagesCaptured = true;
                 IsInCapture = false;
 
-                mainWindowVm.AddOperationLog("完成双目图片获取");
+                mainWindowVm.AddOperationLog("瀹屾垚鍙岀洰鍥剧墖鑾峰彇");
             });
         }
 
@@ -258,9 +263,9 @@ namespace Argus.Calibration.ViewModels
                 CameraCalibrator.SetLogCallback(mainWindowVm.AddOperationLog);
 
                 var result = CameraCalibrator.CalibrateStereoCamera(_leftImageFiles, _rightImageFiles);
-                string leftRms = $"左目图像 重投影误差：{result.LeftRms}";
-                string rightRms = $"右目图像 重投影误差：{result.RightRms}";
-                string stereoRms = $"双目标定完毕 重投影误差：{result.StereoRms}";
+                string leftRms = $"宸︾洰鍥惧儚 閲嶆姇褰辫宸細{result.LeftRms}";
+                string rightRms = $"鍙崇洰鍥惧儚 閲嶆姇褰辫宸細{result.RightRms}";
+                string stereoRms = $"鍙岀洰鏍囧畾瀹屾瘯 閲嶆姇褰辫宸細{result.StereoRms}";
 
                 mainWindowVm.AddOperationLog(leftRms);
                 mainWindowVm.AddOperationLog(rightRms);
@@ -280,15 +285,15 @@ namespace Argus.Calibration.ViewModels
                 FileInfo rightYamlFi = new FileInfo(rightYamlFile);
                 FileInfo xmlFi = new FileInfo(xmlFile);
 
-                string leftYaml = $"左目内参Yaml：{leftYamlFi.FullName}";
-                string rightYaml = $"右目内参Yaml：{rightYamlFi.FullName}";
-                string xml = $"识别用Xml：{xmlFi.FullName}";
+                string leftYaml = $"宸︾洰鍐呭弬Yaml锛歿leftYamlFi.FullName}";
+                string rightYaml = $"鍙崇洰鍐呭弬Yaml锛歿rightYamlFi.FullName}";
+                string xml = $"璇嗗埆鐢╔ml锛歿xmlFi.FullName}";
 
                 mainWindowVm.AddOperationLog(leftYaml);
                 mainWindowVm.AddOperationLog(rightYaml);
                 mainWindowVm.AddOperationLog(xml);
 
-                mainWindowVm.AddOperationLog("完成双目标定");
+                mainWindowVm.AddOperationLog("瀹屾垚鍙岀洰鏍囧畾");
 
                 IsInCalibration = false;
                 IsStereoCalibrated = true;

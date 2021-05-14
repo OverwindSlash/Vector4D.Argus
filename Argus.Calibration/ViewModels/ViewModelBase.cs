@@ -1,4 +1,4 @@
-﻿using Argus.Calibration.Config;
+using Argus.Calibration.Config;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 
