@@ -53,7 +53,7 @@ namespace Argus.Calibration.ViewModels
             _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
             _subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
             _subscriber.Subscribe(x =>
-            { 
+            {
                 int columns = (int)x.width;
                 int rows = (int)x.height;
 
@@ -71,8 +71,11 @@ namespace Argus.Calibration.ViewModels
             {
                 _stereoLeftImage.Dispose();
             }
-            
-            _node.Dispose();
+
+            if (_node != null)
+            {
+                _node.Dispose();
+            }
         }
 
         public void SetArm(RobotArms arm)
@@ -83,57 +86,59 @@ namespace Argus.Calibration.ViewModels
         public async Task CalibrateHandEye(MainWindowViewModel mainWindowVm)
         {
             string handEyeBaseDir = @"~/.ros/easyhandeye";
+            string handEyeDestDir = @"CalibResult";
+
 
             string leftArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_leftarm_eye_on_base.yaml");
             string rightArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_rightarm_eye_on_base.yaml");
 
-            string handEyeDestDir = @"CalibResult";
+            string leftPrepareScript = "calibrate_lucid_body_stereo_left_arm.sh";
+            string rightPrepareScript = "calibrate_lucid_body_stereo_right_arm.sh";
 
-            if (_operationArm == RobotArms.LeftArm)
+            string leftCalibScriptParam = "left param";
+            string rightCalibScriptParam = "right param";
+
+
+            string prepareScript = leftPrepareScript;
+            string calibScriptParam = leftCalibScriptParam;
+            string prefix = "左";
+            if (_operationArm == RobotArms.RightArm)
             {
-                Message = "手眼标定环境配置中......";
-
-                await Task.Run(() =>
-                {
-                    IsInCalibration = true;
-
-                    // TODO: Change to real script
-                    // calibrate_lucid_body_stereo_left_arm.sh
-                    "Mock/fake_cmd.sh".RunSync();
-                    Message = "左臂自动手眼标定中......";
-
-                    // TODO: Change to real script
-                    // calibrate_body_stereo_handfree.sh
-                    "Mock/fake_cmd.sh".RunSync();
-                    Message = "左臂自动手眼标定完成";
-
-                    // TODO: Change to real script
-                    // Copy calibration result to dest folder.
-                    "Mock/fake_cmd.sh".RunSync();
-                    FileInfo leftArmCalibFi = new FileInfo(leftArmCalibFile);
-                    string leftYaml = $"左臂手眼参数：{leftArmCalibFi.FullName}";
-
-                    mainWindowVm.AddOperationLog(leftArmCalibFile);
-
-                    IsInCalibration = false;
-                });
+                prepareScript = rightPrepareScript;
+                calibScriptParam = rightCalibScriptParam;
+                prefix = "右";
             }
-            else
+
+
+            Message = "手眼标定环境配置中......";
+
+            await Task.Run(() =>
             {
-                Message = "右臂自动手眼标定中，请耐心等待完成";
+                IsInCalibration = true;
 
-                var moveRightArmTask = Task.Run(() =>
-                {
-                    IsInCalibration = true;
+                // TODO: Change to real script
+                // calibrate_lucid_body_stereo_left_arm.sh
+                prepareScript.RunSync();
+                Message = $"{prefix}臂自动手眼标定中......";
+                mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
 
-                    // TODO: Change to real script
-                    "Mock/fake_cmd.sh".Bash(() =>
-                    {
-                        IsInCalibration = false;
-                        Message = "右臂自动手眼标定完成";
-                    });
-                });
-            }
+                // TODO: Change to real script
+                // calibrate_body_stereo_handfree.sh
+                string calibCmd = $"Mock/fake_cmd.sh {calibScriptParam}";
+                calibCmd.RunSync();
+                Message = $"{prefix}臂自动手眼标定完成";
+                mainWindowVm.AddOperationLog($"执行脚本 {calibCmd}");
+
+                // TODO: Change to real script
+                // Copy calibration result to dest folder.
+                "Mock/fake_cmd.sh".RunSync();
+                FileInfo leftArmCalibFi = new FileInfo(leftArmCalibFile);
+                string leftYaml = $"{prefix}臂手眼参数：{leftArmCalibFi.FullName}";
+
+                mainWindowVm.AddOperationLog(leftYaml);
+
+                IsInCalibration = false;
+            });
         }
     }
 }

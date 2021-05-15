@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia;
@@ -7,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using JetBrains.Annotations;
+using System.Threading.Tasks;
 
 namespace Argus.Calibration.Views
 {
@@ -35,10 +34,9 @@ namespace Argus.Calibration.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        public async void ShowCheckStereoImagesControlAsync(object? sender, RoutedEventArgs e)
+        private async void ShowCheckStereoImagesControlAsync(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             ScCheckPositionControl control = new ScCheckPositionControl();
             _workArea.Children.Add(control);
 
@@ -81,14 +79,14 @@ namespace Argus.Calibration.Views
             SelectToolType(_toolTypeMenu.SelectedIndex);
         }
 
-        private void ShowCheckArmStereoImagesControl(object? sender, RoutedEventArgs e)
+        private async void ShowCheckArmStereoImagesControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             ScCheckPositionControl control = new ScCheckPositionControl();
-            control.InitDataContext((StereoTypes)_toolTypeCombo.SelectedIndex);
-
             _workArea.Children.Add(control);
+
+            control.InitDataContext((StereoTypes)_toolTypeCombo.SelectedIndex);
+            await control.CheckPositionAsync();
         }
 
         private void ShowLeftArmHandEyeCalibControl(object? sender, RoutedEventArgs e)

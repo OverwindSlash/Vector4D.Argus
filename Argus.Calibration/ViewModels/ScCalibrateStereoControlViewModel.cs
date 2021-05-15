@@ -186,7 +186,10 @@ namespace Argus.Calibration.ViewModels
                         break;
                     }
 
-                    mainWindowVm.AddOperationLog($"{i:D2} 机械臂移动至 {positions[i-1]}");
+                    mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
+                    string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                    moveLeftCmd.RunSync();
+
 
                     // TODO: Change to real script
                     "Mock/fake_cmd.sh".RunSync();
@@ -196,10 +199,6 @@ namespace Argus.Calibration.ViewModels
                     string leftDest = Path.Combine(curDir, leftImgDir, $"Left{i:D2}.jpg");
                     string rightSrc = Path.Combine(curDir, "Images", "right", $"Right{i}.jpg");
                     string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
-
-                    // TODO: Change to real script
-                    "Mock/fake_cmd.sh".RunSync();
-
                     await SimulateSnapShotAsync(leftSrc, leftDest, rightSrc, rightDest);
 
                     FileInfo leftFi = new FileInfo(leftDest);

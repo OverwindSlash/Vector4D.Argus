@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
@@ -76,44 +75,56 @@ namespace Argus.Calibration.ViewModels
         {
             _mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
 
+            // 1. Move robot arms to snapshot positions.
             if (_stereoType == StereoTypes.BodyStereo)
             {
+                // 1.1 Body stereo check only need move left arm to initial position
                 string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile);
                 string[] positions = File.ReadAllText(filepath).Split("\n");
 
-                // Move left arm to initial position
                 await Task.Run(() =>
                 {
-                    // TODO：Change to real script
-                    "Mock/fake_cmd.sh".RunSync();   // Move left arm
+                    _mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
+                    string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                    moveLeftCmd.RunSync();
                 });
             }
             else
             {
+                // 1.2 Arm stereo check need move left and right arm to initial position
                 string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPositionFiles[(int)_stereoType]);
                 string[] positions = File.ReadAllText(filepath).Split("\n");
+
+                // Is left or right arm tool
+                bool isLeftArmTool = (int) _stereoType % 2 == 0;
+                string leftArmPosition = isLeftArmTool ? positions[0] : positions[1];
+                string rightArmPosition = isLeftArmTool ? positions[1] : positions[0];
 
                 // Move left and right arm to initial position
                 await Task.Run(() =>
                 {
-                    // TODO：Change to real script
-                    "Mock/fake_cmd.sh".RunSync();   // Move left arm
-                    "Mock/fake_cmd.sh".RunSync();   // Move right arm
+                    _mainWindowVm.AddOperationLog($"将左臂移动至 {leftArmPosition}");
+                    string moveLeftCmd = $"Scripts/move_leftarm.sh '{leftArmPosition}'";
+                    moveLeftCmd.RunSync();
+
+                    _mainWindowVm.AddOperationLog($"将右臂移动至 {rightArmPosition}");
+                    string moveRightCmd = $"Scripts/move_rightarm.sh '{rightArmPosition}'";
+                    moveLeftCmd.RunSync();
                 });
             }
 
-            // Take snapshot
+            // 2. Take snapshot.
             FsHelper.PurgeDirectory(SnapshotsDir);
 
             _mainWindowVm.AddOperationLog("请等待抓拍完成......");
             await Task.Run(() =>
             {
-                // TODO：Change to real script
-                "Mock/fake_cmd.sh".RunSync();   // Snapshot
+                "Scripts/snapshot_body.sh".RunSync();
             });
 
             await SimulateSnapshotAsync();
 
+            // 3. Find corner.
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "right");
 
