@@ -119,14 +119,19 @@ namespace Argus.Calibration.ViewModels
             _mainWindowVm.AddOperationLog("请等待抓拍完成......");
             await Task.Run(() =>
             {
-                "Scripts/snapshot_body.sh".RunSync();
+                string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                snapshotCmd.RunSync();
             });
 
             await SimulateSnapshotAsync();
 
             // 3. Find corner.
-            LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "left");
-            RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(SnapshotsDir, "right");
+            string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
+            string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
+            LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
+            RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
+            _mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
+            _mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
 
             _mainWindowVm.AddOperationLog("图像角点识别中......");
             await Task.Run(() =>
@@ -145,12 +150,15 @@ namespace Argus.Calibration.ViewModels
         {
             await Task.Run(() =>
             {
-                "cp Images/Left.jpg PositionCheckSnapshots/".RunSync();
-                "cp Images/Right.jpg PositionCheckSnapshots/".RunSync();
-            });
+                FileInfo srcLeftFi = new FileInfo("Images/left/Left1.jpg");
+                FileInfo srcRightFi = new FileInfo("Images/right/Right1.jpg");
 
-            _leftImagePath = "PositionCheckSnapshots/Left.jpg";
-            _rightImagePath = "PositionCheckSnapshots/Right.jpg";
+                FsHelper.EnsureDirectoryExist("PositionCheckSnapshots/left");
+                FsHelper.EnsureDirectoryExist("PositionCheckSnapshots/right");
+
+                srcLeftFi.CopyTo("PositionCheckSnapshots/left/Left.jpg", true);
+                srcRightFi.CopyTo("PositionCheckSnapshots/right/Right.jpg", true);
+            });
         }
     }
 }

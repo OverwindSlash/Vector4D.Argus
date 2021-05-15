@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualBasic;
 
 namespace Argus.Calibration.Helper
@@ -15,9 +16,22 @@ namespace Argus.Calibration.Helper
                 di.Create();
             }
 
+            foreach (var directory in di.GetDirectories())
+            {
+                PurgeDirectory(directory.FullName);
+            }
+
             foreach (var fileInfo in di.GetFiles())
             {
                 fileInfo.Delete();
+            }
+        }
+
+        public static void EnsureDirectoryExist(string dir)
+        {
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
             }
         }
 
@@ -28,17 +42,31 @@ namespace Argus.Calibration.Helper
             {
                 return string.Empty;
             }
-            
-            foreach (var fileInfo in di.GetFiles())
+
+            List<FileInfo> fis = di.GetFiles().ToList();
+            fis.Sort((l, r) => l.Name.CompareTo(r.Name));
+
+            var result = fis.FirstOrDefault(fi => fi.Name.ToLower().Contains(name));
+
+            return result.FullName;
+        }
+
+        public static string GetLastFileByNameFromDirectory(string path, string name)
+        {
+            DirectoryInfo di = new(path);
+            if (!di.Exists)
             {
-                if (fileInfo.Name.ToLower().Contains(name))
-                {
-                    return fileInfo.FullName;
-                }
+                return string.Empty;
             }
 
-            return string.Empty;
+            List<FileInfo> fis = di.GetFiles().ToList();
+            fis.Sort((l, r) => -l.Name.CompareTo(r.Name));
+
+            var result = fis.FirstOrDefault(fi => fi.Name.ToLower().Contains(name));
+
+            return result.FullName;
         }
+
 
         public static List<string> GetImageFilesInFolder(string path)
         {

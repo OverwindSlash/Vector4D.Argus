@@ -42,11 +42,5 @@ namespace Argus.Calibration.Views
             var viewModel = (CalibrateStereoControlViewModel)DataContext!;
             viewModel.CancelOperation();
         }
-
-        private void Result_OnClick(object? sender, RoutedEventArgs e)
-        {
-            var viewModel = (CalibrateStereoControlViewModel)DataContext!;
-            viewModel.ShowStereoCalibrationResult();
-        }
     }
 }

@@ -163,44 +163,39 @@ namespace Argus.Calibration.ViewModels
                 IsInCapture = true;
                 ImagesCaptured = false;
 
+                // 1. Clean up
                 _stereoImagePairFiles.Clear();
 
                 string imageBaseDir = CalibConfig.StereoImagesDir;
-                if (!Directory.Exists(imageBaseDir))
-                {
-                    Directory.CreateDirectory(imageBaseDir);
-                }
+                FsHelper.EnsureDirectoryExist(imageBaseDir);
+                FsHelper.PurgeDirectory(imageBaseDir);
 
                 string leftImgDir = Path.Combine(imageBaseDir, "left");
                 string rightImgDir = Path.Combine(imageBaseDir, "right");
 
-                FsHelper.PurgeDirectory(leftImgDir);
-                FsHelper.PurgeDirectory(rightImgDir);
-
+                // 2. Move left arm to take snapshot
                 string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile);
                 string[] positions = File.ReadAllText(filepath).Split("\n");
-                for (int i = 1; i <= positions.Length; i++)
+                for (int i = 0; i < positions.Length; i++)
                 {
                     if (_userCancelled)
                     {
                         break;
                     }
 
+                    // 2.1 move left arm
                     mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
                     string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
                     moveLeftCmd.RunSync();
 
+                    // 2.2 take snap shot
+                    string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
+                    snapshotCmd.RunSync();
 
-                    // TODO: Change to real script
-                    "Mock/fake_cmd.sh".RunSync();
+                    await SimulateSnapShotAsync(i, leftImgDir, rightImgDir);
 
-                    string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
-                    string leftSrc = Path.Combine(curDir, "Images", "left", $"Left{i}.jpg");
-                    string leftDest = Path.Combine(curDir, leftImgDir, $"Left{i:D2}.jpg");
-                    string rightSrc = Path.Combine(curDir, "Images", "right", $"Right{i}.jpg");
-                    string rightDest = Path.Combine(curDir, rightImgDir, $"Right{i:D2}.jpg");
-                    await SimulateSnapShotAsync(leftSrc, leftDest, rightSrc, rightDest);
-
+                    string leftDest = FsHelper.GetLastFileByNameFromDirectory(leftImgDir, "left");
+                    string rightDest = FsHelper.GetLastFileByNameFromDirectory(rightImgDir, "right");
                     FileInfo leftFi = new FileInfo(leftDest);
                     FileInfo rightFi = new FileInfo(rightDest);
 
@@ -213,7 +208,7 @@ namespace Argus.Calibration.ViewModels
                     _leftImageFiles.Add(leftFi.FullName);
                     _rightImageFiles.Add(rightFi.FullName);
 
-                    SelectedImagePareIndex = i - 1;
+                    SelectedImagePareIndex = i;
                 }
 
                 ImagesCaptured = true;
@@ -223,24 +218,27 @@ namespace Argus.Calibration.ViewModels
             });
         }
 
-        private static async Task SimulateSnapShotAsync(string leftSrc, string leftDest, string rightSrc, string rightDest)
+        private static async Task SimulateSnapShotAsync(int index, string leftImgDir, string rightImgDir)
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                await Task.Run(() =>
-                {
-                    $"cp -r {leftSrc} {leftDest}".RunSync();
-                    $"cp -r {rightSrc} {rightDest}".RunSync();
-                });
-            }
-            else
+            int imageNo = index + 1;
+
+            string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
+            string leftSrc = Path.Combine(curDir, "Images", "left", $"Left{imageNo}.jpg");
+            string leftDest = Path.Combine(curDir, leftImgDir, $"Left{imageNo:D2}.jpg");
+            string rightSrc = Path.Combine(curDir, "Images", "right", $"Right{imageNo}.jpg");
+            string rightDest = Path.Combine(curDir, rightImgDir, $"Right{imageNo:D2}.jpg");
+
+            FsHelper.EnsureDirectoryExist(Path.Combine(curDir, leftImgDir));
+            FsHelper.EnsureDirectoryExist(Path.Combine(curDir, rightImgDir));
+
+            await Task.Run(() =>
             {
                 FileInfo srcLeftFi = new FileInfo(leftSrc);
                 FileInfo srcRightFi = new FileInfo(rightSrc);
 
                 srcLeftFi.CopyTo(leftDest);
                 srcRightFi.CopyTo(rightDest);
-            }
+            });
         }
 
         public void CancelOperation()
@@ -299,11 +297,6 @@ namespace Argus.Calibration.ViewModels
 
                 mainWindowVm.StereoCalibrated = true;
             });
-        }
-
-        public void ShowStereoCalibrationResult()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
