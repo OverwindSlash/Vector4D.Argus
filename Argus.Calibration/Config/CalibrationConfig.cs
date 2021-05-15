@@ -60,8 +60,7 @@ namespace Argus.Calibration.Config
         public int TopicTimeout { get; set; }
         public int XmlRpcTimeout { get; set; }
 
-        public string YamlFileDir { get; set; }
-        public string XmlFileDir { get; set; }
+        public string CalibrationResultDir { get; set; }
 
         private const string jsonFilename = "calib-config.json";
 
@@ -163,8 +162,7 @@ namespace Argus.Calibration.Config
                 TopicTimeout = calibConfig.TopicTimeout;
                 XmlRpcTimeout = calibConfig.XmlRpcTimeout;
 
-                YamlFileDir = calibConfig.YamlFileDir;
-                XmlFileDir = calibConfig.XmlFileDir;
+                CalibrationResultDir = calibConfig.CalibrationResultDir;
             }
             catch (Exception ex)
             {

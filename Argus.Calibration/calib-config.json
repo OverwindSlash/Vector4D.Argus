@@ -47,6 +47,5 @@
   "TopicTimeout": 20000,
   "XmlRpcTimeout": 20000,
 
-  "YamlFileDir": "CalibrationResults",
-  "XmlFileDir": "CalibrationResults"
+  "CalibrationResultDir": "CalibrationResults"
 }

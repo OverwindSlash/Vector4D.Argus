@@ -67,6 +67,15 @@ namespace Argus.Calibration.Helper
             return result.FullName;
         }
 
+        public static string GetHomeDirectory()
+        {
+            string homePath = ((Environment.OSVersion.Platform == PlatformID.Unix ||
+                                Environment.OSVersion.Platform == PlatformID.MacOSX)
+                ? Environment.GetEnvironmentVariable("HOME")
+                : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%"))!;
+
+            return homePath;
+        }
 
         public static List<string> GetImageFilesInFolder(string path)
         {
