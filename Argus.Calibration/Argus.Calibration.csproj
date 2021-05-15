@@ -28,8 +28,11 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="Models\**" />
-      <Compile Update="Views\ScCalibrateStereoControl.axaml.cs">
-        <DependentUpon>ScCalibrateStereoControl.axaml</DependentUpon>
+      <Compile Update="Views\CalibrateStereoControl.axaml.cs">
+        <DependentUpon>CalibrateStereoControl.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\CheckPositionControl.axaml.cs">
+        <DependentUpon>CheckPositionControl.axaml</DependentUpon>
       </Compile>
       <None Update="calib-config.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

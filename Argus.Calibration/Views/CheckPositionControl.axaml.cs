@@ -29,12 +29,12 @@ namespace Argus.Calibration.Views
 
         public void InitDataContext(StereoTypes stereoType)
         {
-            DataContext = new ScCheckPositionControlViewModel(stereoType, _windowViewModel);
+            DataContext = new CheckPositionControlViewModel(stereoType, _windowViewModel);
         }
 
         public async Task CheckPositionAsync()
         {
-            var viewModel = (ScCheckPositionControlViewModel) DataContext!;
+            var viewModel = (CheckPositionControlViewModel) DataContext!;
             await viewModel.CheckPositionAsync();
         }
     }

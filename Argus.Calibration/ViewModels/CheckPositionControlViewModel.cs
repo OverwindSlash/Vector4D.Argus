@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
 {
-    public class ScCheckPositionControlViewModel : ViewModelBase
+    public class CheckPositionControlViewModel : ViewModelBase
     {
         private const string SnapshotsDir = "PositionCheckSnapshots";
 
@@ -65,7 +65,7 @@ namespace Argus.Calibration.ViewModels
         public bool FoundCornersInLeftImage { get; private set; }
         public bool FoundCornersInRightImage { get; private set; }
 
-        public ScCheckPositionControlViewModel(StereoTypes stereoType, MainWindowViewModel mainWindowVm)
+        public CheckPositionControlViewModel(StereoTypes stereoType, MainWindowViewModel mainWindowVm)
         {
             _stereoType = stereoType;
             _mainWindowVm = mainWindowVm;
@@ -109,7 +109,7 @@ namespace Argus.Calibration.ViewModels
 
                     _mainWindowVm.AddOperationLog($"将右臂移动至 {rightArmPosition}");
                     string moveRightCmd = $"Scripts/move_rightarm.sh '{rightArmPosition}'";
-                    moveLeftCmd.RunSync();
+                    moveRightCmd.RunSync();
                 });
             }
 

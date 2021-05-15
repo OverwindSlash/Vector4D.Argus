@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
 {
-    public class ScCalibrateStereoControlViewModel : ViewModelBase
+    public class CalibrateStereoControlViewModel : ViewModelBase
     {
         private ObservableCollection<string> _stereoImagePairFiles;
         private int _selectedStereoImagePairIndex;
@@ -143,7 +143,7 @@ namespace Argus.Calibration.ViewModels
         }
 
 
-        public ScCalibrateStereoControlViewModel()
+        public CalibrateStereoControlViewModel()
         {
             _leftImageFiles = new List<string>();
             _rightImageFiles = new List<string>();

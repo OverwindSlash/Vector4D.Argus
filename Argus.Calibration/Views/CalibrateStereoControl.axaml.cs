@@ -11,7 +11,7 @@ namespace Argus.Calibration.Views
         public ScCalibrateStereoControl()
         {
             InitializeComponent();
-            DataContext = new ScCalibrateStereoControlViewModel();
+            DataContext = new CalibrateStereoControlViewModel();
         }
 
         private void InitializeComponent()
@@ -24,7 +24,7 @@ namespace Argus.Calibration.Views
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
 
-            var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
+            var viewModel = (CalibrateStereoControlViewModel)DataContext!;
             await viewModel.CaptureStereoImages(windowViewModel);
         }
 
@@ -33,19 +33,19 @@ namespace Argus.Calibration.Views
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
 
-            var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
+            var viewModel = (CalibrateStereoControlViewModel)DataContext!;
             viewModel.CalibrateStereo(windowViewModel);
         }
 
         private void Cancel_OnClick(object? sender, RoutedEventArgs e)
         {
-            var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
+            var viewModel = (CalibrateStereoControlViewModel)DataContext!;
             viewModel.CancelOperation();
         }
 
         private void Result_OnClick(object? sender, RoutedEventArgs e)
         {
-            var viewModel = (ScCalibrateStereoControlViewModel)DataContext!;
+            var viewModel = (CalibrateStereoControlViewModel)DataContext!;
             viewModel.ShowStereoCalibrationResult();
         }
     }
