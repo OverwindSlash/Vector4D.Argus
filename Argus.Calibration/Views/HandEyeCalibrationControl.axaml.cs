@@ -33,6 +33,12 @@ namespace Argus.Calibration.Views
             viewModel.SetArm(arm);
         }
 
+        public void SetStereoTypes(StereoTypes stereoType)
+        {
+            var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
+            viewModel.SetStereoTypes(stereoType);
+        }
+
         private void HandEyeCalibrate_OnClick(object? sender, RoutedEventArgs e)
         {
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
@@ -41,5 +47,7 @@ namespace Argus.Calibration.Views
             var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
             viewModel.CalibrateHandEye(windowViewModel);
         }
+
+        
     }
 }

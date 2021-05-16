@@ -7,4 +7,4 @@ echo "snapshot save dir: " $dir
 
 ~/RJ1400/vision/src/Cpp_Save/Cpp_Save
 
-sleep 3
+sleep 2

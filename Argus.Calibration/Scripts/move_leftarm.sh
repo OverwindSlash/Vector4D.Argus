@@ -32,4 +32,4 @@ q2u_rpy_r: ${array[3]}
 q2u_rpy_p: ${array[4]}
 q2u_rpy_y: ${array[5]}"
 
-sleep 5
+sleep 2

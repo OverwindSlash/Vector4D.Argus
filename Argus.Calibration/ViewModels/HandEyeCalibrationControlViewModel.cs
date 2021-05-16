@@ -21,6 +21,7 @@ namespace Argus.Calibration.ViewModels
         private Subscriber<Image>? _subscriber;
 
         private RobotArms _operationArm;
+        private StereoTypes _stereoTypes;
 
         private string _message;
         private bool _isInCalibration;
@@ -81,6 +82,11 @@ namespace Argus.Calibration.ViewModels
         public void SetArm(RobotArms arm)
         {
             _operationArm = arm;
+        }
+
+        public void SetStereoTypes(StereoTypes stereoType)
+        {
+            _stereoTypes = stereoType;
         }
 
         public async Task CalibrateHandEye(MainWindowViewModel mainWindowVm)

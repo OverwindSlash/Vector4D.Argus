@@ -14,7 +14,6 @@ namespace Argus.Calibration.ViewModels
         private const string SnapshotsDir = "PositionCheckSnapshots";
 
         private StereoTypes _stereoType;
-        private MainWindowViewModel _mainWindowVm;
 
         [NotNull] private string _leftImagePath;
         public string LeftImagePath
@@ -65,15 +64,14 @@ namespace Argus.Calibration.ViewModels
         public bool FoundCornersInLeftImage { get; private set; }
         public bool FoundCornersInRightImage { get; private set; }
 
-        public CheckPositionControlViewModel(StereoTypes stereoType, MainWindowViewModel mainWindowVm)
+        public CheckPositionControlViewModel(StereoTypes stereoType)
         {
             _stereoType = stereoType;
-            _mainWindowVm = mainWindowVm;
         }
 
-        public async Task CheckPositionAsync()
+        public async Task CheckPositionAsync(MainWindowViewModel mainWindowVm)
         {
-            _mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
+            mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
 
             // 1. Move robot arms to snapshot positions.
             if (_stereoType == StereoTypes.BodyStereo)
@@ -84,7 +82,7 @@ namespace Argus.Calibration.ViewModels
 
                 await Task.Run(() =>
                 {
-                    _mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
+                    mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
                     string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
                     moveLeftCmd.RunSync();
                 });
@@ -103,11 +101,11 @@ namespace Argus.Calibration.ViewModels
                 // Move left and right arm to initial position
                 await Task.Run(() =>
                 {
-                    _mainWindowVm.AddOperationLog($"将左臂移动至 {leftArmPosition}");
+                    mainWindowVm.AddOperationLog($"将左臂移动至 {leftArmPosition}");
                     string moveLeftCmd = $"Scripts/move_leftarm.sh '{leftArmPosition}'";
                     moveLeftCmd.RunSync();
 
-                    _mainWindowVm.AddOperationLog($"将右臂移动至 {rightArmPosition}");
+                    mainWindowVm.AddOperationLog($"将右臂移动至 {rightArmPosition}");
                     string moveRightCmd = $"Scripts/move_rightarm.sh '{rightArmPosition}'";
                     moveRightCmd.RunSync();
                 });
@@ -116,7 +114,7 @@ namespace Argus.Calibration.ViewModels
             // 2. Take snapshot.
             FsHelper.PurgeDirectory(SnapshotsDir);
 
-            _mainWindowVm.AddOperationLog("请等待抓拍完成......");
+            mainWindowVm.AddOperationLog("请等待抓拍完成......");
             await Task.Run(() =>
             {
                 string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
@@ -130,10 +128,10 @@ namespace Argus.Calibration.ViewModels
             string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
-            _mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
-            _mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
+            mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
+            mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
 
-            _mainWindowVm.AddOperationLog("图像角点识别中......");
+            mainWindowVm.AddOperationLog("图像角点识别中......");
             await Task.Run(() =>
             {
                 FoundCornersInLeftImage = CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
@@ -143,7 +141,7 @@ namespace Argus.Calibration.ViewModels
             this.RaisePropertyChanged(nameof(LeftImage));
             this.RaisePropertyChanged(nameof(RightImage));
 
-            _mainWindowVm.AddOperationLog("抓拍完成");
+            mainWindowVm.AddOperationLog("抓拍完成");
         }
 
         private async Task SimulateSnapshotAsync()

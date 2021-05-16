@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Argus.Calibration.Config;
 
 namespace Argus.Calibration.ViewModels
 {
@@ -19,6 +20,8 @@ namespace Argus.Calibration.ViewModels
         private List<string> _rightImageFiles;
         private string _selectedLeftImagePath;
         private string _selectedRightImagePath;
+
+        private StereoTypes _stereoType;
 
         private bool _isInCapture;
         private bool _isInCalibration;
@@ -143,12 +146,14 @@ namespace Argus.Calibration.ViewModels
         }
 
 
-        public CalibrateStereoControlViewModel()
+        public CalibrateStereoControlViewModel(StereoTypes stereoType)
         {
             _leftImageFiles = new List<string>();
             _rightImageFiles = new List<string>();
             _stereoImagePairFiles = new ObservableCollection<string>();
-            
+
+            _stereoType = stereoType;
+
             IsInCapture = false;
             IsInCalibration = false;
             ImagesCaptured = false;
@@ -173,42 +178,85 @@ namespace Argus.Calibration.ViewModels
                 string leftImgDir = Path.Combine(imageBaseDir, "left");
                 string rightImgDir = Path.Combine(imageBaseDir, "right");
 
-                // 2. Move left arm to take snapshot
-                string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile);
+                // 2. Move arm to take snapshot
+                bool isBodyStereo = (_stereoType == StereoTypes.BodyStereo);
+                string filepath = isBodyStereo ? Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile)   // Body Stereo
+                        : Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPositionFiles[(int)_stereoType]);           // Arm Tool Stereo
                 string[] positions = File.ReadAllText(filepath).Split("\n");
-                for (int i = 0; i < positions.Length; i++)
+
+                // 2.1 If not body stereo, then first move arm which attach tool.
+                int startIndex = 0;
+
+                bool isLeftArmTool = (int)_stereoType % 2 == 0;     // Is left or right arm tool
+                string moveToolArmCmd = isLeftArmTool ? "move_leftarm.sh" : "move_rightarm.sh";
+                string moveNonToolArmCmd = isLeftArmTool ? "move_rightarm.sh" : "move_leftarm.sh";
+
+                if (!isBodyStereo)
+                {
+                    await Task.Run(() =>
+                    {
+                        string toolPrefix = isLeftArmTool ? "左" : "右";
+                        mainWindowVm.AddOperationLog($"将{toolPrefix}臂移动至 {positions[0]}");
+                        string moveToolArmTask = $"Scripts/{moveToolArmCmd} '{positions[0]}'";
+                        moveToolArmTask.RunSync();
+                    });
+
+                    startIndex = 1;
+                }
+
+                // 2.2 Move arm to snapshot position.
+                int imageNo = 1;
+                for (int i = startIndex; i < positions.Length; i++, imageNo++)
                 {
                     if (_userCancelled)
                     {
                         break;
                     }
 
-                    // 2.1 move left arm
-                    mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
-                    string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
-                    moveLeftCmd.RunSync();
+                    // 1. Move robot arms to snapshot positions.
+                    if (isBodyStereo)
+                    {
+                        // 1.1 Body stereo check only need move left arm to initial position
+                        await Task.Run(() =>
+                        {
+                            mainWindowVm.AddOperationLog($"将左臂移动至 {positions[i]}");
+                            string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[i]}'";
+                            moveLeftCmd.RunSync();
+                        });
+                    }
+                    else
+                    {
+                        // Move left and right arm to initial position
+                        await Task.Run(() =>
+                        {
+                            string nonToolPrefix = isLeftArmTool ? "右" : "左";
+                            mainWindowVm.AddOperationLog($"将{nonToolPrefix}臂移动至 {positions[i]}");
+                            string moveToolArmTask = $"Scripts/{moveNonToolArmCmd} '{positions[i]}'";
+                            moveToolArmTask.RunSync();
+                        });
+                    }
 
                     // 2.2 take snap shot
                     string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
                     snapshotCmd.RunSync();
 
-                    await SimulateSnapShotAsync(i, leftImgDir, rightImgDir);
+                    await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
 
                     string leftDest = FsHelper.GetLastFileByNameFromDirectory(leftImgDir, "left");
                     string rightDest = FsHelper.GetLastFileByNameFromDirectory(rightImgDir, "right");
                     FileInfo leftFi = new FileInfo(leftDest);
                     FileInfo rightFi = new FileInfo(rightDest);
 
-                    mainWindowVm.AddOperationLog($"{i:D2} 左目图像：{leftFi.FullName}");
-                    mainWindowVm.AddOperationLog($"{i:D2} 右目图像：{rightFi.FullName}");
+                    mainWindowVm.AddOperationLog($"{imageNo:D2} 左目图像：{leftFi.FullName}");
+                    mainWindowVm.AddOperationLog($"{imageNo:D2} 右目图像：{rightFi.FullName}");
 
-                    string content = $"{i}: {leftFi.Name} <--> {rightFi.Name}";
+                    string content = $"{imageNo}: {leftFi.Name} <--> {rightFi.Name}";
                     _stereoImagePairFiles.Add(content);
 
                     _leftImageFiles.Add(leftFi.FullName);
                     _rightImageFiles.Add(rightFi.FullName);
 
-                    SelectedImagePareIndex = i;
+                    SelectedImagePareIndex = _stereoImagePairFiles.Count - 1;
                 }
 
                 ImagesCaptured = true;
@@ -218,10 +266,8 @@ namespace Argus.Calibration.ViewModels
             });
         }
 
-        private static async Task SimulateSnapShotAsync(int index, string leftImgDir, string rightImgDir)
+        private static async Task SimulateSnapShotAsync(int imageNo, string leftImgDir, string rightImgDir)
         {
-            int imageNo = index + 1;
-
             string curDir = System.AppDomain.CurrentDomain.BaseDirectory;
             string leftSrc = Path.Combine(curDir, "Images", "left", $"Left{imageNo}.jpg");
             string leftDest = Path.Combine(curDir, leftImgDir, $"Left{imageNo:D2}.jpg");

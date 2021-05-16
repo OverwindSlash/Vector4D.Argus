@@ -1,8 +1,8 @@
+using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using System.Threading.Tasks;
 
 namespace Argus.Calibration.Views
 {
@@ -11,12 +11,16 @@ namespace Argus.Calibration.Views
         public ScCalibrateStereoControl()
         {
             InitializeComponent();
-            DataContext = new CalibrateStereoControlViewModel();
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
+        }
+
+        public void InitDataContext(StereoTypes stereoType)
+        {
+            DataContext = new CalibrateStereoControlViewModel(stereoType);
         }
 
         private async void Capture_OnClick(object? sender, RoutedEventArgs e)

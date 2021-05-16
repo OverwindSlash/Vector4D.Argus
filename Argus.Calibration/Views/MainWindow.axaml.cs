@@ -52,7 +52,10 @@ namespace Argus.Calibration.Views
         private void ShowCalibrateStereoControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-            _workArea.Children.Add(new ScCalibrateStereoControl());
+            ScCalibrateStereoControl control = new ScCalibrateStereoControl();
+            _workArea.Children.Add(control);
+
+            control.InitDataContext(StereoTypes.BodyStereo);
         }
 
         private void SelectingItemsControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -95,6 +98,7 @@ namespace Argus.Calibration.Views
 
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
             control.SetArm(RobotArms.LeftArm);
+            control.SetStereoTypes(StereoTypes.BodyStereo);
 
             _workArea.Children.Add(control);
         }
@@ -105,6 +109,36 @@ namespace Argus.Calibration.Views
 
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
             control.SetArm(RobotArms.RightArm);
+            control.SetStereoTypes(StereoTypes.BodyStereo);
+
+            _workArea.Children.Add(control);
+        }
+
+        private void ShowTurntableCalibControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+
+            CalibrateTurntableControl control = new CalibrateTurntableControl();
+
+            _workArea.Children.Add(control);
+        }
+
+        private void ShowCalibrateArmStereoControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+            ScCalibrateStereoControl control = new ScCalibrateStereoControl();
+            _workArea.Children.Add(control);
+
+            control.InitDataContext((StereoTypes)_toolTypeCombo.SelectedIndex);
+        }
+
+        private void ShowArmHandEyeCalibControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+
+            HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+            control.SetArm(RobotArms.LeftArm);
+            control.SetStereoTypes((StereoTypes) _toolTypeCombo.SelectedIndex);
 
             _workArea.Children.Add(control);
         }
