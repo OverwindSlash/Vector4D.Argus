@@ -240,7 +240,7 @@ namespace Argus.Calibration.ViewModels
                     string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
                     snapshotCmd.RunSync();
 
-                    await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
+                    //await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
 
                     string leftDest = FsHelper.GetLastFileByNameFromDirectory(leftImgDir, "left");
                     string rightDest = FsHelper.GetLastFileByNameFromDirectory(rightImgDir, "right");

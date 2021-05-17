@@ -121,7 +121,7 @@ namespace Argus.Calibration.ViewModels
                 snapshotCmd.RunSync();
             });
 
-            await SimulateSnapshotAsync();
+            // await SimulateSnapshotAsync();
 
             // 3. Find corner.
             string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
