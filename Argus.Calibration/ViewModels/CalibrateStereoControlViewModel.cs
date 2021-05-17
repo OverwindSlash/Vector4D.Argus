@@ -219,7 +219,7 @@ namespace Argus.Calibration.ViewModels
                         // 1.1 Body stereo check only need move left arm to initial position
                         await Task.Run(() =>
                         {
-                            mainWindowVm.AddOperationLog($"将左臂移动至 {positions[i]}");
+                            mainWindowVm.AddOperationLog($"将左臂移动至位置{imageNo}：{positions[i]}");
                             string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[i]}'";
                             moveLeftCmd.RunSync();
                         });
@@ -230,7 +230,7 @@ namespace Argus.Calibration.ViewModels
                         await Task.Run(() =>
                         {
                             string nonToolPrefix = isLeftArmTool ? "右" : "左";
-                            mainWindowVm.AddOperationLog($"将{nonToolPrefix}臂移动至 {positions[i]}");
+                            mainWindowVm.AddOperationLog($"将{nonToolPrefix}臂移动至位置{imageNo}： {positions[i]}");
                             string moveToolArmTask = $"Scripts/{moveNonToolArmCmd} '{positions[i]}'";
                             moveToolArmTask.RunSync();
                         });

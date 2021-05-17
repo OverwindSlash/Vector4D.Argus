@@ -37,6 +37,12 @@
       <None Update="calib-config.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Handeye\ur10_leftarm_eye_on_base.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Handeye\ur10_rightarm_eye_on_base.yaml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Icons\Arm.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
@@ -196,6 +202,7 @@
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Movement\" />
+      <Folder Include="Handeye\" />
     </ItemGroup>
     <ItemGroup>
       <AvaloniaResource Update="Assets\avalonia-logo.ico">

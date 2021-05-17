@@ -141,7 +141,7 @@ namespace Argus.Calibration.ViewModels
             this.RaisePropertyChanged(nameof(LeftImage));
             this.RaisePropertyChanged(nameof(RightImage));
 
-            mainWindowVm.AddOperationLog("抓拍完成");
+            mainWindowVm.AddOperationLog("抓拍识别完成");
         }
 
         private async Task SimulateSnapshotAsync()

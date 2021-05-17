@@ -51,17 +51,17 @@ namespace Argus.Calibration.ViewModels
             Ros.TopicTimeout = CalibConfig.TopicTimeout;
             Ros.XmlRpcTimeout = CalibConfig.XmlRpcTimeout;
 
-            //_node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
-            //_subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
-            //_subscriber.Subscribe(x =>
-            //{
-            //    int columns = (int)x.width;
-            //    int rows = (int)x.height;
+            _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
+            _subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
+            _subscriber.Subscribe(x =>
+            {
+                int columns = (int)x.width;
+                int rows = (int)x.height;
 
-            //    Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.Skip(4).ToArray());
-            //    LeftImage = new Bitmap(image.ToMemoryStream());
-            //    image.Dispose();
-            //});
+                Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.Skip(4).ToArray());
+                LeftImage = new Bitmap(image.ToMemoryStream());
+                image.Dispose();
+            });
 
             Message = "请等待左侧机载相机画面开始显示";
         }
@@ -135,6 +135,8 @@ namespace Argus.Calibration.ViewModels
                 string rightArmCalibDestFile = Path.Combine(handEyeDestDir, "ur10_rightarm_eye_on_base.yaml");
                 string calibResultDestFile = isLeftArm ? leftArmCalibDestFile : rightArmCalibDestFile;
 
+                SimulateGenerateHandeyeResultFile(handEyeBaseDir, leftArmCalibFile, rightArmCalibFile);
+
                 FileInfo calibResultFi = new FileInfo(calibResultFile);
                 calibResultFi.CopyTo(calibResultDestFile, true);
 
@@ -143,6 +145,23 @@ namespace Argus.Calibration.ViewModels
 
                 IsInCalibration = false;
             });
+        }
+
+        private static void SimulateGenerateHandeyeResultFile(string handEyeBaseDir, string leftArmCalibFile, string rightArmCalibFile)
+        {
+            FsHelper.EnsureDirectoryExist(handEyeBaseDir);
+
+            if (!File.Exists(leftArmCalibFile))
+            {
+                FileInfo mockFi = new FileInfo("Handeye/ur10_leftarm_eye_on_base.yaml");
+                mockFi.CopyTo(leftArmCalibFile);
+            }
+
+            if (!File.Exists(rightArmCalibFile))
+            {
+                FileInfo mockFi = new FileInfo("Handeye/ur10_rightarm_eye_on_base.yaml");
+                mockFi.CopyTo(rightArmCalibFile);
+            }
         }
     }
 }

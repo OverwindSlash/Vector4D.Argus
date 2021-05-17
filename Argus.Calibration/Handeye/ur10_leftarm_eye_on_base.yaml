@@ -1,0 +1,18 @@
+parameters:
+  eye_on_hand: false
+  freehand_robot_movement: false
+  move_group: manipulator
+  move_group_namespace: /
+  namespace: /ur10_ur10_leftarm_eye_on_base/
+  robot_base_frame: base_link
+  robot_effector_frame: wrist_3_link
+  tracking_base_frame: stereo_gazebo_left_camera_optical_frame
+  tracking_marker_frame: aruco_marker_frame
+transformation:
+  qw: 0.8126952871599524
+  qx: -0.580786894084998
+  qy: -0.04088981448296325
+  qz: 0.02325891138149435
+  x: 0.18934914256861468
+  y: 0.27689399608230186
+  z: -0.02107223275896991
