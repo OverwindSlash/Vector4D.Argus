@@ -29,7 +29,7 @@ namespace Argus.Calibration.ViewModels
         {
             get
             {
-                if (_leftImagePath != null)
+                if (!string.IsNullOrEmpty(_leftImagePath))
                 {
                     return new Bitmap(_leftImagePath);
                 }
@@ -52,7 +52,7 @@ namespace Argus.Calibration.ViewModels
         {
             get
             {
-                if (_rightImagePath != null)
+                if (!string.IsNullOrEmpty(_rightImagePath))
                 {
                     return new Bitmap(_rightImagePath);
                 }

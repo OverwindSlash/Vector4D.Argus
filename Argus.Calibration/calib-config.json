@@ -40,8 +40,8 @@
   "CutWireToolRightStereoName": "rightarm_cut_wire",
   "CutWireToolRightArmPositionFile": "rightarm_cut_wire_calib_arm_move_data.txt",
 
-  "RosMasterUri": "http://10.10.20.18:11311",
-  "HostName": "10.10.20.72",
+  "RosMasterUri": "http://192.168.1.15:11311",
+  "HostName": "192.168.1.15",
   "NodeName": "GuiCalibrator",
   "LeftStereoTopic": "/body_right/image_raw",
   "TopicTimeout": 20000,
