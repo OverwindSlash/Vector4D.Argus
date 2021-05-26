@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Argus.Calibration.Helper
@@ -85,6 +86,51 @@ namespace Argus.Calibration.Helper
             Trace.WriteLine(process.StandardError.ReadToEnd());
 
             return process.ExitCode;
+        }
+
+        public static Task<Process> BashCancellable(this string cmd, Action action = null)
+        {
+            var source = new TaskCompletionSource<Process>();
+            var escapedArgs = cmd.Replace("\"", "\\\"");
+            escapedArgs = escapedArgs.Replace(@"\", @"\\");
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "bash",
+                    Arguments = $"-c \"{escapedArgs}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                },
+                EnableRaisingEvents = true
+            };
+            
+            process.Exited += (sender, args) =>
+            {
+                if (action != null)
+                {
+                    action();
+                }
+
+                Trace.WriteLine(process.StandardError.ReadToEnd());
+                Trace.WriteLine(process.StandardOutput.ReadToEnd());
+
+                process.Dispose();
+            };
+
+            try
+            {
+                source.SetResult(process);
+                var start = process.Start();                
+            }
+            catch (Exception e)
+            {
+                source.SetException(e);
+            }
+
+            return source.Task;
         }
     }
 }

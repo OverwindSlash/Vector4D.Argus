@@ -7,8 +7,10 @@ using RosSharp;
 using RosSharp.sensor_msgs;
 using RosSharp.Topic;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
@@ -44,8 +46,15 @@ namespace Argus.Calibration.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isInCalibration, value);
         }
 
+        private Process _openLucidStereo;
+
         public HandEyeCalibrationControlViewModel()
         {
+            // string openLucidStereo = $"Scripts/open_lucid_stereo.sh";
+            // Task<Process> task = openLucidStereo.BashCancellable();
+
+            // _openLucidStereo = task.Result;
+
             Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
             Ros.HostName = CalibConfig.HostName;
             Ros.TopicTimeout = CalibConfig.TopicTimeout;
@@ -86,6 +95,11 @@ namespace Argus.Calibration.ViewModels
             if (_node != null)
             {
                 _node.Dispose();
+            }
+
+            if (_openLucidStereo != null)
+            {
+                _openLucidStereo.Kill();
             }
         }
 
