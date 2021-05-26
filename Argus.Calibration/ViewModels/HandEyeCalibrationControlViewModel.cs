@@ -16,7 +16,7 @@ namespace Argus.Calibration.ViewModels
     public class HandEyeCalibrationControlViewModel : ViewModelBase, IDisposable
     {
         private Bitmap _stereoLeftImage;
-        
+
         private Node? _node;
         private Subscriber<Image>? _subscriber;
 
@@ -58,9 +58,19 @@ namespace Argus.Calibration.ViewModels
                 int columns = (int)x.width;
                 int rows = (int)x.height;
 
-                Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.Skip(4).ToArray());
-                LeftImage = new Bitmap(image.ToMemoryStream());
-                image.Dispose();
+                try
+                {
+                    Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
+                    Mat outImage = new Mat();
+                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+                    LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    image.Dispose();
+                    outImage.Dispose();
+                }
+                catch (Exception e)
+                {
+
+                }
             });
 
             Message = "请等待左侧机载相机画面开始显示";
@@ -117,7 +127,7 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog(Message);
                 mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
                 prepareScript.RunSync();
-                
+
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
                 string calibCmd = $"Scripts/calibrate_eob_handfree.sh {calibScriptParam}";
