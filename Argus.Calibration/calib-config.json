@@ -43,7 +43,7 @@
   "RosMasterUri": "http://192.168.1.15:11311",
   "HostName": "192.168.1.15",
   "NodeName": "GuiCalibrator",
-  "LeftStereoTopic": "/body_right/image_raw",
+  "LeftStereoTopic": "/aruco_tracking/result",
   "TopicTimeout": 20000,
   "XmlRpcTimeout": 20000,
 

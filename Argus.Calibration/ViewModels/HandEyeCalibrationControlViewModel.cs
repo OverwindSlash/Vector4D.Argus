@@ -69,9 +69,16 @@ namespace Argus.Calibration.ViewModels
 
                 try
                 {
-                    Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
+                    // Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
+                    // Mat outImage = new Mat();
+                    // Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+                    // LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    // image.Dispose();
+                    // outImage.Dispose();
+
+                   Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
                     Mat outImage = new Mat();
-                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
                     LeftImage = new Bitmap(outImage.ToMemoryStream());
                     image.Dispose();
                     outImage.Dispose();
@@ -123,8 +130,8 @@ namespace Argus.Calibration.ViewModels
             string rightPrepareScript = "Scripts/calibrate_eob_rightarm.sh";
 
             // TODO: Change to real parameters.
-            string leftCalibScriptParam = "namespace_prefix:=/ur10_leftarm_eye_on_base.yaml";
-            string rightCalibScriptParam = "namespace_prefix:=/ur10_rightarm_eye_on_base.yaml";
+            string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
+            string rightCalibScriptParam = "ur10_rightarm_eye_on_base";
 
             bool isLeftArm = _operationArm == RobotArms.LeftArm;
             string prepareScript = isLeftArm ? leftPrepareScript : rightPrepareScript;
@@ -139,8 +146,8 @@ namespace Argus.Calibration.ViewModels
                 // 1. Prepare handeye infrastructure.
                 Message = "手眼标定环境配置中......";
                 mainWindowVm.AddOperationLog(Message);
-                mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
-                prepareScript.RunSync();
+                //mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
+                //prepareScript.RunSync();
 
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
