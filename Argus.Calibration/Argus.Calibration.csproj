@@ -178,6 +178,9 @@
       <None Update="Scripts\calibrate_eob_rightarm.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Scripts\fake_cmd.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Movement\leftarm_arrester_calib_arm_move_data.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
