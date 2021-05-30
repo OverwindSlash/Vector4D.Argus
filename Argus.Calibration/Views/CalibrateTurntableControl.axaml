@@ -20,6 +20,8 @@
         </StackPanel>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5, 8, 0, 0">
             <TextBlock Text="{Binding CalibFile}" Width="300" HorizontalAlignment="Left" TextAlignment="Left" Margin="20, 20, 0, 0"></TextBlock>
+            <Button Name="OpenRosCore" Content="Open ROS core" Click="OpenRosCore_OnClick"></Button>
+            <Button Name="CloseRosCore" Content="Close ROS core" Click="CloseRosCore_OnClick"></Button>
         </StackPanel>
     </Grid>
 </UserControl>

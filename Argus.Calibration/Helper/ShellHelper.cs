@@ -99,10 +99,10 @@ namespace Argus.Calibration.Helper
                 {
                     FileName = "bash",
                     Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
+                    RedirectStandardOutput = false,
+                    RedirectStandardError = false,
+                    UseShellExecute = true,
+                    CreateNoWindow = false
                 },
                 EnableRaisingEvents = true
             };
