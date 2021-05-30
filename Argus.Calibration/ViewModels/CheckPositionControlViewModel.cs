@@ -29,7 +29,7 @@ namespace Argus.Calibration.ViewModels
         {
             get
             {
-                if (_leftImagePath != null)
+                if (!string.IsNullOrEmpty(_leftImagePath))
                 {
                     return new Bitmap(_leftImagePath);
                 }
@@ -52,7 +52,7 @@ namespace Argus.Calibration.ViewModels
         {
             get
             {
-                if (_rightImagePath != null)
+                if (!string.IsNullOrEmpty(_rightImagePath))
                 {
                     return new Bitmap(_rightImagePath);
                 }
@@ -72,6 +72,14 @@ namespace Argus.Calibration.ViewModels
         public async Task CheckPositionAsync(MainWindowViewModel mainWindowVm)
         {
             mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
+
+            // 0. Prepare robot arm movement environment.
+            // await Task.Run(() =>
+            //     {
+            //         mainWindowVm.AddOperationLog($"启动机械臂控制节点");
+            //         string moveLeftCmd = $"Scripts/init_leftarm_move.sh";
+            //         moveLeftCmd.Bash();
+            //     });
 
             // 1. Move robot arms to snapshot positions.
             if (_stereoType == StereoTypes.BodyStereo)

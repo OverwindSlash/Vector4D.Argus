@@ -15,6 +15,7 @@ echo "q2u_rpy_r:" ${array[3]}
 echo "q2u_rpy_p:" ${array[4]}
 echo "q2u_rpy_y:" ${array[5]}
 
+source ~/RJ1400/robot/devel/setup.bash 
 rostopic pub -1 /leftarm_radar_chatter armpoint_msg/armpoint "header:
   seq: 0
   stamp:

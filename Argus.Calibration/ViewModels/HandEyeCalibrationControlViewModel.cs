@@ -7,8 +7,10 @@ using RosSharp;
 using RosSharp.sensor_msgs;
 using RosSharp.Topic;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
@@ -16,7 +18,7 @@ namespace Argus.Calibration.ViewModels
     public class HandEyeCalibrationControlViewModel : ViewModelBase, IDisposable
     {
         private Bitmap _stereoLeftImage;
-        
+
         private Node? _node;
         private Subscriber<Image>? _subscriber;
 
@@ -44,8 +46,15 @@ namespace Argus.Calibration.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isInCalibration, value);
         }
 
+        private Process _openLucidStereo;
+
         public HandEyeCalibrationControlViewModel()
         {
+            // string openLucidStereo = $"Scripts/open_lucid_stereo.sh";
+            // Task<Process> task = openLucidStereo.BashCancellable();
+
+            // _openLucidStereo = task.Result;
+
             Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
             Ros.HostName = CalibConfig.HostName;
             Ros.TopicTimeout = CalibConfig.TopicTimeout;
@@ -58,9 +67,26 @@ namespace Argus.Calibration.ViewModels
                 int columns = (int)x.width;
                 int rows = (int)x.height;
 
-                Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.Skip(4).ToArray());
-                LeftImage = new Bitmap(image.ToMemoryStream());
-                image.Dispose();
+                try
+                {
+                    // Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
+                    // Mat outImage = new Mat();
+                    // Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+                    // LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    // image.Dispose();
+                    // outImage.Dispose();
+
+                   Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                    Mat outImage = new Mat();
+                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                    LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    image.Dispose();
+                    outImage.Dispose();
+                }
+                catch (Exception e)
+                {
+
+                }
             });
 
             Message = "请等待左侧机载相机画面开始显示";
@@ -76,6 +102,11 @@ namespace Argus.Calibration.ViewModels
             if (_node != null)
             {
                 _node.Dispose();
+            }
+
+            if (_openLucidStereo != null)
+            {
+                _openLucidStereo.Kill();
             }
         }
 
@@ -99,8 +130,8 @@ namespace Argus.Calibration.ViewModels
             string rightPrepareScript = "Scripts/calibrate_eob_rightarm.sh";
 
             // TODO: Change to real parameters.
-            string leftCalibScriptParam = "namespace_prefix:=/ur10_leftarm_eye_on_base.yaml";
-            string rightCalibScriptParam = "namespace_prefix:=/ur10_rightarm_eye_on_base.yaml";
+            string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
+            string rightCalibScriptParam = "ur10_rightarm_eye_on_base";
 
             bool isLeftArm = _operationArm == RobotArms.LeftArm;
             string prepareScript = isLeftArm ? leftPrepareScript : rightPrepareScript;
@@ -115,9 +146,9 @@ namespace Argus.Calibration.ViewModels
                 // 1. Prepare handeye infrastructure.
                 Message = "手眼标定环境配置中......";
                 mainWindowVm.AddOperationLog(Message);
-                mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
-                prepareScript.RunSync();
-                
+                //mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
+                //prepareScript.RunSync();
+
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
                 string calibCmd = $"Scripts/calibrate_eob_handfree.sh {calibScriptParam}";
