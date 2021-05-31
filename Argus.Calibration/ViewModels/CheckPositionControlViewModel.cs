@@ -74,12 +74,14 @@ namespace Argus.Calibration.ViewModels
             mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
 
             // 0. Prepare robot arm movement environment.
-            // await Task.Run(() =>
-            //     {
-            //         mainWindowVm.AddOperationLog($"启动机械臂控制节点");
-            //         string moveLeftCmd = $"Scripts/init_leftarm_move.sh";
-            //         moveLeftCmd.Bash();
-            //     });
+            await Task.Run(() =>
+                {
+                    mainWindowVm.AddOperationLog($"启动机械臂控制节点");
+                    string initLeftCmd = $"Scripts/init_leftarm_move.sh";
+                    initLeftCmd.Bash();
+                    string initRightCmd = $"Scripts/init_rightarm_move.sh";
+                    initRightCmd.Bash();
+                });
 
             // 1. Move robot arms to snapshot positions.
             if (_stereoType == StereoTypes.BodyStereo)
@@ -102,7 +104,7 @@ namespace Argus.Calibration.ViewModels
                 string[] positions = File.ReadAllText(filepath).Split("\n");
 
                 // Is left or right arm tool
-                bool isLeftArmTool = (int) _stereoType % 2 == 0;
+                bool isLeftArmTool = (int)_stereoType % 2 == 0;
                 string leftArmPosition = isLeftArmTool ? positions[0] : positions[1];
                 string rightArmPosition = isLeftArmTool ? positions[1] : positions[0];
 
@@ -150,6 +152,15 @@ namespace Argus.Calibration.ViewModels
             this.RaisePropertyChanged(nameof(RightImage));
 
             mainWindowVm.AddOperationLog("抓拍识别完成");
+
+            await Task.Run(() =>
+                {
+                    mainWindowVm.AddOperationLog($"关闭机械臂控制节点");
+                    string unInitLeftCmd = $"Scripts/process_stopper.sh arm_move51.py";
+                    unInitLeftCmd.Bash();
+                    string unInitRightCmd = $"Scripts/process_stopper.sh arm_move52.py";
+                    unInitRightCmd.Bash();
+                });
         }
 
         private async Task SimulateSnapshotAsync()
