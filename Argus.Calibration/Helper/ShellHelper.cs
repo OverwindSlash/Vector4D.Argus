@@ -135,5 +135,15 @@ namespace Argus.Calibration.Helper
 
             return source.Task;
         }
+
+        public static void InvokeRosMasterScript(this string cmdParam)
+        {
+            string cmdParamPrefix = @"/home/vector4d/RJ1400/script/";
+            string fullCmdParam = cmdParamPrefix + cmdParam;
+
+            string invokeCmd = $"Scripts/invoke_master_script.sh {fullCmdParam}";
+
+            invokeCmd.Bash();
+        }
     }
 }
