@@ -10,7 +10,8 @@
         Title="Argus 视觉终端标定工具" Height="800" Width="1440"
         TransparencyLevelHint="Transparent"
         Background="Transparent"
-        CanResize="False">
+        CanResize="False"
+        Closing="Window_OnClosing">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>

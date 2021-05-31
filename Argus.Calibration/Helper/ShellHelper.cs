@@ -99,10 +99,10 @@ namespace Argus.Calibration.Helper
                 {
                     FileName = "bash",
                     Arguments = $"-c \"{escapedArgs}\"",
-                    RedirectStandardOutput = false,
-                    RedirectStandardError = false,
-                    UseShellExecute = true,
-                    CreateNoWindow = false
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
                 },
                 EnableRaisingEvents = true
             };
@@ -114,10 +114,13 @@ namespace Argus.Calibration.Helper
                     action();
                 }
 
-                Trace.WriteLine(process.StandardError.ReadToEnd());
-                Trace.WriteLine(process.StandardOutput.ReadToEnd());
-
                 process.Dispose();
+            };
+
+            process.OutputDataReceived += (sender, args) =>
+            {
+                Trace.WriteLine(process.StandardOutput.ReadToEnd());
+                Trace.WriteLine(process.StandardError.ReadToEnd());               
             };
 
             try

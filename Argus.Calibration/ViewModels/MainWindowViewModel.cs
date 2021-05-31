@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using Argus.Calibration.Helper;
 using ReactiveUI;
 
 namespace Argus.Calibration.ViewModels
@@ -58,6 +59,9 @@ namespace Argus.Calibration.ViewModels
             LeftArmCalibrated = true;
             RightArmCalibrated = true;
             SelectedToolType = 0;
+
+
+            $"Scripts/init_roscore.sh".Bash();
         }
 
         public void AddOperationLog(string log)
@@ -65,5 +69,10 @@ namespace Argus.Calibration.ViewModels
             _logs.Add(log);
             NewestLogIndex = _logs.Count - 1;
         }
+
+        public void CleanUp()
+        {
+            $"Scripts/process_stopper.sh roscore".Bash();
+        }      
     }
 }

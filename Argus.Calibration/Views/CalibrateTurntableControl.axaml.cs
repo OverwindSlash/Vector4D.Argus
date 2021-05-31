@@ -11,8 +11,6 @@ namespace Argus.Calibration.Views
 {
     public partial class CalibrateTurntableControl : UserControl
     {
-        private Task<Process> _task;
-
         public CalibrateTurntableControl()
         {
             InitializeComponent();
@@ -26,13 +24,12 @@ namespace Argus.Calibration.Views
 
         private void OpenRosCore_OnClick(object? sender, RoutedEventArgs e)
         {
-            _task = $"Scripts/init_roscore.sh".BashCancellable();
+            $"Scripts/init_roscore.sh".Bash();
         }
 
         private void CloseRosCore_OnClick(object? sender, RoutedEventArgs e)
         {
-            Process process = _task.Result;
-            process.Kill();
+            $"Scripts/process_stopper.sh roscore".Bash();
         }
     }
 }

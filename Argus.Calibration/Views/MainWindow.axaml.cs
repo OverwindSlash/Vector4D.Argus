@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using JetBrains.Annotations;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Argus.Calibration.Views
@@ -141,6 +142,12 @@ namespace Argus.Calibration.Views
             control.SetStereoTypes((StereoTypes) _toolTypeCombo.SelectedIndex);
 
             _workArea.Children.Add(control);
+        }
+
+        private void Window_OnClosing(object? sender, CancelEventArgs e)
+        {
+            var viewModel = (MainWindowViewModel)DataContext!;
+            viewModel.CleanUp();
         }
     }
 }
