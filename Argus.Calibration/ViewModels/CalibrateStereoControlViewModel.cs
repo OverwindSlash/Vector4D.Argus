@@ -168,6 +168,20 @@ namespace Argus.Calibration.ViewModels
                 IsInCapture = true;
                 ImagesCaptured = false;
 
+                // 0. Prepare robot arm movement environment.
+                await Task.Run(() =>
+                {
+                    mainWindowVm.AddOperationLog($"启动机械臂控制节点");
+                    string initLeftCmd = $"Scripts/init_leftarm_move.sh";
+                    initLeftCmd.Bash();
+                    string initRightCmd = $"Scripts/init_rightarm_move.sh";
+                    initRightCmd.Bash();
+                    string initKcbCmd = $"Scripts/init_kcb_control.sh";
+                    initKcbCmd.Bash();
+                    string initTurntableCmd = $"Scripts/init_turntable_move.sh";
+                    initTurntableCmd.Bash();
+                });
+
                 // 1. Clean up
                 _stereoImagePairFiles.Clear();
 
@@ -263,6 +277,18 @@ namespace Argus.Calibration.ViewModels
                 IsInCapture = false;
 
                 mainWindowVm.AddOperationLog("完成双目图片获取");
+
+                // 3. Clean up robot arm movement environment.
+                await Task.Run(() =>
+                {
+                    mainWindowVm.AddOperationLog($"关闭机械臂控制节点");
+                    string unInitLeftCmd = $"Scripts/process_stopper.sh arm_move51.py";
+                    unInitLeftCmd.Bash();
+                    string unInitRightCmd = $"Scripts/process_stopper.sh arm_move52.py";
+                    unInitRightCmd.Bash();
+                    string unInitKcbCmd = $"Scripts/process_stopper.sh kcbCtrl";
+                    unInitKcbCmd.Bash();
+                });
             });
         }
 
@@ -291,7 +317,7 @@ namespace Argus.Calibration.ViewModels
         {
             this._userCancelled = true;
 
-            Thread.Sleep(1000);
+            Thread.Sleep(5000);
 
             this._userCancelled = false;
         }

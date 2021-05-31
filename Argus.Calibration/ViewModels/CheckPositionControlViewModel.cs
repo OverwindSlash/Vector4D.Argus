@@ -153,6 +153,7 @@ namespace Argus.Calibration.ViewModels
 
             mainWindowVm.AddOperationLog("抓拍识别完成");
 
+            // 4. Clean up robot arm movement environment.
             await Task.Run(() =>
                 {
                     mainWindowVm.AddOperationLog($"关闭机械臂控制节点");
