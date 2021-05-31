@@ -69,19 +69,21 @@ namespace Argus.Calibration.ViewModels
 
                 try
                 {
-                    // Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
-                    // Mat outImage = new Mat();
-                    // Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
-                    // LeftImage = new Bitmap(outImage.ToMemoryStream());
-                    // image.Dispose();
-                    // outImage.Dispose();
-
-                   Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                    // For image_raw topic.
+                    Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
                     Mat outImage = new Mat();
-                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
                     LeftImage = new Bitmap(outImage.ToMemoryStream());
                     image.Dispose();
                     outImage.Dispose();
+
+                    // For tracking_result topic
+                    // Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                    // Mat outImage = new Mat();
+                    // Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                    // LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    // image.Dispose();
+                    // outImage.Dispose();
                 }
                 catch (Exception e)
                 {
@@ -138,10 +140,16 @@ namespace Argus.Calibration.ViewModels
             string calibScriptParam = isLeftArm ? leftCalibScriptParam : rightCalibScriptParam;
             string prefix = isLeftArm ? "左" : "右";
             string calibResultFile = isLeftArm ? leftArmCalibFile : rightArmCalibFile;
+            
 
             await Task.Run(() =>
             {
                 IsInCalibration = true;
+
+                // 0. Prepare robot arm movement environment.
+                mainWindowVm.AddOperationLog($"启动机械臂控制节点");
+                string correctLeftCmd = $"Scripts/correct_leftarm.sh";
+                correctLeftCmd.Bash();            
 
                 // 1. Prepare handeye infrastructure.
                 Message = "手眼标定环境配置中......";
