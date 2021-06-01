@@ -60,8 +60,7 @@ namespace Argus.Calibration.ViewModels
             RightArmCalibrated = true;
             SelectedToolType = 0;
 
-
-            $"Scripts/init_roscore.sh".Bash();
+            //$"Scripts/init_roscore.sh".Bash();
         }
 
         public void AddOperationLog(string log)
@@ -72,7 +71,7 @@ namespace Argus.Calibration.ViewModels
 
         public void CleanUp()
         {
-            $"Scripts/process_stopper.sh roscore".Bash();
+            //$"Scripts/process_stopper.sh roscore".Bash();
         }      
     }
 }

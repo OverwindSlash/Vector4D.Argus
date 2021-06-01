@@ -76,11 +76,9 @@ namespace Argus.Calibration.ViewModels
             // 0. Prepare robot arm movement environment.
             await Task.Run(() =>
             {
-                mainWindowVm.AddOperationLog($"启动机械臂控制节点");
-                string initLeftCmd = $"Scripts/init_leftarm_move.sh";
-                initLeftCmd.Bash();
-                string initRightCmd = $"Scripts/init_rightarm_move.sh";
-                initRightCmd.Bash();
+                mainWindowVm.AddOperationLog($"启动Master上的机械臂控制节点");
+                string initArmCmd = $"init_arm_move.sh";
+                initArmCmd.InvokeRosMasterScript();
             });
 
             // 1. Move robot arms to snapshot positions.
@@ -156,11 +154,9 @@ namespace Argus.Calibration.ViewModels
             // 4. Clean up robot arm movement environment.
             await Task.Run(() =>
             {
-                mainWindowVm.AddOperationLog($"关闭机械臂控制节点");
-                string unInitLeftCmd = $"Scripts/process_stopper.sh arm_move51.py";
-                unInitLeftCmd.Bash();
-                string unInitRightCmd = $"Scripts/process_stopper.sh arm_move52.py";
-                unInitRightCmd.Bash();
+                mainWindowVm.AddOperationLog($"关闭Master上的机械臂控制节点");
+                string unInitArmCmd = $"kill_all.sh";
+                unInitArmCmd.InvokeRosMasterScript();
             });
         }
 
