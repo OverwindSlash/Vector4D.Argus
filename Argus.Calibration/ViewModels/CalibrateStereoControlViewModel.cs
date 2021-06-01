@@ -171,15 +171,9 @@ namespace Argus.Calibration.ViewModels
                 // 0. Prepare robot arm movement environment.
                 await Task.Run(() =>
                 {
-                    mainWindowVm.AddOperationLog($"启动机械臂控制节点");
-                    string initLeftCmd = $"Scripts/init_leftarm_move.sh";
-                    initLeftCmd.Bash();
-                    string initRightCmd = $"Scripts/init_rightarm_move.sh";
-                    initRightCmd.Bash();
-                    string initKcbCmd = $"Scripts/init_kcb_control.sh";
-                    initKcbCmd.Bash();
-                    string initTurntableCmd = $"Scripts/init_turntable_move.sh";
-                    initTurntableCmd.Bash();
+                    mainWindowVm.AddOperationLog($"启动Master上的机械臂及转台控制节点");
+                    string initArmCmd = $"init_arm_turntable_move.sh";
+                    initArmCmd.InvokeRosMasterScript();
                 });
 
                 // 1. Clean up
@@ -281,13 +275,9 @@ namespace Argus.Calibration.ViewModels
                 // 3. Clean up robot arm movement environment.
                 await Task.Run(() =>
                 {
-                    mainWindowVm.AddOperationLog($"关闭机械臂控制节点");
-                    string unInitLeftCmd = $"Scripts/process_stopper.sh arm_move51.py";
-                    unInitLeftCmd.Bash();
-                    string unInitRightCmd = $"Scripts/process_stopper.sh arm_move52.py";
-                    unInitRightCmd.Bash();
-                    string unInitKcbCmd = $"Scripts/process_stopper.sh kcbCtrl";
-                    unInitKcbCmd.Bash();
+                    mainWindowVm.AddOperationLog($"关闭Master上的机械臂及转台控制节点");
+                    string unInitArmCmd = $"kill_all.sh";
+                    unInitArmCmd.InvokeRosMasterScript();
                 });
             });
         }

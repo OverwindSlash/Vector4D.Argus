@@ -33,11 +33,11 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <Image Width="600" Height="450" Source="{Binding SelectedLeftImage}" Margin="5"></Image>
-                <Label Name="LeftRms" Content="{Binding LeftRms}" HorizontalAlignment="Center"></Label>
+                <!-- <Label Name="LeftRms" Content="{Binding LeftRms}" HorizontalAlignment="Center"></Label> -->
             </StackPanel>
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <Image Width="600" Height="450" Source="{Binding SelectedRightImage}" Margin="5"></Image>
-                <Label Name="RightRms" Content="{Binding RightRms}" HorizontalAlignment="Center"></Label>
+                <!-- <Label Name="RightRms" Content="{Binding RightRms}" HorizontalAlignment="Center"></Label> -->
             </StackPanel>
         </StackPanel>
     </Grid>
