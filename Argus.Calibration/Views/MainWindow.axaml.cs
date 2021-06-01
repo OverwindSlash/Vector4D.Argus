@@ -119,9 +119,11 @@ namespace Argus.Calibration.Views
         {
             _workArea.Children.Clear();
 
-            CalibrateTurntableControl control = new CalibrateTurntableControl();
+            CalibrateTurntableControl control = new CalibrateTurntableControl();            
 
             _workArea.Children.Add(control);
+
+            control.CalibrateTurntable();
         }
 
         private void ShowCalibrateArmStereoControl(object? sender, RoutedEventArgs e)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ReactiveUI;
+using Argus.Calibration.Helper;
 
 namespace Argus.Calibration.ViewModels
 {
@@ -26,8 +27,21 @@ namespace Argus.Calibration.ViewModels
 
         public CalibrateTurntableControlViewModel()
         {
-            Result = "x:\ny:\nz:\nqw:\nqx:\nqy:\nqz:\n";
+            Result = "转台标定中……\n请等待标定计算完成";
             CalibFile = "转台标定文件：";
+        }
+
+        public void CalibrateTurntable(MainWindowViewModel mainWindowVm)
+        {
+            mainWindowVm.AddOperationLog($"启动Master上的转台标定节点");
+            string calibTurntableCmd = $"calibrate_turntable.sh";
+            calibTurntableCmd.InvokeRosMasterScript();
+        }
+
+        public void Dispose()
+        {
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
         }
     }
 }
