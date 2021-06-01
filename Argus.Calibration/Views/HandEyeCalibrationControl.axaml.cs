@@ -46,8 +46,6 @@ namespace Argus.Calibration.Views
 
             var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
             viewModel.CalibrateHandEye(windowViewModel);
-        }
-
-        
+        }        
     }
 }

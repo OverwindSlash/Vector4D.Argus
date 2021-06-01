@@ -50,10 +50,10 @@ namespace Argus.Calibration.ViewModels
 
         public HandEyeCalibrationControlViewModel()
         {
-            string prepareLeftArmCmd = $"calibrate_lucid_body_stereo_left_arm.sh";
-            prepareLeftArmCmd.InvokeRosMasterScript();
+            string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+            prepareStereoCmd.InvokeRosMasterScript();
 
-            Thread.Sleep(10000);
+            Thread.Sleep(5000);
 
             Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
             Ros.HostName = CalibConfig.HostName;
@@ -102,8 +102,9 @@ namespace Argus.Calibration.ViewModels
                 _node.Dispose();
             }
 
-            string disposeLeftArmCmd = $"kill_all.sh";
-            disposeLeftArmCmd.InvokeRosMasterScript();
+            // 4. Clean up
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
         }
 
         public void SetArm(RobotArms arm)
@@ -122,8 +123,8 @@ namespace Argus.Calibration.ViewModels
             string leftArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_leftarm_eye_on_base.yaml");
             string rightArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_rightarm_eye_on_base.yaml");
 
-            string leftPrepareScript = "Scripts/calibrate_eob_leftarm.sh";
-            string rightPrepareScript = "Scripts/calibrate_eob_rightarm.sh";
+            string leftPrepareScript = "calibrate_lucid_body_stereo_left_arm.sh";
+            string rightPrepareScript = "calibrate_lucid_body_stereo_right_arm.sh";
 
             // TODO: Change to real parameters.
             string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
@@ -135,29 +136,23 @@ namespace Argus.Calibration.ViewModels
             string prefix = isLeftArm ? "左" : "右";
             string calibResultFile = isLeftArm ? leftArmCalibFile : rightArmCalibFile;
 
-
             await Task.Run(() =>
             {
                 IsInCalibration = true;
 
-                // 0. Prepare robot arm movement environment.
-                mainWindowVm.AddOperationLog($"启动机械臂控制节点");
-                //string correctLeftCmd = $"open_lucid_body_stereo.sh";
-                //correctLeftCmd.InvokeRosMasterScript();    
+                // 1. Prepare robot arm movement environment.
+                mainWindowVm.AddOperationLog($"启动Master上的手眼标定配置环境");
+                prepareScript.InvokeRosMasterScript();
 
-                // 1. Prepare handeye infrastructure.
-                Message = "手眼标定环境配置中......";
-                mainWindowVm.AddOperationLog(Message);
-                //mainWindowVm.AddOperationLog($"执行脚本 {prepareScript}");
-                //prepareScript.RunSync();
+                Thread.Sleep(30000);  
 
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
-                string calibCmd = $"Scripts/calibrate_eob_handfree.sh {calibScriptParam}";
+                string calibCmd = $"calibrate_body_stereo_handfree.sh {calibScriptParam}";
                 mainWindowVm.AddOperationLog(Message);
                 mainWindowVm.AddOperationLog($"执行脚本 {calibCmd}");
-                calibCmd.RunSync();
-                Message = $"{prefix}臂自动手眼标定完成";
+                calibCmd.InvokeRosMasterScript();
+                Message = $"请等待{prefix}臂自动手眼标定完成";
                 mainWindowVm.AddOperationLog(Message);
 
                 // 3. Copy calibration result to dest folder.
@@ -176,7 +171,7 @@ namespace Argus.Calibration.ViewModels
                 string leftYaml = $"{prefix}臂手眼参数：{calibResultDestFile}";
                 mainWindowVm.AddOperationLog(leftYaml);
 
-                IsInCalibration = false;
+                IsInCalibration = false;                
             });
         }
 
