@@ -16,6 +16,10 @@
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false,
+            "env": {
+                "ROS_MASTER_URI": "http://10.10.20.18:11311",
+                "ROS_HOSTNAME" : "10.10.20.123"
+            }
         },
         {
             "name": ".NET Core Attach",

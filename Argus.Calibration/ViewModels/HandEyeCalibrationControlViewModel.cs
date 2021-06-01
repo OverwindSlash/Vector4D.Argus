@@ -28,6 +28,8 @@ namespace Argus.Calibration.ViewModels
         private string _message;
         private bool _isInCalibration;
 
+        private bool _isConnectedWithMaster;
+
         public string Message
         {
             get => _message;
@@ -46,14 +48,12 @@ namespace Argus.Calibration.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isInCalibration, value);
         }
 
-        private Process _openLucidStereo;
-
         public HandEyeCalibrationControlViewModel()
         {
-            // string openLucidStereo = $"Scripts/open_lucid_stereo.sh";
-            // Task<Process> task = openLucidStereo.BashCancellable();
+            string prepareLeftArmCmd = $"calibrate_lucid_body_stereo_left_arm.sh";
+            prepareLeftArmCmd.InvokeRosMasterScript();
 
-            // _openLucidStereo = task.Result;
+            Thread.Sleep(10000);
 
             Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
             Ros.HostName = CalibConfig.HostName;
@@ -62,33 +62,29 @@ namespace Argus.Calibration.ViewModels
 
             _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
             _subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
+
             _subscriber.Subscribe(x =>
             {
+                if (x.data == null) { return; }
+
                 int columns = (int)x.width;
                 int rows = (int)x.height;
 
-                try
-                {
-                    // For image_raw topic.
-                    Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
-                    Mat outImage = new Mat();
-                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
-                    LeftImage = new Bitmap(outImage.ToMemoryStream());
-                    image.Dispose();
-                    outImage.Dispose();
+                // For image_raw topic.
+                Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
+                Mat outImage = new Mat();
+                Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+                LeftImage = new Bitmap(outImage.ToMemoryStream());
+                image.Dispose();
+                outImage.Dispose();
 
-                    // For tracking_result topic
-                    // Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
-                    // Mat outImage = new Mat();
-                    // Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
-                    // LeftImage = new Bitmap(outImage.ToMemoryStream());
-                    // image.Dispose();
-                    // outImage.Dispose();
-                }
-                catch (Exception e)
-                {
-
-                }
+                // For tracking_result topic
+                // Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                // Mat outImage = new Mat();
+                // Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                // LeftImage = new Bitmap(outImage.ToMemoryStream());
+                // image.Dispose();
+                // outImage.Dispose();
             });
 
             Message = "请等待左侧机载相机画面开始显示";
@@ -106,10 +102,8 @@ namespace Argus.Calibration.ViewModels
                 _node.Dispose();
             }
 
-            if (_openLucidStereo != null)
-            {
-                _openLucidStereo.Kill();
-            }
+            string disposeLeftArmCmd = $"kill_all.sh";
+            disposeLeftArmCmd.InvokeRosMasterScript();
         }
 
         public void SetArm(RobotArms arm)
@@ -140,7 +134,7 @@ namespace Argus.Calibration.ViewModels
             string calibScriptParam = isLeftArm ? leftCalibScriptParam : rightCalibScriptParam;
             string prefix = isLeftArm ? "左" : "右";
             string calibResultFile = isLeftArm ? leftArmCalibFile : rightArmCalibFile;
-            
+
 
             await Task.Run(() =>
             {
@@ -148,8 +142,8 @@ namespace Argus.Calibration.ViewModels
 
                 // 0. Prepare robot arm movement environment.
                 mainWindowVm.AddOperationLog($"启动机械臂控制节点");
-                string correctLeftCmd = $"Scripts/correct_leftarm.sh";
-                correctLeftCmd.Bash();            
+                //string correctLeftCmd = $"open_lucid_body_stereo.sh";
+                //correctLeftCmd.InvokeRosMasterScript();    
 
                 // 1. Prepare handeye infrastructure.
                 Message = "手眼标定环境配置中......";

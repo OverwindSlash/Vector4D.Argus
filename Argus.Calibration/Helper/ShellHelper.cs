@@ -25,7 +25,7 @@ namespace Argus.Calibration.Helper
                 },
                 EnableRaisingEvents = true
             };
-            
+
             process.Exited += (sender, args) =>
             {
                 if (action != null)
@@ -106,7 +106,7 @@ namespace Argus.Calibration.Helper
                 },
                 EnableRaisingEvents = true
             };
-            
+
             process.Exited += (sender, args) =>
             {
                 if (action != null)
@@ -120,13 +120,13 @@ namespace Argus.Calibration.Helper
             process.OutputDataReceived += (sender, args) =>
             {
                 Trace.WriteLine(process.StandardOutput.ReadToEnd());
-                Trace.WriteLine(process.StandardError.ReadToEnd());               
+                Trace.WriteLine(process.StandardError.ReadToEnd());
             };
 
             try
             {
                 source.SetResult(process);
-                var start = process.Start();                
+                var start = process.Start();
             }
             catch (Exception e)
             {
@@ -134,6 +134,16 @@ namespace Argus.Calibration.Helper
             }
 
             return source.Task;
+        }
+
+        public static void InvokeRosMasterScript(this string remoteCmd, string remoteParam = "")
+        {
+            string remotePathPrefix = @"/home/vector4d/RJ1400/script/";
+            string fullParam = remotePathPrefix + remoteCmd;
+
+            string invokeRemoteCmd = $"Scripts/invoke_master_script.sh {fullParam}";
+
+            invokeRemoteCmd.RunSync();
         }
     }
 }
