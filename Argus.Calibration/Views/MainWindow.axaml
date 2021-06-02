@@ -138,7 +138,7 @@
                 <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="自动深度相机标定">
                     <Image Source="{StaticResource rgbd}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="手动激光雷达标定">
+                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="手动激光雷达标定" Click="ShowLidarCalibControl">
                     <Image Source="{StaticResource lidar}" />
                 </Button>
             </StackPanel>
