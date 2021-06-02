@@ -151,5 +151,14 @@ namespace Argus.Calibration.Views
             var viewModel = (MainWindowViewModel)DataContext!;
             viewModel.CleanUp();
         }
+
+        private void ShowLidarCalibControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
+
+            LidarCalibrationControl control = new LidarCalibrationControl();
+
+            _workArea.Children.Add(control);
+        }
     }
 }
