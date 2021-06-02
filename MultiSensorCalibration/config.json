@@ -1,0 +1,9 @@
+{
+  "RealSenseWidth": 640,
+  "RealSenseHeight": 480,
+  "ChessboardWidth": 11,
+  "ChessboardHeight": 8,
+  "ChessboardSize": 30.0,
+  "StereoImageWidth": 1920,
+  "StereoImageHeight": 1080
+}

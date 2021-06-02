@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4" Version="4.5.2.20210404" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.2.20210404" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Intel.RealSense\Intel.RealSense.csproj" />
+    <ProjectReference Include="..\pointmatcher.net\pointmatcher.net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="realsense2.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="realsense2d.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
