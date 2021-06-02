@@ -170,6 +170,12 @@
       <None Update="Images\right\Right17.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Scripts\annotate_lidar.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Scripts\annotate_photo.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Scripts\calibrate_eob_handfree.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
@@ -180,6 +186,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Scripts\check_lidar.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Scripts\convert_rosbag_pcd.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Scripts\correct_leftarm.sh">
@@ -195,6 +204,12 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Movement\stereo_calib_arm_move_data.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Scripts\get_lidar_ext1.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Scripts\get_lidar_ext2.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Scripts\init_leftarm_move.sh">
@@ -224,13 +239,25 @@
        <None Update="Scripts\invoke_master_script.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+       <None Update="Scripts\open_lidar_corner_file.sh">
+         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+       </None>
+       <None Update="Scripts\open_lidar_msg.sh">
+         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+       </None>
       <None Update="Scripts\open_lucid_stereo.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Scripts\process_stopper.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Scripts\record_lidar_bag.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Scripts\snapshot_body.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Scripts\take_photo_for_lidar.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

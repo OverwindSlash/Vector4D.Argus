@@ -10,9 +10,38 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <StackPanel>
-        <Button Name="CheckLidar" Content="检查激光雷达" Margin="10" Click="CheckLidar_OnClick"></Button>
+    <StackPanel Orientation="Horizontal">
+      <Label Content="标定准备：" VerticalAlignment="Center" Margin="10"></Label>
+      <Button Name="CheckLidar" Content="检查激光雷达" Margin="10" Click="CheckLidar_OnClick"></Button>
+      <Button Name="OpenLidarMsg" Content="打开激光雷达录制" Margin="10" Click="OpenLidarMsg_OnClick"></Button>
     </StackPanel>
+    <StackPanel Orientation="Horizontal" Grid.Row="1">
+      <Label Content="采集数据：" VerticalAlignment="Center" Margin="10"></Label>
+      <Label Content="当前数据编号" VerticalAlignment="Center" Margin="10, 10, 10, 2"></Label>
+      <Label Content="{Binding CurrentDataCollectIndex}" VerticalAlignment="Center" Margin="2, 10, 10, 10"></Label>
+      <Button Name="TakePhoto" Content="拍摄照片" Margin="10" Click="TakePhoto_OnClick"></Button>
+      <Button Name="RecordLidarBag" Content="录制激光雷达数据" Margin="10" Click="RecordLidarBag_OnClick"></Button>
+    </StackPanel>
+    <StackPanel Orientation="Horizontal" Grid.Row="2">
+        <Label Content="标注RGB数据：" VerticalAlignment="Center" Margin="10"></Label>
+        <Label Content="当前数据编号" VerticalAlignment="Center" Margin="10, 10, 10, 2"></Label>
+        <Label Content="{Binding CurrentAnnoPhotoIndex}" VerticalAlignment="Center" Margin="2, 10, 10, 10"></Label>
+        <Button Name="AnnotatePhoto" Content="标注照片" Margin="10" Click="AnnotatePhoto_OnClick"></Button>
+    </StackPanel>
+      <StackPanel Orientation="Horizontal" Grid.Row="3">
+          <Label Content="标注激光雷达数据：" VerticalAlignment="Center" Margin="10"></Label>
+          <Button Name="Convert2Pcd" Content="转换雷达数据格式" Margin="10" Click="Convert2Pcd_OnClick"></Button>
+          <Button Name="OpenFile" Content="打开雷达数据标注结果文件" Margin="10" Click="OpenFile_OnClick"></Button>
+          <Label Content="当前数据编号" VerticalAlignment="Center" Margin="10, 10, 10, 2"></Label>
+          <Label Content="{Binding CurrentAnnoLidarIndex}" VerticalAlignment="Center" Margin="2, 10, 10, 10"></Label>
+          <Button Name="AnnotateLidar" Content="标注激光雷达" Margin="10" Click="AnnotateLidar_OnClick"></Button>
+      </StackPanel>
+      <StackPanel Orientation="Horizontal" Grid.Row="4">
+          <Label Content="外参计算：" VerticalAlignment="Center" Margin="10"></Label>
+          <Button Name="GetExt1" Content="计算外参 方法1" Margin="10" Click="GetExt1_OnClick"></Button>
+          <Button Name="GetExt2" Content="计算外参 方法2" Margin="10" Click="GetExt2_OnClick"></Button>
+      </StackPanel>
   </Grid>
 </UserControl>
