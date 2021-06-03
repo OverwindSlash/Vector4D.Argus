@@ -96,7 +96,8 @@ namespace Argus.Calibration.ViewModels
                 string toolPrefix = isLeftArmTool ? "left" : "right";
 
                 string ip = CalibConfig.ArmToolsIps[(int)_stereoType];
-                string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
+                //string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
+                string prepareStereoCmd = $"open_right_arm_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }            
 
