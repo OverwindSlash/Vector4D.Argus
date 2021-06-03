@@ -23,7 +23,7 @@ namespace Argus.Calibration.ViewModels
         private Subscriber<Image>? _subscriber;
 
         private RobotArms _operationArm;
-        private StereoTypes _stereoTypes;
+        private StereoTypes _stereoType;
 
         private string _message;
         private bool _isInCalibration;
@@ -50,8 +50,52 @@ namespace Argus.Calibration.ViewModels
 
         public HandEyeCalibrationControlViewModel()
         {
-            string prepareStereoCmd = $"open_lucid_body_stereo.sh";
-            prepareStereoCmd.InvokeRosMasterScript();
+            
+        }
+
+        public void Dispose()
+        {
+            if (_stereoLeftImage != null)
+            {
+                _stereoLeftImage.Dispose();
+            }
+
+            if (_node != null)
+            {
+                _node.Dispose();
+            }  
+
+            // 4. Clean up
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
+        }
+
+        public void SetArm(RobotArms arm)
+        {
+            _operationArm = arm;
+        }
+
+        public void SetStereoTypes(StereoTypes stereoType)
+        {
+            _stereoType = stereoType;
+
+            InitRosTopicConnection();
+        }
+
+        private void InitRosTopicConnection()
+        {
+
+            if (_stereoType == StereoTypes.BodyStereo)
+            {
+                string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                prepareStereoCmd.InvokeRosMasterScript();
+            }
+            else
+            {
+                string ip = CalibConfig.ArmToolsIps[(int)_stereoType];
+                string prepareStereoCmd = $"open_arm_stereo.sh '{ip}'";
+                prepareStereoCmd.InvokeRosMasterScript();
+            }            
 
             Thread.Sleep(5000);
 
@@ -88,33 +132,6 @@ namespace Argus.Calibration.ViewModels
             });
 
             Message = "请等待左侧机载相机画面开始显示";
-        }
-
-        public void Dispose()
-        {
-            if (_stereoLeftImage != null)
-            {
-                _stereoLeftImage.Dispose();
-            }
-
-            if (_node != null)
-            {
-                _node.Dispose();
-            }  
-
-            // 4. Clean up
-            string cleanUpCmd = $"kill_all.sh";
-            cleanUpCmd.InvokeRosMasterScript();
-        }
-
-        public void SetArm(RobotArms arm)
-        {
-            _operationArm = arm;
-        }
-
-        public void SetStereoTypes(StereoTypes stereoType)
-        {
-            _stereoTypes = stereoType;
         }
 
         public async Task CalibrateHandEye(MainWindowViewModel mainWindowVm)

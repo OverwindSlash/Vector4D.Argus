@@ -231,6 +231,10 @@ namespace Argus.Calibration.ViewModels
                             string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[i]}'";
                             moveLeftCmd.RunSync();
                         });
+
+                        // 2.2 take snap shot
+                        string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
+                        snapshotCmd.RunSync();
                     }
                     else
                     {
@@ -242,11 +246,12 @@ namespace Argus.Calibration.ViewModels
                             string moveToolArmTask = $"Scripts/{moveNonToolArmCmd} '{positions[i]}'";
                             moveToolArmTask.RunSync();
                         });
-                    }
 
-                    // 2.2 take snap shot
-                    string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
-                    snapshotCmd.RunSync();
+                        // 2.2 take snap shot
+                        string ip = CalibConfig.ArmToolsIps[(int)_stereoType];
+                        string snapshotCmd = $"Scripts/snapshot_arm.sh '{ip}' '{imageBaseDir}'";
+                        snapshotCmd.RunSync();
+                    }                    
 
                     //await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
 
