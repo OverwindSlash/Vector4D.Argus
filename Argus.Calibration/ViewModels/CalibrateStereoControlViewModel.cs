@@ -344,6 +344,9 @@ namespace Argus.Calibration.ViewModels
                 string xmlFile = CameraCalibrator.GenerateXmlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}",
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.RightCameraMatrix, result.RightDistCoeffs,
                     result.Rotation, result.Translation, result.Essential, result.Fundamental);
+                var f = CameraCalibrator.GenerateXmlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}_all",
+                    result.LeftCameraMatrix, result.LeftDistCoeffs, result.RightCameraMatrix, result.RightDistCoeffs,
+                    result.Rotation, result.Translation, result.Essential, result.Fundamental, result.R1, result.R2, result.P1, result.P2);
 
                 FileInfo leftYamlFi = new FileInfo(leftYamlFile);
                 FileInfo rightYamlFi = new FileInfo(rightYamlFile);

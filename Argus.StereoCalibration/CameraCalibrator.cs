@@ -431,5 +431,57 @@ namespace Argus.StereoCalibration
                 return xmlFilename;
             }
         }
+
+        public static string GenerateXmlFile(string xmlDir, string cameraName, Mat<double> leftCameraMatrix, Mat<double> leftDistCoeffs,
+            Mat<double> rightCameraMatrix, Mat<double> rightDistCoeffs, Mat<double> R, Mat<double> T, Mat<double> E, Mat<double> F,
+            Mat<double> R1, Mat<double> R2, Mat<double> P1, Mat<double> P2 )
+        {
+            string xmlFilename = $"{cameraName}.xml";
+            if (Directory.Exists(xmlDir))
+            {
+                xmlFilename = Path.Combine(xmlDir, $"{cameraName}.xml");
+            }
+
+            using (var fs = new FileStorage(xmlFilename, FileStorage.Modes.Write))
+            {
+                fs.Write("M1", leftCameraMatrix);
+                fs.Write("D1", leftDistCoeffs);
+                fs.Write("M2", rightCameraMatrix);
+                fs.Write("D2", rightDistCoeffs);
+                fs.Write("R", R);
+                fs.Write("T", T);
+                fs.Write("E", E);
+                fs.Write("F", F);
+                fs.Write("R1", R1);
+                fs.Write("R2", R2);
+                fs.Write("P1", P1);
+                fs.Write("P2", P2);
+
+                MatWriter(xmlDir, "intrinsic", leftCameraMatrix, leftDistCoeffs);
+
+                return xmlFilename;
+            }
+        }
+
+        private static void MatWriter(string dir, string name, Mat<double> M, Mat<double> D)
+        {
+            string filename = $"{name}.txt";
+            if (Directory.Exists(dir))
+            {
+                filename = Path.Combine(dir, filename);
+            }
+            using (StreamWriter sw = new(filename))
+            {
+                sw.WriteLine("intrinsic");
+                for (int i = 0; i < 3; i++)
+                {
+                    string line = $"{M.At<double>(i, 0)} {M.At<double>(i, 1)} {M.At<double>(i, 2)}";
+                    sw.WriteLine(line);
+                }
+                sw.WriteLine("distortion");
+                string d = $"{D.At<double>(0,0)} {D.At<double>(0, 1)} {D.At<double>(0, 2)} {D.At<double>(0, 3)} {D.At<double>(0, 4)}";
+                sw.WriteLine(d);
+            }
+        }
     }
 }

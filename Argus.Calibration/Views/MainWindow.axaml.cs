@@ -125,7 +125,16 @@ namespace Argus.Calibration.Views
 
             control.CalibrateTurntable();
         }
+        private void ShowRealSenseCalibControl(object? sender, RoutedEventArgs e)
+        {
+            _workArea.Children.Clear();
 
+            CalibrateMultiSensorControl control = new CalibrateMultiSensorControl();
+
+            _workArea.Children.Add(control);
+
+            control.CalibrateRealSense();
+        }
         private void ShowCalibrateArmStereoControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
