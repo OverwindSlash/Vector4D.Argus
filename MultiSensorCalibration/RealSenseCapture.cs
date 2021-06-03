@@ -57,7 +57,7 @@ namespace Argus.MultiSensorCalibration
             }
         }
 
-        public Point2f[] CaptureImageCorners()
+        private Point2f[] CaptureImageCorners()
         {
             using (var frames = pipeline.WaitForFrames())
             using (var color = frames.ColorFrame)
@@ -66,7 +66,7 @@ namespace Argus.MultiSensorCalibration
                 return GetCornersFromImage(colorFrame);
             }
         }
-        public Point2f[] GetCornersFromImage(VideoFrame colorFrame)
+        private Point2f[] GetCornersFromImage(VideoFrame colorFrame)
         {
             using Mat c = new Mat(colorFrame.Height, colorFrame.Width, MatType.CV_8UC3, colorFrame.Data);
             using Mat rgb = new Mat();
@@ -114,6 +114,21 @@ namespace Argus.MultiSensorCalibration
                 i++;
             }
         }
+        public string Capture(string path)
+        {
+            using (var frames = pipeline.WaitForFrames())
+            using (var depth = frames.DepthFrame)
+            using (var color = frames.ColorFrame)
+            {
+                VideoFrame colorFrame = color.As<VideoFrame>();
+                using Mat c = new Mat(colorFrame.Height, colorFrame.Width, MatType.CV_8UC3, colorFrame.Data);
+                using Mat rgb = new Mat();
+                Cv2.CvtColor(c, rgb, ColorConversionCodes.BGR2RGB);
+                string fileName = path + ".png";
+                rgb.ImWrite(fileName);
+                return fileName;
+            }
+        }
 
         public void CaptureAndAlign()
         {
@@ -136,7 +151,7 @@ namespace Argus.MultiSensorCalibration
 
         }
 
-        public List<Point3f> GetPoints(Point2f[] corners, DepthFrame depth, Intrinsics colorIntrinsic)
+        private List<Point3f> GetPoints(Point2f[] corners, DepthFrame depth, Intrinsics colorIntrinsic)
         {
             List<Point3f> points = new List<Point3f>();
             foreach (var corner in corners)
@@ -177,7 +192,7 @@ namespace Argus.MultiSensorCalibration
             }
             return points;
         }
-        public float[] GetPoint(int u, int v)
+        private float[] GetPoint(int u, int v)
         {
             using (var frames = pipeline.WaitForFrames())
             {
@@ -233,7 +248,7 @@ namespace Argus.MultiSensorCalibration
         /// <param name="v">pixel y</param>
         /// <param name="depth"></param>
         /// <returns></returns>
-        public float[] DeprojectPixelToPoint(Intrinsics intrin, int u, int v, float depth)
+        private float[] DeprojectPixelToPoint(Intrinsics intrin, int u, int v, float depth)
         {
             float[] point = new float[3];
 

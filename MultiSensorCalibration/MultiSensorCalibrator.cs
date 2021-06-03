@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenCvSharp;
-using pointmatcher.net;
 
 namespace Argus.MultiSensorCalibration
 {
@@ -37,7 +36,7 @@ namespace Argus.MultiSensorCalibration
             using Mat rightImage = new Mat(rightImageFile);
 
             using var fs = new FileStorage(parameterFile, FileStorage.Modes.Read);
-
+            
             using Mat M1 = fs["M1"].ReadMat();
             using Mat M2 = fs["M2"].ReadMat();
             using Mat D1 = fs["D1"].ReadMat();
@@ -122,23 +121,23 @@ namespace Argus.MultiSensorCalibration
                 // log
                 return (Q, T);
             }
-            var points1 = ConvertPointToDataPoint(pc1);
-            var points2 = ConvertPointToDataPoint(pc2);
-            EuclideanTransform initialTransform = EuclideanTransform.Identity;
-            ICP icp = new ICP();
-            //icp.ReadingDataPointsFilters = new RandomSamplingDataPointsFilter(prob: 0.1f);
-            //icp.ReferenceDataPointsFilters = new SamplingSurfaceNormalDataPointsFilter(SamplingMethod.RandomSampling, ratio: 0.2f);
-            //icp.OutlierFilter = new TrimmedDistOutlierFilter(ratio: 0.5f);
-            EuclideanTransform transform = icp.Compute(points1, points2, initialTransform);
-            var r = transform.rotation;
-            var t = transform.translation;
-            Q.At<float>(0) = r.W;
-            Q.At<float>(1) = r.X;
-            Q.At<float>(2) = r.Y;
-            Q.At<float>(3) = r.Z;
-            T.At<float>(0) = t.X;
-            T.At<float>(1) = t.Y;
-            T.At<float>(2) = t.Z;
+            //var points1 = ConvertPointToDataPoint(pc1);
+            //var points2 = ConvertPointToDataPoint(pc2);
+            //EuclideanTransform initialTransform = EuclideanTransform.Identity;
+            //ICP icp = new ICP();
+            ////icp.ReadingDataPointsFilters = new RandomSamplingDataPointsFilter(prob: 0.1f);
+            ////icp.ReferenceDataPointsFilters = new SamplingSurfaceNormalDataPointsFilter(SamplingMethod.RandomSampling, ratio: 0.2f);
+            ////icp.OutlierFilter = new TrimmedDistOutlierFilter(ratio: 0.5f);
+            //EuclideanTransform transform = icp.Compute(points1, points2, initialTransform);
+            //var r = transform.rotation;
+            //var t = transform.translation;
+            //Q.At<float>(0) = r.W;
+            //Q.At<float>(1) = r.X;
+            //Q.At<float>(2) = r.Y;
+            //Q.At<float>(3) = r.Z;
+            //T.At<float>(0) = t.X;
+            //T.At<float>(1) = t.Y;
+            //T.At<float>(2) = t.Z;
 
             return (Q, T);
         }
@@ -180,14 +179,14 @@ namespace Argus.MultiSensorCalibration
 
             return world;
         }
-        static DataPoints ConvertPointToDataPoint(List<Point3f> points)
-        {
-            DataPoints dataPoints = new DataPoints();
-            if (points.Count > 0)
-            {
-                dataPoints.points = points.Select(p => new DataPoint { point = new System.Numerics.Vector3 { X = p.X, Y = p.Y, Z = p.Z } }).ToArray();
-            }
-            return dataPoints;
-        }
+        //static DataPoints ConvertPointToDataPoint(List<Point3f> points)
+        //{
+        //    DataPoints dataPoints = new DataPoints();
+        //    if (points.Count > 0)
+        //    {
+        //        dataPoints.points = points.Select(p => new DataPoint { point = new System.Numerics.Vector3 { X = p.X, Y = p.Y, Z = p.Z } }).ToArray();
+        //    }
+        //    return dataPoints;
+        //}
     }
 }

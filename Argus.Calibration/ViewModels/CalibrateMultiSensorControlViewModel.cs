@@ -1,5 +1,6 @@
 ﻿using Argus.Calibration.Helper;
 using Argus.MultiSensorCalibration;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,15 @@ namespace Argus.Calibration.ViewModels
     {
         private const string SnapshotsDir = "MultiSensorStereoSnapshots";
         private const string CalibrationResultDir = "CalibrationResults";
+
+        private string result;
+
+        public string Result
+        {
+            get => result;
+            set => this.RaiseAndSetIfChanged(ref result, value);
+        }
+
         public async Task CheckPositionAsync(MainWindowViewModel mainWindowVm)
         {
             mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
@@ -48,9 +58,6 @@ namespace Argus.Calibration.ViewModels
             });
             mainWindowVm.AddOperationLog("抓拍完成......");
 
-            
-
-
         }
 
         public async Task Calibrate(MainWindowViewModel mainWindowVm)
@@ -80,13 +87,15 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog("开始双目与RealSense间标定......");
 
                 (OpenCvSharp.Mat<float> Q, OpenCvSharp.Mat<float> T) p = MultiSensorCalibrator.CalibrateTwoPointCloud(stereoPoints, rsPoints);
+
             });
         }
 
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            string unInitArmCmd = $"kill_all.sh";
+            unInitArmCmd.InvokeRosMasterScript();
         }
     }
 }
