@@ -71,20 +71,20 @@ namespace Argus.Calibration.ViewModels
                 int rows = (int)x.height;
 
                 // For image_raw topic.
-                Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
-                Mat outImage = new Mat();
-                Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
-                LeftImage = new Bitmap(outImage.ToMemoryStream());
-                image.Dispose();
-                outImage.Dispose();
-
-                // For tracking_result topic
-                // Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                // Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
                 // Mat outImage = new Mat();
-                // Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                // Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
                 // LeftImage = new Bitmap(outImage.ToMemoryStream());
                 // image.Dispose();
                 // outImage.Dispose();
+
+                // For tracking_result topic
+                Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                Mat outImage = new Mat();
+                Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                LeftImage = new Bitmap(outImage.ToMemoryStream());
+                image.Dispose();
+                outImage.Dispose();
             });
 
             Message = "请等待左侧机载相机画面开始显示";
@@ -100,7 +100,7 @@ namespace Argus.Calibration.ViewModels
             if (_node != null)
             {
                 _node.Dispose();
-            }
+            }  
 
             // 4. Clean up
             string cleanUpCmd = $"kill_all.sh";

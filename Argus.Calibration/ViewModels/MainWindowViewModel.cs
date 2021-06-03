@@ -71,7 +71,8 @@ namespace Argus.Calibration.ViewModels
 
         public void CleanUp()
         {
-            //$"Scripts/process_stopper.sh roscore".Bash();
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
         }      
     }
 }

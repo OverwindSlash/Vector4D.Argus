@@ -125,11 +125,20 @@ namespace Argus.Calibration.ViewModels
             mainWindowVm.AddOperationLog("请等待抓拍完成......");
             await Task.Run(() =>
             {
-                string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
-                snapshotCmd.RunSync();
+                if (_stereoType == StereoTypes.BodyStereo)
+                {
+                    string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                    snapshotCmd.RunSync();
+                }
+                else
+                {
+                    string ip = CalibConfig.ArmToolsIps[(int)_stereoType];
+                    string snapshotCmd = $"Scripts/snapshot_arm.sh '{ip}' '{SnapshotsDir}'";
+                    snapshotCmd.RunSync();
+                }                
             });
 
-            await SimulateSnapshotAsync();
+            // await SimulateSnapshotAsync();
 
             // 3. Find corner.
             string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
