@@ -100,7 +100,7 @@ namespace Argus.Calibration.ViewModels
             if (_node != null)
             {
                 _node.Dispose();
-            }
+            }  
 
             // 4. Clean up
             string cleanUpCmd = $"kill_all.sh";

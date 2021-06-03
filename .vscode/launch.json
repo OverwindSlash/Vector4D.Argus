@@ -18,7 +18,8 @@
             "stopAtEntry": false,
             "env": {
                 "ROS_MASTER_URI": "http://10.10.20.18:11311",
-                "ROS_HOSTNAME" : "10.10.20.123"
+                "ROS_HOSTNAME" : "10.10.20.123",
+                "LD_LIBRARY_PATH": "/home/ros/RJ1400/vision/src/video_stream_opencv/motu/lib"
             }
         },
         {

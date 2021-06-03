@@ -62,8 +62,8 @@
                             <MenuItem Name="NutDestroyToolRight" Header="螺母破拆工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
                             <MenuItem Name="StripWireToolLeft" Header="剥线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
                             <MenuItem Name="StripWireToolRight" Header="剥线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
-                            <MenuItem Name="ClampWireToolLeft" Header="钳线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
-                            <MenuItem Name="ClampWireToolRight" Header="钳线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ClampWireToolLeft" Header="接线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
+                            <MenuItem Name="ClampWireToolRight" Header="接线工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
                             <MenuItem Name="ClawToolLeft" Header="夹爪工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
                             <MenuItem Name="ClawToolRight" Header="夹爪工具 - 右臂" Click="SelectToolMenu_OnClick"></MenuItem>
                             <MenuItem Name="CutWireToolLeft" Header="断线工具 - 左臂" Click="SelectToolMenu_OnClick"></MenuItem>
@@ -115,8 +115,8 @@
                     <ComboBoxItem>螺母破拆工具 - 右臂</ComboBoxItem>
                     <ComboBoxItem>剥线工具 - 左臂</ComboBoxItem>
                     <ComboBoxItem>剥线工具 - 右臂</ComboBoxItem>
-                    <ComboBoxItem>钳线工具 - 左臂</ComboBoxItem>
-                    <ComboBoxItem>钳线工具 - 右臂</ComboBoxItem>
+                    <ComboBoxItem>接线工具 - 左臂</ComboBoxItem>
+                    <ComboBoxItem>接线工具 - 右臂</ComboBoxItem>
                     <ComboBoxItem>夹爪工具 - 左臂</ComboBoxItem>
                     <ComboBoxItem>夹爪工具 - 右臂</ComboBoxItem>
                     <ComboBoxItem>断线工具 - 左臂</ComboBoxItem>
