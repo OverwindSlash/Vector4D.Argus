@@ -167,6 +167,7 @@ namespace Argus.Calibration.ViewModels
 
                 Thread.Sleep(30000);  
 
+                // TODO: use pre-position calibration for hand stereo.
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
                 string calibCmd = $"calibrate_body_stereo_handfree.sh {calibScriptParam}";

@@ -335,6 +335,7 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog(rightRms);
                 mainWindowVm.AddOperationLog(stereoRms);
 
+                // TODO: Change camera name according to stereo type.
                 string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}_left", result.ImageSize,
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.R1, result.P1);
 
