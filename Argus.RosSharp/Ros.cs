@@ -35,6 +35,7 @@ using RosSharp.Utility;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -119,9 +120,17 @@ namespace RosSharp
 
                 initTask.ContinueWith(t =>
                 {
-                    node.Disposing += DisposeNode;
-                    _nodes.Add(nodeName, node);
-                    tcs.SetResult(node);
+                    try
+                    {
+                        node.Disposing += DisposeNode;
+                        _nodes.Add(nodeName, node);
+                        tcs.SetResult(node);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(e.Message);
+                    }
+                    
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
                 initTask.ContinueWith(

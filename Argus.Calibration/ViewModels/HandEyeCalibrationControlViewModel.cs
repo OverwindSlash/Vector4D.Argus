@@ -97,6 +97,7 @@ namespace Argus.Calibration.ViewModels
 
                 string ip = CalibConfig.ArmToolsIps[(int)_stereoType];
                 //string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
+                // TODO: Add various arm tool stereo open scripts.
                 string prepareStereoCmd = $"open_right_arm_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }            
@@ -108,6 +109,10 @@ namespace Argus.Calibration.ViewModels
             Ros.TopicTimeout = CalibConfig.TopicTimeout;
             Ros.XmlRpcTimeout = CalibConfig.XmlRpcTimeout;
 
+            foreach(var node in Ros.GetNodes())
+            {
+                node.Dispose();
+            }
             _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
             _subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
 
@@ -167,10 +172,30 @@ namespace Argus.Calibration.ViewModels
 
                 Thread.Sleep(30000);  
 
-                // TODO: use pre-position calibration for hand stereo.
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
+
                 string calibCmd = $"calibrate_body_stereo_handfree.sh {calibScriptParam}";
+                if  (_stereoType != StereoTypes.BodyStereo)
+                {
+                    // 2.1 Load arm tool preset file.
+                    string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPresetFiles[(int)_stereoType]);    
+                    string[] positions = File.ReadAllText(filepath).Split("\n");
+
+                    bool isLeftArmTool = (int)_stereoType % 2 == 0;     // Is left or right arm tool
+                    string moveToolArmCmd = isLeftArmTool ? "move_leftarm.sh" : "move_rightarm.sh";
+                    string moveNonToolArmCmd = isLeftArmTool ? "move_rightarm.sh" : "move_leftarm.sh";
+
+                    // 2.2 Move arm which attach tool to init position.
+                    string toolPrefix = isLeftArmTool ? "左" : "右";
+                    mainWindowVm.AddOperationLog($"将{toolPrefix}臂移动至 {positions[0]}");
+                    string moveToolArmTask = $"Scripts/{moveToolArmCmd} '{positions[0]}'";
+                    moveToolArmTask.RunSync();
+
+                    // 2.3 Call script to perform preset postion handeye calibration.
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} temp.txt";
+                }
+                
                 mainWindowVm.AddOperationLog(Message);
                 mainWindowVm.AddOperationLog($"执行脚本 {calibCmd}");
                 calibCmd.InvokeRosMasterScript();

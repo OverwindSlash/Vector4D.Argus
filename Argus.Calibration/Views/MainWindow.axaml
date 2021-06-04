@@ -141,6 +141,9 @@
                 <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="手动激光雷达标定" Click="ShowLidarCalibControl">
                     <Image Source="{StaticResource lidar}" />
                 </Button>
+                <Button Width="36" Height="36" Margin="20,2,2,2" ToolTip.Tip="清理Master节点运行脚本" Click="CleanUpMasterRunningScript">
+                    <PathIcon Data="{StaticResource broom_regular}" />
+                </Button>
             </StackPanel>
             <Border Grid.Row="2" Background="Gray" BorderThickness="1" Margin="2">
             </Border>

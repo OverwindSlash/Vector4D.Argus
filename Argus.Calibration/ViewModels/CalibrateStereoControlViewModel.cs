@@ -335,17 +335,23 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog(rightRms);
                 mainWindowVm.AddOperationLog(stereoRms);
 
-                // TODO: Change camera name according to stereo type.
-                string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}_left", result.ImageSize,
+                // Generate result files.
+                string stereoName = CalibConfig.BodyStereoName;
+                if  (_stereoType != StereoTypes.BodyStereo)
+                {
+                    stereoName = CalibConfig.ArmToolsNames[(int)_stereoType];
+                }
+
+                string leftYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.CalibrationResultDir, $"{stereoName}_left", result.ImageSize,
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.R1, result.P1);
 
-                string rightYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}_right", result.ImageSize,
+                string rightYamlFile = CameraCalibrator.GenerateYamlFile(CalibConfig.CalibrationResultDir, $"{stereoName}_right", result.ImageSize,
                     result.RightCameraMatrix, result.RightDistCoeffs, result.R2, result.P2);
 
-                string xmlFile = CameraCalibrator.GenerateXmlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}",
+                string xmlFile = CameraCalibrator.GenerateXmlFile(CalibConfig.CalibrationResultDir, $"{stereoName}",
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.RightCameraMatrix, result.RightDistCoeffs,
                     result.Rotation, result.Translation, result.Essential, result.Fundamental);
-                var f = CameraCalibrator.GenerateXmlFile(CalibConfig.CalibrationResultDir, $"{CalibConfig.BodyStereoName}_all",
+                var f = CameraCalibrator.GenerateXmlFile(CalibConfig.CalibrationResultDir, $"{stereoName}_all",
                     result.LeftCameraMatrix, result.LeftDistCoeffs, result.RightCameraMatrix, result.RightDistCoeffs,
                     result.Rotation, result.Translation, result.Essential, result.Fundamental, result.R1, result.R2, result.P1, result.P2);
 

@@ -1,4 +1,5 @@
 using Argus.Calibration.Config;
+using Argus.Calibration.Helper;
 using Argus.Calibration.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
@@ -168,6 +169,12 @@ namespace Argus.Calibration.Views
             LidarCalibrationControl control = new LidarCalibrationControl();
 
             _workArea.Children.Add(control);
+        }
+
+        private void CleanUpMasterRunningScript(object? sender, RoutedEventArgs e)
+        {
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
         }
     }
 }
