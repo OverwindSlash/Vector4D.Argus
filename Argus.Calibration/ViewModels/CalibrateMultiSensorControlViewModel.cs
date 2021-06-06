@@ -1,5 +1,5 @@
 ﻿using Argus.Calibration.Helper;
-using Argus.MultiSensorCalibration;
+using Argus.StereoCalibration;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -68,25 +68,29 @@ namespace Argus.Calibration.ViewModels
             string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
             var LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
             var RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
-            //mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
-            //mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
+            mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
+            mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
 
             mainWindowVm.AddOperationLog("图像角点识别中......");
-            var parameterPath = Path.Combine(CalibrationResultDir, "body_total.xml");
-            var stereoPoints = MultiSensorCalibrator.GetPointCloudFromStereo(
-                LeftImagePath, RightImagePath, parameterPath);
+            bool foundLeft= CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
+            bool foundRight=CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
+
             mainWindowVm.AddOperationLog("双目抓拍识别完成");
+            if (!foundLeft || !foundRight)
+            {
+                mainWindowVm.AddOperationLog("存在未识别的角点，请移动标定板位置");
+                return;
+            }
+
+            // copy image files to remote machine
 
             //4 find realsense corner
             await Task.Factory.StartNew(() =>
             {
-                List<OpenCvSharp.Point3f> rsPoints = MultiSensorCalibrator.GetPointCloudFromRealSense();
-
-                mainWindowVm.AddOperationLog("RealSense识别完成");
-                // 5 calibration
-                mainWindowVm.AddOperationLog("开始双目与RealSense间标定......");
-
-                (OpenCvSharp.Mat<float> Q, OpenCvSharp.Mat<float> T) p = MultiSensorCalibrator.CalibrateTwoPointCloud(stereoPoints, rsPoints);
+                mainWindowVm.AddOperationLog("开始远程标定RealSense与双目相机...");
+                string cmd = $"calibrate_rs_stereo_runsh.sh";
+                cmd.InvokeRosMasterScript();
+                mainWindowVm.AddOperationLog("标定结果将显示在界面上，请耐心等待...");
 
             });
         }

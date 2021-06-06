@@ -1,5 +1,5 @@
 #!/bin/bash
-cmd=$1
+cmd=$*
 
 source /opt/ros/melodic/setup.bash
 echo "invoke script on ROS master..."

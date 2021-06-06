@@ -16,7 +16,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Argus.RosSharp\Argus.RosSharp.csproj" />
       <ProjectReference Include="..\Argus.StereoCalibration\Argus.StereoCalibration.csproj" />
-      <ProjectReference Include="..\MultiSensorCalibration\Argus.MultiSensorCalibration.csproj" />
     </ItemGroup>
     <ItemGroup>
       <AvaloniaXaml Remove="Models\**" />
