@@ -31,6 +31,18 @@ namespace Argus.Calibration.Views
 
             var viewModel = (CalibrateMultiSensorControlViewModel)DataContext!;
             viewModel.Calibrate(windowViewModel);
+            Ros.MasterUri = new Uri(viewModel.CalibConfig.RosMasterUri);
+            Ros.HostName = viewModel.CalibConfig.HostName;
+            Ros.TopicTimeout = viewModel.CalibConfig.TopicTimeout;
+            Ros.XmlRpcTimeout = viewModel.CalibConfig.XmlRpcTimeout;
+
+            var node = Ros.InitNodeAsync(viewModel.CalibConfig.NodeName).Result;
+            var subscriber = node.SubscriberAsync<RosSharp.std_msgs.String>(@"/qt_echo_topic").Result;
+
+            subscriber.Subscribe(x =>
+            {
+                viewModel.Result = x.data;
+            });
 
         }
     }
