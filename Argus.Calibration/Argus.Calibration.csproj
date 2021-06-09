@@ -262,14 +262,21 @@
       <None Update="Scripts\take_photo_for_lidar.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Scripts\snapshot_qc_body.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Movement\leftarm_arrester_calib_arm_preset_data.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Movement\rightarm_arrester_calib_arm_move_data.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Movement\rightarm_arrester_calib_arm_preset_data.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
     <ItemGroup>
       <Folder Include="Movement\" />
       <Folder Include="Handeye\" />
-    </ItemGroup>
-    <ItemGroup>
-      <AvaloniaResource Update="Assets\avalonia-logo.ico">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </AvaloniaResource>
     </ItemGroup>
 </Project>

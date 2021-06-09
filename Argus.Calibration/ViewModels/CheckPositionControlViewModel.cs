@@ -79,6 +79,9 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog($"启动Master上的机械臂控制节点");
                 string initArmCmd = $"init_arm_move.sh";
                 initArmCmd.InvokeRosMasterScript();
+
+                string initTurntableCmd = $"init_arm_turntable_move.sh";
+                initTurntableCmd.InvokeRosMasterScript();
             });
 
             // 1. Move robot arms to snapshot positions.
@@ -127,7 +130,9 @@ namespace Argus.Calibration.ViewModels
             {
                 if (_stereoType == StereoTypes.BodyStereo)
                 {
-                    string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                    // TODO: Temp solution for qc stereo
+                    //string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                    string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{SnapshotsDir}'";
                     snapshotCmd.RunSync();
                 }
                 else

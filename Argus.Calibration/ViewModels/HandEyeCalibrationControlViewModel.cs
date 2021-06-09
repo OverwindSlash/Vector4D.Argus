@@ -87,7 +87,9 @@ namespace Argus.Calibration.ViewModels
 
             if (_stereoType == StereoTypes.BodyStereo)
             {
-                string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                // TODO: Temp solution for qc stereo.
+                //string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                string prepareStereoCmd = $"open_qc_body_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }
             else
@@ -149,8 +151,13 @@ namespace Argus.Calibration.ViewModels
             string leftArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_leftarm_eye_on_base.yaml");
             string rightArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_rightarm_eye_on_base.yaml");
 
-            string leftPrepareScript = "calibrate_lucid_body_stereo_left_arm.sh";
-            string rightPrepareScript = "calibrate_lucid_body_stereo_right_arm.sh";
+            string leftPrepareScript = "calibrate_body_stereo_left_arm_auto.sh";
+            string rightPrepareScript = "calibrate_body_stereo_right_arm_auto.sh";
+            if (_stereoType != StereoTypes.BodyStereo)
+            {
+                leftPrepareScript = "calibrate_body_stereo_left_arm_preset.sh";
+                rightPrepareScript = "calibrate_body_stereo_right_arm_preset.sh";
+            }
 
             // TODO: Change to real parameters.
             string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
@@ -175,7 +182,9 @@ namespace Argus.Calibration.ViewModels
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
 
-                string calibCmd = $"calibrate_body_stereo_handfree.sh {calibScriptParam}";
+                // TODO: Temp solution for script param pass
+                //string calibCmd = $"calibrate_body_stereo_handfree.sh '{calibScriptParam}'";
+                string calibCmd = $"calibrate_body_stereo_handfree.sh";
                 if  (_stereoType != StereoTypes.BodyStereo)
                 {
                     // 2.1 Load arm tool preset file.
@@ -186,14 +195,16 @@ namespace Argus.Calibration.ViewModels
                     string moveToolArmCmd = isLeftArmTool ? "move_leftarm.sh" : "move_rightarm.sh";
                     string moveNonToolArmCmd = isLeftArmTool ? "move_rightarm.sh" : "move_leftarm.sh";
 
-                    // 2.2 Move arm which attach tool to init position.
-                    string toolPrefix = isLeftArmTool ? "左" : "右";
-                    mainWindowVm.AddOperationLog($"将{toolPrefix}臂移动至 {positions[0]}");
-                    string moveToolArmTask = $"Scripts/{moveToolArmCmd} '{positions[0]}'";
-                    moveToolArmTask.RunSync();
+                    // 2.2 Move arm which NOT attach tool to init position.
+                    string nonToolPrefix = !isLeftArmTool ? "左" : "右";
+                    mainWindowVm.AddOperationLog($"将{nonToolPrefix}臂移动至 {positions[0]}");
+                    string moveNonToolArmTask = $"Scripts/{moveNonToolArmCmd} '{positions[0]}'";
+                    moveNonToolArmTask.RunSync();
 
                     // 2.3 Call script to perform preset postion handeye calibration.
-                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} temp.txt";
+                    // TODO: Temp solution for script param pass
+                    //calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} temp.txt";
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh";
                 }
                 
                 mainWindowVm.AddOperationLog(Message);
