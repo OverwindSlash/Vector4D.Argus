@@ -24,6 +24,7 @@ namespace Argus.Calibration.ViewModels
         private bool _leftArmCalibrated;
         private bool _rightArmCalibrated;
         private int _selectedToolType;
+        private bool _turntableCalibrated;
 
         public bool StereoCalibrated
         {
@@ -41,6 +42,12 @@ namespace Argus.Calibration.ViewModels
         {
             get => _rightArmCalibrated;
             set => this.RaiseAndSetIfChanged(ref _rightArmCalibrated, value);
+        }
+
+        public bool TurntableCalibrated
+        {
+            get => _turntableCalibrated;
+            set => this.RaiseAndSetIfChanged(ref _turntableCalibrated, value);
         }
 
         public int SelectedToolType

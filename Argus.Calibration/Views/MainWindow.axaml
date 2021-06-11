@@ -4,10 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Argus.Calibration.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1440" d:DesignHeight="900"
         x:Class="Argus.Calibration.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Argus 视觉终端标定工具" Height="800" Width="1440"
+        Title="Argus 视觉终端标定工具" Height="1000" Width="1900"
         TransparencyLevelHint="Transparent"
         Background="Transparent"
         CanResize="False"
@@ -88,9 +88,13 @@
                 <Button Width="36" Height="36" Margin="2" Click="ShowCalibrateStereoControl" ToolTip.Tip="自动机载双目标定">
                     <Image Source="{StaticResource stereo}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2" IsEnabled="{Binding StereoCalibrated}" 
+                <Button Width="36" Height="36" Margin="12,2,2,2" IsEnabled="{Binding StereoCalibrated}" 
                         ToolTip.Tip="自动左臂机载手眼标定" Click="ShowLeftArmHandEyeCalibControl">
                     <Image Source="{StaticResource arm}" />
+                </Button>
+                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding LeftArmCalibrated}"
+                        ToolTip.Tip="左臂标定结果指点验证" Click="ShowLeftArmPointValidationControl">
+                    <PathIcon Data="{StaticResource point_scan_regular}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding StereoCalibrated}" 
                         ToolTip.Tip="自动右臂机载手眼标定" Click="ShowRightArmHandEyeCalibControl">
@@ -100,11 +104,23 @@
                         </Image.RenderTransform>
                     </Image>
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="自动转台标定" IsEnabled="{Binding LeftArmCalibrated}" 
+                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding RightArmCalibrated}"
+                        ToolTip.Tip="右臂标定结果指点验证" Click="ShowRightArmPointValidationControl">
+                    <PathIcon Data="{StaticResource point_scan_regular}">
+                        <PathIcon.RenderTransform>
+                            <ScaleTransform ScaleX="-1"></ScaleTransform>
+                        </PathIcon.RenderTransform>
+                    </PathIcon>
+                </Button>
+                <Button Width="36" Height="36" Margin="12,2,2,2" ToolTip.Tip="自动转台标定" IsEnabled="{Binding LeftArmCalibrated}" 
                         Click="ShowTurntableCalibControl">
                     <Image Source="{StaticResource turntable}" />
                 </Button>
-                <ComboBox Name="ToolType" Width="170" Height="36" Margin="8,2,2,2" 
+                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding TurntableCalibrated}"
+                        ToolTip.Tip="转台标定结果指点验证" Click="ShowTurntablePointValidationControl">
+                    <PathIcon Data="{StaticResource my_location_regular}" />
+                </Button>
+                <ComboBox Name="ToolType" Width="170" Height="36" Margin="12,2,2,2" 
                           SelectedIndex="{Binding SelectedToolType}" 
                           SelectionChanged="SelectingItemsControl_OnSelectionChanged">
                     <ComboBoxItem>避雷器工具 - 左臂</ComboBoxItem>
@@ -135,11 +151,21 @@
                         </Image.RenderTransform>
                     </Image>
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="自动深度相机标定" Click="ShowRealSenseCalibControl">
+                <Button Width="36" Height="36" Margin="2" IsEnabled="{Binding TurntableCalibrated}"
+                        ToolTip.Tip="转台标定结果指点验证" Click="ShowArmToolPointValidationControl">
+                    <PathIcon Data="{StaticResource my_location_regular}" />
+                </Button>
+                <Button Width="36" Height="36" Margin="12,2,2,2" ToolTip.Tip="自动深度相机标定" Click="ShowRealSenseCalibControl">
                     <Image Source="{StaticResource rgbd}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="8,2,2,2" ToolTip.Tip="手动激光雷达标定" Click="ShowLidarCalibControl">
+                <Button Width="36" Height="36" Margin="2" ToolTip.Tip="深度相机标定结果指点验证" Click="ShowDepthCameraPointValidationControl">
+                    <PathIcon Data="{StaticResource my_location_regular}" />
+                </Button>
+                <Button Width="36" Height="36" Margin="12,2,2,2" ToolTip.Tip="手动激光雷达标定" Click="ShowLidarCalibControl">
                     <Image Source="{StaticResource lidar}" />
+                </Button>
+                <Button Width="36" Height="36" Margin="2" ToolTip.Tip="激光雷达标定结果指点验证" Click="ShowLidarPointValidationControl">
+                    <PathIcon Data="{StaticResource my_location_regular}" />
                 </Button>
                 <Button Width="36" Height="36" Margin="20,2,2,2" ToolTip.Tip="清理Master节点运行脚本" Click="CleanUpMasterRunningScript">
                     <PathIcon Data="{StaticResource broom_regular}" />

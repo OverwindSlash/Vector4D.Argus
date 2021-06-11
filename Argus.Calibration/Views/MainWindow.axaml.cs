@@ -176,5 +176,35 @@ namespace Argus.Calibration.Views
             string cleanUpCmd = $"kill_all.sh";
             cleanUpCmd.InvokeRosMasterScript();
         }
+
+        private void ShowLeftArmPointValidationControl(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ShowRightArmPointValidationControl(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ShowTurntablePointValidationControl(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ShowArmToolPointValidationControl(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ShowDepthCameraPointValidationControl(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ShowLidarPointValidationControl(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
