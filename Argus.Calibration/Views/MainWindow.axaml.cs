@@ -206,5 +206,10 @@ namespace Argus.Calibration.Views
         {
             throw new System.NotImplementedException();
         }
+
+        private void ResetMasterRemoteNode(object? sender, RoutedEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
