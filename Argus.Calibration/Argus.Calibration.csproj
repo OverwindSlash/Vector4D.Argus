@@ -8,10 +8,10 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="0.10.0" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.0" />
-        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.0" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.0" />
+        <PackageReference Include="Avalonia" Version="0.10.6" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.6" />
+        <PackageReference Include="Avalonia.Diagnostics" Version="0.10.6" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.6" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Argus.RosSharp\Argus.RosSharp.csproj" />
@@ -33,6 +33,9 @@
       </Compile>
       <Compile Update="Views\CheckPositionControl.axaml.cs">
         <DependentUpon>CheckPositionControl.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\ArmPointControl.axaml.cs">
+        <DependentUpon>ArmPointControl.axaml</DependentUpon>
       </Compile>
       <None Update="calib-config.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -116,6 +119,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Images\left\Left17.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Images\no-image.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Images\right\Right1.jpg">

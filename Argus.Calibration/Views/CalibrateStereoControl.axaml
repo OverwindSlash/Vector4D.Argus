@@ -12,7 +12,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="260"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <DockPanel Grid.RowSpan="4" Grid.Column="0">
@@ -32,13 +32,16 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                <Image Width="600" Height="450" Source="{Binding SelectedLeftImage}" Margin="5"></Image>
-                <!-- <Label Name="LeftRms" Content="{Binding LeftRms}" HorizontalAlignment="Center"></Label> -->
+                <Image Width="800" Height="600" Source="{Binding SelectedLeftImage}" Margin="5"></Image>
+                <Label Name="LeftRms" Content="{Binding LeftRms}" HorizontalAlignment="Center" Margin="5"></Label>
             </StackPanel>
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                <Image Width="600" Height="450" Source="{Binding SelectedRightImage}" Margin="5"></Image>
-                <!-- <Label Name="RightRms" Content="{Binding RightRms}" HorizontalAlignment="Center"></Label> -->
+                <Image Width="800" Height="600" Source="{Binding SelectedRightImage}" Margin="5"></Image>
+                <Label Name="RightRms" Content="{Binding RightRms}" HorizontalAlignment="Center" Margin="5"></Label>
             </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="3" Grid.Column="1" Margin="5">
+            <Label Name="StereoRms" Content="{Binding StereoRms}" HorizontalAlignment="Center" Margin="5"></Label>
         </StackPanel>
     </Grid>
 </UserControl>

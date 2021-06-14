@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ReactiveUI;
 using Argus.Calibration.Helper;
+using RosSharp;
 
 namespace Argus.Calibration.ViewModels
 {
@@ -33,9 +34,30 @@ namespace Argus.Calibration.ViewModels
 
         public void CalibrateTurntable(MainWindowViewModel mainWindowVm)
         {
-            mainWindowVm.AddOperationLog($"启动Master上的转台标定节点");
-            string calibTurntableCmd = $"calibrate_turntable.sh";
-            calibTurntableCmd.InvokeRosMasterScript();
+            try
+            {
+                Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
+                Ros.HostName = CalibConfig.HostName;
+                Ros.TopicTimeout = CalibConfig.TopicTimeout;
+                Ros.XmlRpcTimeout = CalibConfig.XmlRpcTimeout;
+
+                var node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
+                var subscriber = node.SubscriberAsync<RosSharp.std_msgs.String>(@"/qt_echo_topic").Result;
+
+                subscriber.Subscribe(x =>
+                {
+                    Result = x.data;
+                });
+            
+                mainWindowVm.AddOperationLog($"启动Master上的转台标定节点");
+                string calibTurntableCmd = $"calibrate_turntable.sh";
+                calibTurntableCmd.InvokeRosMasterScript();
+            }
+            catch (Exception e)
+            {
+                mainWindowVm.AddOperationLog($"错误！{e.Message}");
+                Result = $"错误！{e.Message}";
+            }
         }
 
         public void Dispose()

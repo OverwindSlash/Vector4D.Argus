@@ -14,10 +14,10 @@
       <Label HorizontalAlignment="Left" Content="自动手眼标定图像" Margin="400, 5, 0, 5"></Label>
     </StackPanel>
     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 8, 0, 0">
-        <Image VerticalAlignment ="Top" Name="LeftImage" Width="800" Height="600" Source="{Binding LeftImage}" Margin="5"></Image>
+        <Image VerticalAlignment ="Top" Name="LeftImage" Width="900" Height="675" Source="{Binding LeftImage}" Margin="5"></Image>
         <StackPanel Orientation="Vertical">
             <Button Name="HandEyeCalibrate" Width="120" HorizontalContentAlignment="Center" Content="开始手眼标定" Click="HandEyeCalibrate_OnClick"
-                    Margin="270, 180, 0, 0" IsEnabled="{Binding !IsInCalibration}"></Button>
+                    Margin="270, 180, 0, 0" IsEnabled="{Binding CanCalibrate}"></Button>
             <TextBlock Text="{Binding Message}" Width="300" TextAlignment="Center" Margin="180, 20, 0, 0"></TextBlock>
         </StackPanel>
     </StackPanel>

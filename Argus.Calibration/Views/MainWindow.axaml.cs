@@ -97,31 +97,27 @@ namespace Argus.Calibration.Views
         private void ShowLeftArmHandEyeCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+            _workArea.Children.Add(control);
+            
             control.SetArm(RobotArms.LeftArm);
             control.SetStereoTypes(StereoTypes.BodyStereo);
-
-            _workArea.Children.Add(control);
         }
 
         private void ShowRightArmHandEyeCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+            _workArea.Children.Add(control);
+            
             control.SetArm(RobotArms.RightArm);
             control.SetStereoTypes(StereoTypes.BodyStereo);
-
-            _workArea.Children.Add(control);
         }
 
         private void ShowTurntableCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
-            CalibrateTurntableControl control = new CalibrateTurntableControl();            
-
+            CalibrateTurntableControl control = new CalibrateTurntableControl();
             _workArea.Children.Add(control);
 
             control.CalibrateTurntable();
@@ -129,9 +125,7 @@ namespace Argus.Calibration.Views
         private void ShowRealSenseCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             CalibrateMultiSensorControl control = new CalibrateMultiSensorControl();
-
             _workArea.Children.Add(control);
 
             control.CalibrateRealSense();
@@ -148,12 +142,11 @@ namespace Argus.Calibration.Views
         private void ShowArmHandEyeCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
+            _workArea.Children.Add(control);
+            
             control.SetArm(RobotArms.LeftArm);
             control.SetStereoTypes((StereoTypes) _toolTypeCombo.SelectedIndex);
-
-            _workArea.Children.Add(control);
         }
 
         private void Window_OnClosing(object? sender, CancelEventArgs e)
@@ -165,41 +158,74 @@ namespace Argus.Calibration.Views
         private void ShowLidarCalibControl(object? sender, RoutedEventArgs e)
         {
             _workArea.Children.Clear();
-
             LidarCalibrationControl control = new LidarCalibrationControl();
-
             _workArea.Children.Add(control);
-        }
-
-        private void CleanUpMasterRunningScript(object? sender, RoutedEventArgs e)
-        {
-            string cleanUpCmd = $"kill_all.sh";
-            cleanUpCmd.InvokeRosMasterScript();
         }
 
         private void ShowLeftArmPointValidationControl(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _workArea.Children.Clear();
+            ArmPointControl control = new ArmPointControl();
+            _workArea.Children.Add(control);
+            
+            control.SetStereoTypes(StereoTypes.BodyStereo);
+            //control.SetLinks("body_stereo_link", "left_arm_link");
+            control.SetArm(RobotArms.LeftArm);
+
+            control.PointChessboard();
         }
 
         private void ShowRightArmPointValidationControl(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _workArea.Children.Clear();
+            ArmPointControl control = new ArmPointControl();
+            _workArea.Children.Add(control);
+            
+            control.SetStereoTypes(StereoTypes.BodyStereo);
+            //control.SetLinks("body_stereo_link", "right_arm_link");
+            control.SetArm(RobotArms.RightArm);
+
+            control.PointChessboard();
         }
 
         private void ShowTurntablePointValidationControl(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _workArea.Children.Clear();
+            ArmPointControl control = new ArmPointControl();
+            _workArea.Children.Add(control);
+            
+            control.SetStereoTypes(StereoTypes.BodyStereo);
+            //control.SetLinks("body_stereo_link", "left_arm_link");
+            control.MoveTurntable(0, 1200);
+            control.SetArm(RobotArms.LeftArm);
+
+            control.PointChessboard();
         }
 
         private void ShowArmToolPointValidationControl(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _workArea.Children.Clear();
+            ArmPointControl control = new ArmPointControl();
+            _workArea.Children.Add(control);
+            
+            control.SetStereoTypes((StereoTypes) _toolTypeCombo.SelectedIndex);
+            //control.SetLinks("body_stereo_link", "left_arm_link");
+            control.SetArm(RobotArms.LeftArm);
+
+            control.PointChessboard();
         }
 
         private void ShowDepthCameraPointValidationControl(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            _workArea.Children.Clear();
+            ArmPointControl control = new ArmPointControl();
+            _workArea.Children.Add(control);
+            
+            control.SetStereoTypes(StereoTypes.Realsense);
+            //control.SetLinks("body_stereo_link", "left_arm_link");
+            control.SetArm(RobotArms.LeftArm);
+
+            control.PointChessboard();
         }
 
         private void ShowLidarPointValidationControl(object? sender, RoutedEventArgs e)
@@ -210,6 +236,12 @@ namespace Argus.Calibration.Views
         private void ResetMasterRemoteNode(object? sender, RoutedEventArgs e)
         {
             throw new System.NotImplementedException();
+        }
+        
+        private void CleanUpMasterRunningScript(object? sender, RoutedEventArgs e)
+        {
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
         }
     }
 }

@@ -143,13 +143,21 @@ namespace Argus.Calibration.ViewModels
                 }                
             });
 
-            // await SimulateSnapshotAsync();
+            //await SimulateSnapshotAsync();
 
             // 3. Find corner.
             string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
             string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
+            if (string.IsNullOrEmpty(LeftImagePath) || string.IsNullOrEmpty(RightImagePath))
+            {
+                mainWindowVm.AddOperationLog($"错误：双目抓拍图像失败！");
+                LeftImagePath = RightImagePath = @"Images/no-image.jpg";
+                this.RaisePropertyChanged(nameof(LeftImage));
+                this.RaisePropertyChanged(nameof(RightImage));
+                return;
+            }
             mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
             mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
 

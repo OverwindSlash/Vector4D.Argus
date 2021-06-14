@@ -358,7 +358,7 @@ namespace Argus.StereoCalibration
         private static void ShowRectifiedStereo(Mat undistLeftImg, Mat undistRightImg)
         {
             int width, height;
-            double scale = 800.0 / Math.Max(_imageSize.Width, _imageSize.Height);
+            double scale = 1400.0 / Math.Max(_imageSize.Width, _imageSize.Height);
             width = (int)Math.Round(_imageSize.Width * scale);
             height = (int)Math.Round(_imageSize.Height * scale);
             Mat canvas = new Mat(height, width * 2, MatType.CV_8UC3);
