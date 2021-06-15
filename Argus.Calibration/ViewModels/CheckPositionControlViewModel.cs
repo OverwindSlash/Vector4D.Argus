@@ -79,6 +79,9 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog($"启动Master上的机械臂控制节点");
                 string initArmCmd = $"init_arm_move.sh";
                 initArmCmd.InvokeRosMasterScript();
+
+                string initTurntableCmd = $"init_arm_turntable_move.sh";
+                initTurntableCmd.InvokeRosMasterScript();
             });
 
             // 1. Move robot arms to snapshot positions.
@@ -127,7 +130,9 @@ namespace Argus.Calibration.ViewModels
             {
                 if (_stereoType == StereoTypes.BodyStereo)
                 {
-                    string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                    // TODO: Temp solution for qc stereo
+                    //string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                    string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{SnapshotsDir}'";
                     snapshotCmd.RunSync();
                 }
                 else
@@ -138,13 +143,21 @@ namespace Argus.Calibration.ViewModels
                 }                
             });
 
-            // await SimulateSnapshotAsync();
+            //await SimulateSnapshotAsync();
 
             // 3. Find corner.
             string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
             string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
             LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
             RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
+            if (string.IsNullOrEmpty(LeftImagePath) || string.IsNullOrEmpty(RightImagePath))
+            {
+                mainWindowVm.AddOperationLog($"错误：双目抓拍图像失败！");
+                LeftImagePath = RightImagePath = @"Images/no-image.jpg";
+                this.RaisePropertyChanged(nameof(LeftImage));
+                this.RaisePropertyChanged(nameof(RightImage));
+                return;
+            }
             mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
             mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
 

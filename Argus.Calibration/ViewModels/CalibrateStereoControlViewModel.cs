@@ -34,6 +34,9 @@ namespace Argus.Calibration.ViewModels
         private bool _userCancelled;
 
         private bool _isStereoCalibrated;
+        private string _leftRms;
+        private string _rightRms;
+        private string _stereoRms;
 
         public bool IsInCapture
         {
@@ -145,6 +148,23 @@ namespace Argus.Calibration.ViewModels
             }
         }
 
+        public string LeftRms
+        {
+            get => _leftRms;
+            set => this.RaiseAndSetIfChanged(ref _leftRms, value);
+        }
+
+        public string RightRms
+        {
+            get => _rightRms;
+            set => this.RaiseAndSetIfChanged(ref _rightRms, value);
+        }
+
+        public string StereoRms
+        {
+            get => _stereoRms;
+            set => this.RaiseAndSetIfChanged(ref _stereoRms, value);
+        }
 
         public CalibrateStereoControlViewModel(StereoTypes stereoType)
         {
@@ -233,7 +253,9 @@ namespace Argus.Calibration.ViewModels
                         });
 
                         // 2.2 take snap shot
-                        string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
+                        // TODO: Temp solution for qc stereo
+                        //string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
+                        string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{imageBaseDir}'";
                         snapshotCmd.RunSync();
                     }
                     else
@@ -253,7 +275,7 @@ namespace Argus.Calibration.ViewModels
                         snapshotCmd.RunSync();
                     }                    
 
-                    //await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
+                    await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
 
                     string leftDest = FsHelper.GetLastFileByNameFromDirectory(leftImgDir, "left");
                     string rightDest = FsHelper.GetLastFileByNameFromDirectory(rightImgDir, "right");
@@ -327,15 +349,17 @@ namespace Argus.Calibration.ViewModels
                 CameraCalibrator.SetLogCallback(mainWindowVm.AddOperationLog);
 
                 var result = CameraCalibrator.CalibrateStereoCamera(_leftImageFiles, _rightImageFiles);
-                string leftRms = $"左目图像 重投影误差：{result.LeftRms}";
-                string rightRms = $"右目图像 重投影误差：{result.RightRms}";
-                string stereoRms = $"双目标定完毕 重投影误差：{result.StereoRms}";
+                LeftRms = $"左目图像 重投影误差：{result.LeftRms}";
+                RightRms = $"右目图像 重投影误差：{result.RightRms}";
+                StereoRms = $"双目标定完毕 重投影误差：{result.StereoRms}";
 
-                mainWindowVm.AddOperationLog(leftRms);
-                mainWindowVm.AddOperationLog(rightRms);
-                mainWindowVm.AddOperationLog(stereoRms);
+                mainWindowVm.AddOperationLog(LeftRms);
+                mainWindowVm.AddOperationLog(RightRms);
+                mainWindowVm.AddOperationLog(StereoRms);
 
                 // Generate result files.
+                FsHelper.EnsureDirectoryExist(CalibConfig.CalibrationResultDir);
+
                 string stereoName = CalibConfig.BodyStereoName;
                 if  (_stereoType != StereoTypes.BodyStereo)
                 {

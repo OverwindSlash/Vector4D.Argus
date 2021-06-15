@@ -7,9 +7,7 @@ using RosSharp;
 using RosSharp.sensor_msgs;
 using RosSharp.Topic;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,6 +27,7 @@ namespace Argus.Calibration.ViewModels
         private bool _isInCalibration;
 
         private bool _isConnectedWithMaster;
+        private bool _isTopicAccessable;
 
         public string Message
         {
@@ -41,6 +40,12 @@ namespace Argus.Calibration.ViewModels
             get => _stereoLeftImage;
             set => this.RaiseAndSetIfChanged(ref _stereoLeftImage, value);
         }
+        
+        public bool IsTopicAccessable
+        {
+            get => _isTopicAccessable;
+            set => this.RaiseAndSetIfChanged(ref _isTopicAccessable, value);
+        }
 
         public bool IsInCalibration
         {
@@ -48,9 +53,10 @@ namespace Argus.Calibration.ViewModels
             set => this.RaiseAndSetIfChanged(ref _isInCalibration, value);
         }
 
+        public bool CanCalibrate => IsTopicAccessable && !IsInCalibration;
+
         public HandEyeCalibrationControlViewModel()
         {
-            
         }
 
         public void Dispose()
@@ -63,7 +69,7 @@ namespace Argus.Calibration.ViewModels
             if (_node != null)
             {
                 _node.Dispose();
-            }  
+            }
 
             // 4. Clean up
             string cleanUpCmd = $"kill_all.sh";
@@ -75,72 +81,91 @@ namespace Argus.Calibration.ViewModels
             _operationArm = arm;
         }
 
-        public void SetStereoTypes(StereoTypes stereoType)
+        public void SetStereoTypes(StereoTypes stereoType, MainWindowViewModel mainWindowViewModel)
         {
             _stereoType = stereoType;
 
-            InitRosTopicConnection();
+            InitRosTopicConnection(mainWindowViewModel);
         }
 
-        private void InitRosTopicConnection()
+        private void InitRosTopicConnection(MainWindowViewModel mainWindowViewModel)
         {
-
+            mainWindowViewModel.AddOperationLog("开启机载双目视频流......");
             if (_stereoType == StereoTypes.BodyStereo)
             {
-                string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                // TODO: Temp solution for qc stereo.
+                //string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                string prepareStereoCmd = $"open_qc_body_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }
             else
             {
-                bool isLeftArmTool = (int)_stereoType % 2 == 0;
+                bool isLeftArmTool = (int) _stereoType % 2 == 0;
                 string toolPrefix = isLeftArmTool ? "left" : "right";
 
-                string ip = CalibConfig.ArmToolsIps[(int)_stereoType];
+                string ip = CalibConfig.ArmToolsIps[(int) _stereoType];
                 //string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
                 // TODO: Add various arm tool stereo open scripts.
                 string prepareStereoCmd = $"open_right_arm_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
-            }            
+            }
 
             Thread.Sleep(5000);
 
-            Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
-            Ros.HostName = CalibConfig.HostName;
-            Ros.TopicTimeout = CalibConfig.TopicTimeout;
-            Ros.XmlRpcTimeout = CalibConfig.XmlRpcTimeout;
-
-            foreach(var node in Ros.GetNodes())
+            mainWindowViewModel.AddOperationLog("订阅机载双目相机Topic......");
+            try
             {
-                node.Dispose();
+                IsTopicAccessable = false;
+                
+                Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
+                Ros.HostName = CalibConfig.HostName;
+                Ros.TopicTimeout = CalibConfig.TopicTimeout;
+                Ros.XmlRpcTimeout = CalibConfig.XmlRpcTimeout;
+
+                foreach (var node in Ros.GetNodes())
+                {
+                    node.Dispose();
+                }
+
+                _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
+                _subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
+                
+                _subscriber.Subscribe(x =>
+                {
+                    if (x.data == null)
+                    {
+                        return;
+                    }
+
+                    int columns = (int) x.width;
+                    int rows = (int) x.height;
+
+                    // For image_raw topic.
+                    // Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
+                    // Mat outImage = new Mat();
+                    // Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+                    // LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    // image.Dispose();
+                    // outImage.Dispose();
+
+                    // For tracking_result topic
+                    Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
+                    Mat outImage = new Mat();
+                    Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
+                    LeftImage = new Bitmap(outImage.ToMemoryStream());
+                    image.Dispose();
+                    outImage.Dispose();
+
+                    IsTopicAccessable = true;
+                });
+                
+                Message = "请等待左侧机载相机画面开始显示";
             }
-            _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
-            _subscriber = _node.SubscriberAsync<RosSharp.sensor_msgs.Image>(CalibConfig.LeftStereoTopic).Result;
-
-            _subscriber.Subscribe(x =>
+            catch (Exception e)
             {
-                if (x.data == null) { return; }
-
-                int columns = (int)x.width;
-                int rows = (int)x.height;
-
-                // For image_raw topic.
-                // Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
-                // Mat outImage = new Mat();
-                // Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
-                // LeftImage = new Bitmap(outImage.ToMemoryStream());
-                // image.Dispose();
-                // outImage.Dispose();
-
-                // For tracking_result topic
-                Mat image = new Mat(rows, columns, MatType.CV_8UC3, x.data.ToArray());
-                Mat outImage = new Mat();
-                Cv2.CvtColor(image, outImage, ColorConversionCodes.BGR2RGB);
-                LeftImage = new Bitmap(outImage.ToMemoryStream());
-                image.Dispose();
-                outImage.Dispose();
-            });
-
-            Message = "请等待左侧机载相机画面开始显示";
+                mainWindowViewModel.AddOperationLog($"错误！{e.Message}");
+                Message = $"错误！{e.Message}";
+            }
         }
 
         public async Task CalibrateHandEye(MainWindowViewModel mainWindowVm)
@@ -149,8 +174,13 @@ namespace Argus.Calibration.ViewModels
             string leftArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_leftarm_eye_on_base.yaml");
             string rightArmCalibFile = Path.Combine(handEyeBaseDir, "ur10_rightarm_eye_on_base.yaml");
 
-            string leftPrepareScript = "calibrate_lucid_body_stereo_left_arm.sh";
-            string rightPrepareScript = "calibrate_lucid_body_stereo_right_arm.sh";
+            string leftPrepareScript = "calibrate_body_stereo_left_arm_auto.sh";
+            string rightPrepareScript = "calibrate_body_stereo_right_arm_auto.sh";
+            if (_stereoType != StereoTypes.BodyStereo)
+            {
+                leftPrepareScript = "calibrate_body_stereo_left_arm_preset.sh";
+                rightPrepareScript = "calibrate_body_stereo_right_arm_preset.sh";
+            }
 
             // TODO: Change to real parameters.
             string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
@@ -170,32 +200,37 @@ namespace Argus.Calibration.ViewModels
                 mainWindowVm.AddOperationLog($"启动Master上的手眼标定配置环境");
                 prepareScript.InvokeRosMasterScript();
 
-                Thread.Sleep(30000);  
+                Thread.Sleep(30000);
 
                 // 2. Calibrate handeye.
                 Message = $"{prefix}臂自动手眼标定中......";
 
-                string calibCmd = $"calibrate_body_stereo_handfree.sh {calibScriptParam}";
-                if  (_stereoType != StereoTypes.BodyStereo)
+                // TODO: Temp solution for script param pass
+                //string calibCmd = $"calibrate_body_stereo_handfree.sh '{calibScriptParam}'";
+                string calibCmd = $"calibrate_body_stereo_handfree.sh";
+                if (_stereoType != StereoTypes.BodyStereo)
                 {
                     // 2.1 Load arm tool preset file.
-                    string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPresetFiles[(int)_stereoType]);    
+                    string filepath = Path.Combine(CalibConfig.MovementFileDir,
+                        CalibConfig.ArmToolsPresetFiles[(int) _stereoType]);
                     string[] positions = File.ReadAllText(filepath).Split("\n");
 
-                    bool isLeftArmTool = (int)_stereoType % 2 == 0;     // Is left or right arm tool
+                    bool isLeftArmTool = (int) _stereoType % 2 == 0; // Is left or right arm tool
                     string moveToolArmCmd = isLeftArmTool ? "move_leftarm.sh" : "move_rightarm.sh";
                     string moveNonToolArmCmd = isLeftArmTool ? "move_rightarm.sh" : "move_leftarm.sh";
 
-                    // 2.2 Move arm which attach tool to init position.
-                    string toolPrefix = isLeftArmTool ? "左" : "右";
-                    mainWindowVm.AddOperationLog($"将{toolPrefix}臂移动至 {positions[0]}");
-                    string moveToolArmTask = $"Scripts/{moveToolArmCmd} '{positions[0]}'";
-                    moveToolArmTask.RunSync();
+                    // 2.2 Move arm which NOT attach tool to init position.
+                    string nonToolPrefix = !isLeftArmTool ? "左" : "右";
+                    mainWindowVm.AddOperationLog($"将{nonToolPrefix}臂移动至 {positions[0]}");
+                    string moveNonToolArmTask = $"Scripts/{moveNonToolArmCmd} '{positions[0]}'";
+                    moveNonToolArmTask.RunSync();
 
                     // 2.3 Call script to perform preset postion handeye calibration.
-                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} temp.txt";
+                    // TODO: Temp solution for script param pass
+                    //calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} temp.txt";
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh";
                 }
-                
+
                 mainWindowVm.AddOperationLog(Message);
                 mainWindowVm.AddOperationLog($"执行脚本 {calibCmd}");
                 calibCmd.InvokeRosMasterScript();
@@ -218,11 +253,12 @@ namespace Argus.Calibration.ViewModels
                 string leftYaml = $"{prefix}臂手眼参数：{calibResultDestFile}";
                 mainWindowVm.AddOperationLog(leftYaml);
 
-                IsInCalibration = false;                
+                IsInCalibration = false;
             });
         }
 
-        private static void SimulateGenerateHandeyeResultFile(string handEyeBaseDir, string leftArmCalibFile, string rightArmCalibFile)
+        private static void SimulateGenerateHandeyeResultFile(string handEyeBaseDir, string leftArmCalibFile,
+            string rightArmCalibFile)
         {
             FsHelper.EnsureDirectoryExist(handEyeBaseDir);
 

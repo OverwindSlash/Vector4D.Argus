@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Argus.Calibration.Config;
 using Argus.Calibration.ViewModels;
 using Avalonia.Controls;
+using Avalonia.Layout;
 using Avalonia.Markup.Xaml;
 
 namespace Argus.Calibration.Views

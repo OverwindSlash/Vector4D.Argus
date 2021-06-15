@@ -47,6 +47,11 @@ namespace Argus.Calibration.Helper
 
             var result = fis.FirstOrDefault(fi => fi.Name.ToLower().Contains(name));
 
+            if (result == null)
+            {
+                return null;
+            }
+
             return result.FullName;
         }
 
