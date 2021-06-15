@@ -68,8 +68,8 @@
   "CutWireToolRightArmPositionFile": "rightarm_cut_wire_calib_arm_move_data.txt",
   "CutWireToolRightArmHandEyePresetFile": "rightarm_cut_wire_calib_arm_preset_data.txt",
 
-  "RosMasterUri": "http://10.10.20.18:11311",
-  "HostName": "10.10.20.123",
+  "RosMasterUri": "http://192.168.1.15:11311",
+  "HostName": "192.168.1.15",
   "NodeName": "GuiCalibrator",
   "LeftStereoTopic": "/aruco_tracking/result",
   "TopicTimeout": 20000,

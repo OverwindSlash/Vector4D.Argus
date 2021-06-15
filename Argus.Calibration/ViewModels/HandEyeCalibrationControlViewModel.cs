@@ -44,16 +44,24 @@ namespace Argus.Calibration.ViewModels
         public bool IsTopicAccessable
         {
             get => _isTopicAccessable;
-            set => this.RaiseAndSetIfChanged(ref _isTopicAccessable, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isTopicAccessable, value);
+                this.RaisePropertyChanged(nameof(CanCalibrate));
+            }
         }
 
         public bool IsInCalibration
         {
             get => _isInCalibration;
-            set => this.RaiseAndSetIfChanged(ref _isInCalibration, value);
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isInCalibration, value);
+                this.RaisePropertyChanged(nameof(CanCalibrate));
+            }
         }
 
-        public bool CanCalibrate => IsTopicAccessable && !IsInCalibration;
+        public bool CanCalibrate => (IsTopicAccessable && !IsInCalibration);
 
         public HandEyeCalibrationControlViewModel()
         {
@@ -93,9 +101,8 @@ namespace Argus.Calibration.ViewModels
             mainWindowViewModel.AddOperationLog("开启机载双目视频流......");
             if (_stereoType == StereoTypes.BodyStereo)
             {
-                // TODO: Temp solution for qc stereo.
-                //string prepareStereoCmd = $"open_lucid_body_stereo.sh";
-                string prepareStereoCmd = $"open_qc_body_stereo.sh";
+                string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                //string prepareStereoCmd = $"open_qc_body_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }
             else

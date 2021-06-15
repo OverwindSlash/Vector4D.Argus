@@ -129,10 +129,9 @@ namespace Argus.Calibration.ViewModels
             await Task.Run(() =>
             {
                 if (_stereoType == StereoTypes.BodyStereo)
-                {
-                    // TODO: Temp solution for qc stereo
-                    //string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
-                    string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{SnapshotsDir}'";
+                {                   
+                    string snapshotCmd = $"Scripts/snapshot_body.sh '{SnapshotsDir}'";
+                    //string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{SnapshotsDir}'";
                     snapshotCmd.RunSync();
                 }
                 else

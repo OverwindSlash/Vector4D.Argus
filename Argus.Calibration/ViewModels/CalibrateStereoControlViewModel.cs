@@ -253,9 +253,8 @@ namespace Argus.Calibration.ViewModels
                         });
 
                         // 2.2 take snap shot
-                        // TODO: Temp solution for qc stereo
-                        //string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
-                        string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{imageBaseDir}'";
+                        string snapshotCmd = $"Scripts/snapshot_body.sh '{imageBaseDir}'";
+                        //string snapshotCmd = $"Scripts/snapshot_qc_body.sh '192.168.1.101' '192.168.1.102' '{imageBaseDir}'";
                         snapshotCmd.RunSync();
                     }
                     else
@@ -275,7 +274,7 @@ namespace Argus.Calibration.ViewModels
                         snapshotCmd.RunSync();
                     }                    
 
-                    await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
+                    //await SimulateSnapShotAsync(imageNo, leftImgDir, rightImgDir);
 
                     string leftDest = FsHelper.GetLastFileByNameFromDirectory(leftImgDir, "left");
                     string rightDest = FsHelper.GetLastFileByNameFromDirectory(rightImgDir, "right");
