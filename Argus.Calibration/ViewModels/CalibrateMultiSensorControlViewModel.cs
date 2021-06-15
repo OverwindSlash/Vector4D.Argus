@@ -1,11 +1,14 @@
 ﻿using Argus.Calibration.Helper;
 using Argus.StereoCalibration;
 using ReactiveUI;
+using RosSharp;
+using RosSharp.Topic;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
@@ -16,11 +19,47 @@ namespace Argus.Calibration.ViewModels
         private const string CalibrationResultDir = "CalibrationResults";
 
         private string result;
+        private Node? _node;
+        private Subscriber<RosSharp.std_msgs.String>? _subscriber;
 
         public string Result
         {
             get => result;
             set => this.RaiseAndSetIfChanged(ref result, value);
+        }
+        public CalibrateMultiSensorControlViewModel()
+        {
+        }
+        public void initRos()
+        {
+            // Thread.Sleep(5000);
+            Ros.MasterUri = new Uri(CalibConfig.RosMasterUri);
+            Ros.HostName = CalibConfig.HostName;
+            Ros.TopicTimeout = CalibConfig.TopicTimeout;
+            Ros.XmlRpcTimeout = CalibConfig.XmlRpcTimeout;
+            var nodes = Ros.GetNodes();
+            foreach (var n in Ros.GetNodes())
+            {
+                n.Dispose();
+            }
+            _node = Ros.InitNodeAsync(CalibConfig.NodeName).Result;
+            _subscriber = _node.SubscriberAsync<RosSharp.std_msgs.String>(@"/qt_echo_topic").Result;
+
+            _subscriber.Subscribe(x =>
+            {
+                Result = x.data;
+            });
+        }
+        public void Dispose()
+        {
+            if (_node != null)
+            {
+                _node.Dispose();
+            }
+
+            // 4. Clean up
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
         }
 
         public async Task CheckPositionAsync(MainWindowViewModel mainWindowVm)
@@ -62,44 +101,39 @@ namespace Argus.Calibration.ViewModels
 
         public async Task Calibrate(MainWindowViewModel mainWindowVm)
         {
-            await CheckPositionAsync(mainWindowVm);
+            // await CheckPositionAsync(mainWindowVm);
             // 3. Find stereo corner.
-            string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
-            string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
-            var LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
-            var RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
-            mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
-            mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
+            // string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");
+            // string rightSnapshotDir = Path.Combine(SnapshotsDir, "right");
+            // var LeftImagePath = FsHelper.GetFirstFileByNameFromDirectory(leftSnapshotDir, "left");
+            // var RightImagePath = FsHelper.GetFirstFileByNameFromDirectory(rightSnapshotDir, "right");
+            // mainWindowVm.AddOperationLog($"左目抓拍图像保存至: {LeftImagePath}");
+            // mainWindowVm.AddOperationLog($"右目抓拍图像保存至: {RightImagePath}");
 
-            mainWindowVm.AddOperationLog("图像角点识别中......");
-            bool foundLeft= CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
-            bool foundRight=CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
+            // mainWindowVm.AddOperationLog("图像角点识别中......");
+            // bool foundLeft= CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
+            // bool foundRight=CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
 
-            mainWindowVm.AddOperationLog("双目抓拍识别完成");
-            if (!foundLeft || !foundRight)
-            {
-                mainWindowVm.AddOperationLog("存在未识别的角点，请移动标定板位置");
-                return;
-            }
+            // mainWindowVm.AddOperationLog("双目抓拍识别完成");
+            // if (!foundLeft || !foundRight)
+            // {
+            //     mainWindowVm.AddOperationLog("存在未识别的角点，请移动标定板位置");
+            //     return;
+            // }
 
             // copy image files to remote machine
 
             //4 find realsense corner
-            await Task.Factory.StartNew(() =>
-            {
-                mainWindowVm.AddOperationLog("开始远程标定RealSense与双目相机...");
-                string cmd = $"calibrate_rs_stereo_runsh.sh";
-                cmd.InvokeRosMasterScript();
-                mainWindowVm.AddOperationLog("标定结果将显示在界面上，请耐心等待...");
+            // await Task.Factory.StartNew(() =>
+            // {
+            mainWindowVm.AddOperationLog("开始远程标定RealSense与双目相机...");
+            string cmd = $"calibrate_rs_stereo_runsh.sh";
+            cmd.InvokeRosMasterScript();
+            mainWindowVm.AddOperationLog("标定结果将显示在界面上，请耐心等待...");
 
-            });
+            // });
         }
 
 
-        public void Dispose()
-        {
-            string unInitArmCmd = $"kill_all.sh";
-            unInitArmCmd.InvokeRosMasterScript();
-        }
     }
 }

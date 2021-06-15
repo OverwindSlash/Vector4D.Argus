@@ -169,6 +169,9 @@
       <None Update="Images\right\Right17.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Scripts\scp_camera_info.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Scripts\annotate_lidar.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
