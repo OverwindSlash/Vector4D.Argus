@@ -12,6 +12,7 @@ namespace Argus.Calibration.ViewModels
         private string _destLink;
         
         private RobotArms _operationArm;
+        private int _number;
         
         public void SetStereoTypes(StereoTypes stereoType)
         {
@@ -45,7 +46,9 @@ namespace Argus.Calibration.ViewModels
         {
             CalculateSrcDestLinks();
 
-            // TODO
+            // TODO_operationArm
+            string cmd = $"pointing.sh {_destLink} {_sourceLink} {_operationArm} {_number} {_stereoName}";
+            cmd.InvokeRosMasterScript();
         }
 
         private void CalculateSrcDestLinks()
