@@ -145,7 +145,7 @@ namespace Argus.Calibration.Views
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
             _workArea.Children.Add(control);
             
-            control.SetArm(RobotArms.LeftArm);
+            //control.SetArm(RobotArms.LeftArm);
             control.SetStereoTypes((StereoTypes) _toolTypeCombo.SelectedIndex);
         }
 

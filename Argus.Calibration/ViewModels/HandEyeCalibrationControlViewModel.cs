@@ -193,7 +193,8 @@ namespace Argus.Calibration.ViewModels
             string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
             string rightCalibScriptParam = "ur10_rightarm_eye_on_base";
 
-            bool isLeftArm = _operationArm == RobotArms.LeftArm;
+            //bool isLeftArm = _operationArm == RobotArms.LeftArm;
+            bool isLeftArm = (int)_stereoType % 2 == 0;
             string prepareScript = isLeftArm ? leftPrepareScript : rightPrepareScript;
             string calibScriptParam = isLeftArm ? leftCalibScriptParam : rightCalibScriptParam;
             string prefix = isLeftArm ? "左" : "右";

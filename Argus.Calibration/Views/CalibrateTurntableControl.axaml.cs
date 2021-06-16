@@ -45,16 +45,16 @@ namespace Argus.Calibration.Views
             viewModel.initRos();
             viewModel.CalibrateTurntable(windowViewModel);
 
-            Ros.TopicTimeout = viewModel.CalibConfig.TopicTimeout;
-            Ros.XmlRpcTimeout = viewModel.CalibConfig.XmlRpcTimeout;
+            // Ros.TopicTimeout = viewModel.CalibConfig.TopicTimeout;
+            // Ros.XmlRpcTimeout = viewModel.CalibConfig.XmlRpcTimeout;
 
-            var node = Ros.InitNodeAsync(viewModel.CalibConfig.NodeName).Result;
-            var subscriber = node.SubscriberAsync<RosSharp.std_msgs.String>(@"/qt_echo_topic").Result;
+            // var node = Ros.InitNodeAsync(viewModel.CalibConfig.NodeName).Result;
+            // var subscriber = node.SubscriberAsync<RosSharp.std_msgs.String>(@"/qt_echo_topic").Result;
 
-            subscriber.Subscribe(x =>
-            {
-                viewModel.Result = x.data;
-            });
+            // subscriber.Subscribe(x =>
+            // {
+            //     viewModel.Result = x.data;
+            // });
         }
 
         private void Visual_OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
