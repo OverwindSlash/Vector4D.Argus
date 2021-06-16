@@ -8,8 +8,8 @@ namespace Argus.Calibration.Config
 {
     public enum StereoTypes
     {
-        Realsense = -2,
-        BodyStereo = -1,
+        Realsense = -4,
+        BodyStereo = -2,
         ArresterToolLeftStereo = 0,
         ArresterToolRightStereo = 1,
         NutInstallToolLeftStereo = 2,
