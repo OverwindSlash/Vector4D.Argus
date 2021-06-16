@@ -4,5 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Argus.Calibration.Views.ArmPointControl">
-  Welcome to Avalonia!
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Name="Title" Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="1" Margin="2, 8, 2, 8">
+            <Label HorizontalAlignment="Stretch" Content="请确认下方左右目图像中标定板所有角点可见并被识别"></Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="5">
+                <Image Name="LeftImage" Width="800" Height="600" Source="{Binding LeftImage}" Margin="5"></Image>
+                <Label Content="相机左目图像" HorizontalAlignment="Center" Margin="10"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="5">
+                <Image Name="RightImage" Width="800" Height="600" Source="{Binding RightImage}" Margin="5"></Image>
+                <Label Content="相机右目图像" HorizontalAlignment="Center" Margin="10"></Label>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Margin="2, 8, 2, 8">
+            <Button Name="OpenStereoStream" Content="开启双目视频流" Margin="16,8, 16, 8" Click="OpenStereoStream_OnClick"></Button>
+            <Button Name="Reconstruct3dCorner" Content="角点三维重建" Margin="16,8, 16, 8" Click="Reconstruct3dCorner_OnClick"></Button>
+            <ComboBox Name="CornerIndex" Margin="16,8, 16, 8" Items="{Binding CornerIndexes}"></ComboBox>
+            <Button Name="PointingCorner" Content="指点" Margin="16,8, 16, 8" Click="PointingCorner_OnClick"></Button>
+        </StackPanel>
+    </Grid>
 </UserControl>

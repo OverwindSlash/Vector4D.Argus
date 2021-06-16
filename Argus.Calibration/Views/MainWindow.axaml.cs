@@ -172,7 +172,9 @@ namespace Argus.Calibration.Views
             //control.SetLinks("body_stereo_link", "left_arm_link");
             control.SetArm(RobotArms.LeftArm);
 
-            control.PointChessboard();
+            control.Init();
+
+            //control.PointChessboard();
         }
 
         private void ShowRightArmPointValidationControl(object? sender, RoutedEventArgs e)
@@ -185,7 +187,7 @@ namespace Argus.Calibration.Views
             //control.SetLinks("body_stereo_link", "right_arm_link");
             control.SetArm(RobotArms.RightArm);
 
-            control.PointChessboard();
+            //control.PointChessboard();
         }
 
         private void ShowTurntablePointValidationControl(object? sender, RoutedEventArgs e)
@@ -199,7 +201,7 @@ namespace Argus.Calibration.Views
             control.MoveTurntable(0, 1200);
             control.SetArm(RobotArms.LeftArm);
 
-            control.PointChessboard();
+            //control.PointChessboard();
         }
 
         private void ShowArmToolPointValidationControl(object? sender, RoutedEventArgs e)
@@ -212,7 +214,7 @@ namespace Argus.Calibration.Views
             //control.SetLinks("body_stereo_link", "left_arm_link");
             control.SetArm(RobotArms.LeftArm);
 
-            control.PointChessboard();
+            //control.PointChessboard();
         }
 
         private void ShowDepthCameraPointValidationControl(object? sender, RoutedEventArgs e)
@@ -225,17 +227,17 @@ namespace Argus.Calibration.Views
             //control.SetLinks("body_stereo_link", "left_arm_link");
             control.SetArm(RobotArms.LeftArm);
 
-            control.PointChessboard();
+            //control.PointChessboard();
         }
 
         private void ShowLidarPointValidationControl(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         private void ResetMasterRemoteNode(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
         
         private void CleanUpMasterRunningScript(object? sender, RoutedEventArgs e)

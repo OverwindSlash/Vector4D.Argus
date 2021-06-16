@@ -98,7 +98,7 @@ namespace Argus.Calibration.ViewModels
 
         private void InitRosTopicConnection(MainWindowViewModel mainWindowViewModel)
         {
-            mainWindowViewModel.AddOperationLog("开启机载双目视频流......");
+            mainWindowViewModel.AddOperationLog("开启双目视频流......");
             if (_stereoType == StereoTypes.BodyStereo)
             {
                 string prepareStereoCmd = $"open_lucid_body_stereo.sh";
@@ -119,7 +119,7 @@ namespace Argus.Calibration.ViewModels
 
             Thread.Sleep(5000);
 
-            mainWindowViewModel.AddOperationLog("订阅机载双目相机Topic......");
+            mainWindowViewModel.AddOperationLog("订阅双目相机Topic......");
             try
             {
                 IsTopicAccessable = false;

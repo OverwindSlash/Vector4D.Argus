@@ -3,6 +3,7 @@ using Argus.Calibration.Helper;
 using Argus.Calibration.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 
 namespace Argus.Calibration.Views
@@ -38,16 +39,40 @@ namespace Argus.Calibration.Views
             viewModel.SetArm(robotArms);
         }
         
+        public void Init()
+        {
+            var window = (MainWindow)this.Parent.Parent.Parent.Parent;
+            MainWindowViewModel windowDataContext = (MainWindowViewModel)window.DataContext!;
+            
+            var viewModel = (ArmPointControlViewModel)DataContext!;
+            viewModel.Init(windowDataContext);
+        }
+        
         public void MoveTurntable(int x1, int y1)
         {
             var viewModel = (ArmPointControlViewModel)DataContext!;
             viewModel.MoveTurntable(x1, y1);
         }
 
-        public void PointChessboard()
+        private void OpenStereoStream_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var window = (MainWindow)this.Parent.Parent.Parent.Parent;
+            MainWindowViewModel windowDataContext = (MainWindowViewModel)window.DataContext!;
+            
+            var viewModel = (ArmPointControlViewModel)DataContext!;
+            viewModel.OpenStereoStream(windowDataContext);
+        }
+
+        private void Reconstruct3dCorner_OnClick(object? sender, RoutedEventArgs e)
         {
             var viewModel = (ArmPointControlViewModel)DataContext!;
-            viewModel.PointChessboard();
+            viewModel.Reconstruct3dCorner();
+        }
+
+        private void PointingCorner_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (ArmPointControlViewModel)DataContext!;
+            viewModel.PointingCorner(1);
         }
     }
 }

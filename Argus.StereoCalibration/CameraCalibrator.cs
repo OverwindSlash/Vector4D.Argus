@@ -373,7 +373,6 @@ namespace Argus.StereoCalibration
                 Cv2.Line(canvas, new Point(0, i), new Point(canvas.Cols, i), Scalar.Aqua);
 
             Window.ShowImages(canvas);
-
             Window.WaitKey();
         }
 
