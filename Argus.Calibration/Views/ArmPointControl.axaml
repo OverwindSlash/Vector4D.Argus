@@ -26,7 +26,17 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0" Margin="2, 8, 2, 8">
             <Button Name="OpenStereoStream" Content="开启双目视频流" Margin="16,8, 16, 8" Click="OpenStereoStream_OnClick"></Button>
             <Button Name="Reconstruct3dCorner" Content="角点三维重建" Margin="16,8, 16, 8" Click="Reconstruct3dCorner_OnClick"></Button>
-            <ComboBox Name="CornerIndex" Margin="16,8, 16, 8" Items="{Binding CornerIndexes}"></ComboBox>
+            <ComboBox Name="CornerIndex" Margin="16,8, 16, 8">
+                    <ComboBoxItem>1</ComboBoxItem>
+                    <ComboBoxItem>2</ComboBoxItem>
+                    <ComboBoxItem>11</ComboBoxItem>
+                    <ComboBoxItem>12</ComboBoxItem>
+                    <ComboBoxItem>44</ComboBoxItem>
+                    <ComboBoxItem>77</ComboBoxItem>
+                    <ComboBoxItem>78</ComboBoxItem>
+                    <ComboBoxItem>87</ComboBoxItem>
+                    <ComboBoxItem>88</ComboBoxItem>
+            </ComboBox>
             <Button Name="PointingCorner" Content="指点" Margin="16,8, 16, 8" Click="PointingCorner_OnClick"></Button>
         </StackPanel>
     </Grid>

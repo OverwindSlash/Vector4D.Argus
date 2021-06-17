@@ -54,10 +54,14 @@ namespace Argus.StereoCalibration
         
         private static (bool found, Mat<Point2f> imageCorners) CheckAndGetCorners(string imageFile)
         {
+            using Mat image = new Mat(imageFile);           
+            return CheckAndGetCorners(image);
+        }
+
+        private static (bool found, Mat<Point2f> imageCorners) CheckAndGetCorners(Mat image)
+        {
             bool found = false;
             Mat<Point2f> imageCorners = new Mat<Point2f>();
-
-            using Mat image = new Mat(imageFile);
 
             // try find corners using sector based approach.
             //found = Cv2.FindChessboardCornersSB(image, _patternSize, imageCorners,
@@ -89,7 +93,7 @@ namespace Argus.StereoCalibration
             _logCallBack = callback;
         }
 
-        public static bool CheckAndDrawConCorners(string imageFile)
+        public static bool CheckAndDrawCorners(string imageFile)
         {
             var result = CheckAndGetCorners(imageFile);
 
@@ -99,6 +103,14 @@ namespace Argus.StereoCalibration
             image.SaveImage(imageFile);
 
             return result.found;
+        }
+        public static (bool found, int cornersCount) DrawCornersOnMat(Mat image)
+        {
+            var result = CheckAndGetCorners(image);
+
+            Cv2.DrawChessboardCorners(image, _patternSize, result.imageCorners, result.found);
+
+            return (result.found, result.imageCorners.Width * result.imageCorners.Height);
         }
         
         public static (Mat<double> cameraMatrix, Mat<double> distCoeffs, double rms) CalibrateCameraIntrinsic(List<string> imageFiles)

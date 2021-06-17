@@ -163,8 +163,8 @@ namespace Argus.Calibration.ViewModels
             mainWindowVm.AddOperationLog("图像角点识别中......");
             await Task.Run(() =>
             {
-                FoundCornersInLeftImage = CameraCalibrator.CheckAndDrawConCorners(LeftImagePath);
-                FoundCornersInRightImage = CameraCalibrator.CheckAndDrawConCorners(RightImagePath);
+                FoundCornersInLeftImage = CameraCalibrator.CheckAndDrawCorners(LeftImagePath);
+                FoundCornersInRightImage = CameraCalibrator.CheckAndDrawCorners(RightImagePath);
             });
 
             this.RaisePropertyChanged(nameof(LeftImage));

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
+using Argus.StereoCalibration;
 using Avalonia.Media.Imaging;
 using DynamicData;
 using OpenCvSharp;
@@ -28,7 +30,13 @@ namespace Argus.Calibration.ViewModels
         
         private bool _isTopicAccessable;
 
-        public IObservableList<int> CornerIndexes { get; set; }
+        public bool LeftCornersFound { get; set; }
+        public int LeftCornersCount { get; set; }
+
+        public bool RightCornersFound { get; set; }
+        public int RightCornersCount { get; set; }
+
+        public ObservableCollection<int> CornerIndexes { get; set; }
         
         public bool IsTopicAccessable
         {
@@ -95,6 +103,8 @@ namespace Argus.Calibration.ViewModels
                 string prepareStereoCmd = $"open_right_arm_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }
+
+            CornerIndexes = new  ObservableCollection<int>();
         }
         
         public void MoveTurntable(int x1, int y1)
@@ -143,6 +153,23 @@ namespace Argus.Calibration.ViewModels
                 Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
                 Mat outImage = new Mat();
                 Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+
+                (bool found, int cornersCount) p = CameraCalibrator.DrawCornersOnMat(outImage);
+                LeftCornersFound = p.found;
+                LeftCornersCount = p.cornersCount;
+
+                // CornerIndexes.Clear();
+                // this.RaisePropertyChanged(nameof(CornerIndexes));
+
+                // if ((LeftCornersFound && RightCornersFound) && (LeftCornersCount == RightCornersCount))
+                // {                    
+                //     for (int i = 0; i < LeftCornersCount; i++)
+                //     {
+                //         CornerIndexes.Add(i);
+                //     }
+                //     this.RaisePropertyChanged(nameof(CornerIndexes));
+                // }
+
                 LeftImage = new Bitmap(outImage.ToMemoryStream());
                 image.Dispose();
                 outImage.Dispose();
@@ -162,6 +189,11 @@ namespace Argus.Calibration.ViewModels
                 Mat image = new Mat(rows, columns, MatType.CV_8U, x.data.ToArray());
                 Mat outImage = new Mat();
                 Cv2.CvtColor(image, outImage, ColorConversionCodes.BayerRG2RGB);
+
+                (bool found, int cornersCount) p = CameraCalibrator.DrawCornersOnMat(outImage);
+                RightCornersFound = p.found;
+                RightCornersCount = p.cornersCount;
+
                 RightImage = new Bitmap(outImage.ToMemoryStream());
                 image.Dispose();
                 outImage.Dispose();
