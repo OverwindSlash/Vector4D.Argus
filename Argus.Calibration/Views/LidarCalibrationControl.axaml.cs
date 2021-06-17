@@ -32,16 +32,16 @@ namespace Argus.Calibration.Views
 
         private void TakePhoto_OnClick(object? sender, RoutedEventArgs e)
         {
-            "Scripts/take_photo_for_lidar.sh".Bash();
-
             var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+
+            $"Scripts/take_photo_for_lidar.sh {viewModel.CurrentDataCollectIndex}".Bash();
         }
 
         private void RecordLidarBag_OnClick(object? sender, RoutedEventArgs e)
         {
             var viewModel = (LidarCalibrationControlViewModel)DataContext!;
 
-            $"Scripts/take_photo_for_lidar.sh {viewModel.CurrentDataCollectIndex}".Bash();
+            $"Scripts/record_lidar_bag.sh {viewModel.CurrentDataCollectIndex}".Bash();
 
             viewModel.IncreaceDataCollectIndex();
         }
