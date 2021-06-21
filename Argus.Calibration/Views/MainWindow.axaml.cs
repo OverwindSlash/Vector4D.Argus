@@ -1,3 +1,4 @@
+using System;
 using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Argus.Calibration.ViewModels;
@@ -241,6 +242,12 @@ namespace Argus.Calibration.Views
         }
         
         private void CleanUpMasterRunningScript(object? sender, RoutedEventArgs e)
+        {
+            string cleanUpCmd = $"kill_all.sh";
+            cleanUpCmd.InvokeRosMasterScript();
+        }
+
+        private void StyledElement_OnInitialized(object? sender, EventArgs e)
         {
             string cleanUpCmd = $"kill_all.sh";
             cleanUpCmd.InvokeRosMasterScript();

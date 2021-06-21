@@ -11,6 +11,7 @@
         CanResize="False"
         TransparencyLevelHint="Transparent"
         Background="Transparent"
+        Initialized="StyledElement_OnInitialized"
         Closing="Window_OnClosing">
 
     <Design.DataContext>
