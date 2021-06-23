@@ -199,6 +199,9 @@
       <None Update="Scripts\convert_rosbag_pcd.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+       <None Update="Scripts\color_lidar.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Scripts\correct_leftarm.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
