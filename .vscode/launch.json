@@ -17,9 +17,9 @@
             "console": "internalConsole",
             "stopAtEntry": false,
             "env": {
-                "ROS_MASTER_URI": "http://192.168.1.15:11311",
-                "ROS_HOSTNAME" : "192.168.1.15",
-                "LD_LIBRARY_PATH": "/home/rj1300-4/RJ1400/vision/src/video_stream_opencv/motu/lib"
+                "ROS_MASTER_URI": "http://10.10.20.18:11311",
+                "ROS_HOSTNAME" : "10.10.20.18",
+                "LD_LIBRARY_PATH": "/home/vector4d/RJ1400/vision/src/video_stream_opencv/motu/lib"
             }
         },
         {
