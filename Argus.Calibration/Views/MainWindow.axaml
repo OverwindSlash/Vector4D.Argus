@@ -181,10 +181,6 @@
                 <Button Width="36" Height="36" Margin="12,2,2,2" ToolTip.Tip="手动激光雷达标定" Click="ShowLidarCalibControl">
                     <Image Source="{StaticResource lidar}" />
                 </Button>
-                <Button Width="36" Height="36" Margin="2" ToolTip.Tip="激光雷达标定结果融合验证"
-                        Click="ShowLidarPointValidationControl">
-                    <PathIcon Data="{StaticResource image_copy_regular}" />
-                </Button>
                 <Button Width="36" Height="36" Margin="20,2,2,2" ToolTip.Tip="重置Master远程节点"
                         Click="ResetMasterRemoteNode">
                     <PathIcon Data="{StaticResource arrow_rotate_clockwise_regular}" />
