@@ -69,19 +69,19 @@ namespace Argus.Calibration.Views
         {
             var viewModel = (LidarCalibrationControlViewModel)DataContext!;
 
-            $"Scripts/annotate_lidar.sh {viewModel.CurrentAnnoPhotoIndex}".Bash();
+            $"Scripts/annotate_lidar.sh {viewModel.CurrentAnnoLidarIndex}".Bash();
 
             viewModel.IncreaceAnnoLidarIndex();
         }
 
         private void GetExt1_OnClick(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            $"Scripts/get_lidar_ext1.sh".Bash();
         }
 
         private void GetExt2_OnClick(object? sender, RoutedEventArgs e)
         {
-            throw new System.NotImplementedException();
+            $"Scripts/get_lidar_ext2.sh".Bash();
         }
 
         private void IncreaseCollectIndex(object? sender, RoutedEventArgs e)
@@ -122,7 +122,7 @@ namespace Argus.Calibration.Views
 
         private void ColorLidar_OnClick(object? sender, RoutedEventArgs e)
         {
-            $"Scripts/colorLidar.sh".Bash();
+            $"Scripts/color_lidar.sh".Bash();
         }
     }
 }
