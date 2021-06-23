@@ -124,5 +124,10 @@ namespace Argus.Calibration.Views
         {
             $"Scripts/color_lidar.sh".Bash();
         }
+
+        private void ProjectCloud_OnClick(object? sender, RoutedEventArgs e)
+        {
+            $"Scripts/project_cloud.sh".Bash();
+        }
     }
 }

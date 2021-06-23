@@ -51,7 +51,8 @@
           <Button Name="GetExt2" Content="计算外参 方法2" Margin="10" Click="GetExt2_OnClick"></Button>
       </StackPanel>
       <StackPanel Orientation="Horizontal" Grid.Row="5">
-          <Label Content="点云着色验证：" VerticalAlignment="Center" Margin="10"></Label>
+          <Label Content="标定结果验证：" VerticalAlignment="Center" Margin="10"></Label>
+          <Button Name="ProjectCloud" Content="投射点云" Margin="10" Click="ProjectCloud_OnClick"></Button>
           <Button Name="ColorLidar" Content="点云着色" Margin="10" Click="ColorLidar_OnClick"></Button>
       </StackPanel>
   </Grid>

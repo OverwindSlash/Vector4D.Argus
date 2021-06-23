@@ -262,6 +262,9 @@
       <None Update="Scripts\process_stopper.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Scripts\project_cloud.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Scripts\record_lidar_bag.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
