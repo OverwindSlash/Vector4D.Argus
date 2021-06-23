@@ -83,5 +83,46 @@ namespace Argus.Calibration.Views
         {
             throw new System.NotImplementedException();
         }
+
+        private void IncreaseCollectIndex(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+            viewModel.IncreaceDataCollectIndex();
+        }
+
+        private void DecreaseCollectIndex(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+            viewModel.DecreaceDataCollectIndex();
+        }
+
+        private void IncreaseAnnoPhotoIndex(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+            viewModel.IncreaceAnnoPhotoIndex();
+        }
+
+        private void DecreaseAnnoPhotoIndex(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+            viewModel.DecreaceAnnoPhotoIndex();
+        }
+
+        private void IncreaseAnnoLidarIndex(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+            viewModel.IncreaceAnnoLidarIndex();
+        }
+
+        private void DecreaseAnnoLidarIndex(object? sender, RoutedEventArgs e)
+        {
+            var viewModel = (LidarCalibrationControlViewModel)DataContext!;
+            viewModel.DecreaceAnnoLidarIndex();
+        }
+
+        private void ColorLidar_OnClick(object? sender, RoutedEventArgs e)
+        {
+            $"Scripts/colorLidar.sh".Bash();
+        }
     }
 }

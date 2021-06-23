@@ -1,4 +1,3 @@
-using System;
 using Argus.Calibration.Config;
 using Argus.Calibration.Helper;
 using Argus.Calibration.ViewModels;
@@ -7,8 +6,8 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using JetBrains.Annotations;
+using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 
 namespace Argus.Calibration.Views
 {

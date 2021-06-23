@@ -24,20 +24,55 @@ namespace Argus.Calibration.ViewModels
 
         public void IncreaceDataCollectIndex()
         {
-            CurrentDataCollectIndex++;
-            this.RaisePropertyChanged(nameof(CurrentDataCollectIndex));
+            if (CurrentDataCollectIndex < 9)
+            {
+                CurrentDataCollectIndex++;
+                this.RaisePropertyChanged(nameof(CurrentDataCollectIndex));
+            }
+        }
+
+        public void DecreaceDataCollectIndex()
+        {
+            if (CurrentDataCollectIndex > 0)
+            {
+                CurrentDataCollectIndex--;
+                this.RaisePropertyChanged(nameof(CurrentDataCollectIndex));
+            }
         }
 
         public void IncreaceAnnoPhotoIndex()
         {
-            CurrentAnnoPhotoIndex++;
-            this.RaisePropertyChanged(nameof(CurrentAnnoPhotoIndex));
+            if (CurrentAnnoPhotoIndex < 9)
+            {
+                CurrentAnnoPhotoIndex++;
+                this.RaisePropertyChanged(nameof(CurrentAnnoPhotoIndex));
+            }
+        }
+
+        public void DecreaceAnnoPhotoIndex()
+        {
+            if (CurrentAnnoPhotoIndex > 0)
+            {
+                CurrentAnnoPhotoIndex--;
+                this.RaisePropertyChanged(nameof(CurrentAnnoPhotoIndex));
+            }
         }
 
         public void IncreaceAnnoLidarIndex()
         {
-            CurrentAnnoLidarIndex++;
-            this.RaisePropertyChanged(nameof(CurrentAnnoLidarIndex));
+            if (CurrentAnnoLidarIndex < 9)
+            {
+                CurrentAnnoLidarIndex++;
+                this.RaisePropertyChanged(nameof(CurrentAnnoLidarIndex));
+            }
+        }
+        public void DecreaceAnnoLidarIndex()
+        {
+            if (CurrentAnnoLidarIndex > 0)
+            {
+                CurrentAnnoLidarIndex--;
+                this.RaisePropertyChanged(nameof(CurrentAnnoLidarIndex));
+            }
         }
     }
 }
