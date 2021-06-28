@@ -138,7 +138,7 @@ namespace Argus.Calibration.Helper
 
         public static void InvokeRosMasterScript(this string remoteCmd, string remoteParam = "")
         {
-            string remotePathPrefix = @"/home/vector4d/RJ1400/script/";
+            string remotePathPrefix = @"/home/rj1300-4/RJ1400/script/";
             string fullParam = remotePathPrefix + remoteCmd;
 
             string invokeRemoteCmd = $"Scripts/invoke_master_script.sh {fullParam}";

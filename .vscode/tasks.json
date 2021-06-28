@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "build",
-            "command": "/home/vector4d/dotnet/dotnet",
+            "command": "/home/rj1300-4/dotnet/dotnet",
             "type": "process",
             "args": [
                 "build",
@@ -15,7 +15,7 @@
         },
         {
             "label": "publish",
-            "command": "/home/vector4d/dotnet/dotnet",
+            "command": "/home/rj1300-4/dotnet/dotnet",
             "type": "process",
             "args": [
                 "publish",
@@ -27,7 +27,7 @@
         },
         {
             "label": "watch",
-            "command": "/home/vector4d/dotnet/dotnet",
+            "command": "/home/rj1300-4/dotnet/dotnet",
             "type": "process",
             "args": [
                 "watch",
