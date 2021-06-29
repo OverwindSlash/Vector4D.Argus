@@ -9,7 +9,7 @@
   "ArresterToolLeftStereoName": "leftarm_arrester",
   "ArresterToolLeftArmPositionFile": "leftarm_arrester_calib_arm_move_data.txt",
   "ArresterToolLeftArmHandEyePresetFile": "leftarm_arrester_calib_arm_preset_data.txt",
-  "ArresterToolRightStereoIp": "192.168.1.67",
+  "ArresterToolRightStereoIp": "192.168.1.66",
   "ArresterToolRightStereoName": "rightarm_arrester",
   "ArresterToolRightArmPositionFile": "rightarm_arrester_calib_arm_move_data.txt", 
   "ArresterToolRightArmHandEyePresetFile": "rightarm_arrester_calib_arm_preset_data.txt", 
