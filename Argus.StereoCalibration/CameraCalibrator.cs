@@ -291,7 +291,7 @@ namespace Argus.StereoCalibration
             Mat<double> f = new Mat<double>(Mat.Eye(3, 3, MatType.CV_64FC1));
 
             double rms = Cv2.StereoCalibrate(objectPoints, leftImagePoints, rightImagePoints, leftCameraMatrix.ToRectangularArray(), leftDistCoeffs.ToArray(),
-                rightCameraMatrix.ToRectangularArray(), rightCameraMatrix.ToArray(), _imageSize, r, t, e, f);
+                rightCameraMatrix.ToRectangularArray(), rightDistCoeffs.ToArray(), _imageSize, r, t, e, f);
 
             return (r, t, e, f, rms);
         }
