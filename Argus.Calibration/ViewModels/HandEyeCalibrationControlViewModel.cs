@@ -101,9 +101,28 @@ namespace Argus.Calibration.ViewModels
             mainWindowViewModel.AddOperationLog("开启双目视频流......");
             if (_stereoType == StereoTypes.BodyStereo)
             {
-                string prepareStereoCmd = $"open_lucid_body_stereo.sh";
+                string prepareStereoCmd = $"open_lucid_body_stereo_nodisp.sh";
                 //string prepareStereoCmd = $"open_qc_body_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
+
+                mainWindowViewModel.AddOperationLog("初始化转台位置......");
+                string initTurntableCmd = $"init_eob_turntable_move.sh";
+                initTurntableCmd.InvokeRosMasterScript(); 
+
+                mainWindowViewModel.AddOperationLog("将臂移动至标定位置......");
+                string moveArmCmd1 = $"Scripts/move_leftarm.sh '-0.24651 -1.01253 -0.01062 1.767 2.480 -0.090'";
+                if (_operationArm == RobotArms.RightArm)    
+                {
+                    moveArmCmd1 = $"Scripts/move_rightarm.sh '-0.18837 -0.38491 0.05038 0.077 3.105 0.022'";
+                }                
+                moveArmCmd1.RunSync();
+
+                string moveArmCmd2 = $"Scripts/move_leftarm.sh '-0.22826  -0.89512 0.39115 0.143 -3.192 -1.464'";
+                if (_operationArm == RobotArms.RightArm)    
+                {
+                    moveArmCmd2 = $"Scripts/move_rightarm.sh '0.30165 -0.77184 0.33642 0.103 2.813 1.106'";
+                }                
+                moveArmCmd2.RunSync();
             }
             else
             {
@@ -193,8 +212,12 @@ namespace Argus.Calibration.ViewModels
             string leftCalibScriptParam = "ur10_leftarm_eye_on_base";
             string rightCalibScriptParam = "ur10_rightarm_eye_on_base";
 
-            //bool isLeftArm = _operationArm == RobotArms.LeftArm;
             bool isLeftArm = (int)_stereoType % 2 == 0;
+             if (_stereoType  == StereoTypes.BodyStereo)
+             {
+                isLeftArm = _operationArm == RobotArms.LeftArm ? true : false;
+             }
+           
             string prepareScript = isLeftArm ? leftPrepareScript : rightPrepareScript;
             string calibScriptParam = isLeftArm ? leftCalibScriptParam : rightCalibScriptParam;
             string prefix = isLeftArm ? "左" : "右";
