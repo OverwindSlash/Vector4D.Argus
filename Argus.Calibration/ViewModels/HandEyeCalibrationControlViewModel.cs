@@ -257,8 +257,9 @@ namespace Argus.Calibration.ViewModels
                     moveNonToolArmTask.RunSync();
 
                     // 2.3 Call script to perform preset postion handeye calibration.
+                    string armControlTopic = isLeftArmTool ? "leftarm" : "rightarm";
                     // TODO: Temp solution for script param pass
-                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} {filepath}";
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} {filepath} {armControlTopic}";
                     //calibCmd = $"calibrate_body_stereo_preset_poses.sh";
                 }
 
