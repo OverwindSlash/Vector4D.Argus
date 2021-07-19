@@ -214,8 +214,8 @@ namespace Argus.Calibration.ViewModels
                 Message = $"{prefix}臂自动手眼标定中......";
 
                 // TODO: Temp solution for script param pass
-                //string calibCmd = $"calibrate_body_stereo_handfree.sh '{calibScriptParam}'";
-                string calibCmd = $"calibrate_body_stereo_handfree.sh";
+                string calibCmd = $"calibrate_body_stereo_handfree.sh '{calibScriptParam}'";
+                //string calibCmd = $"calibrate_body_stereo_handfree.sh";
                 if (_stereoType != StereoTypes.BodyStereo)
                 {
                     // 2.1 Load arm tool preset file.
@@ -253,7 +253,7 @@ namespace Argus.Calibration.ViewModels
                 string rightArmCalibDestFile = Path.Combine(handEyeDestDir, "ur10_rightarm_eye_on_base.yaml");
                 string calibResultDestFile = isLeftArm ? leftArmCalibDestFile : rightArmCalibDestFile;
 
-                SimulateGenerateHandeyeResultFile(handEyeBaseDir, leftArmCalibFile, rightArmCalibFile);
+                //SimulateGenerateHandeyeResultFile(handEyeBaseDir, leftArmCalibFile, rightArmCalibFile);
 
                 FileInfo calibResultFi = new FileInfo(calibResultFile);
                 calibResultFi.CopyTo(calibResultDestFile, true);
