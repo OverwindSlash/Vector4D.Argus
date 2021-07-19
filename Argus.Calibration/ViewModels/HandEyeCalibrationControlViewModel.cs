@@ -235,8 +235,8 @@ namespace Argus.Calibration.ViewModels
 
                     // 2.3 Call script to perform preset postion handeye calibration.
                     // TODO: Temp solution for script param pass
-                    //calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} temp.txt";
-                    calibCmd = $"calibrate_body_stereo_preset_poses.sh";
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} {filepath}";
+                    //calibCmd = $"calibrate_body_stereo_preset_poses.sh";
                 }
 
                 mainWindowVm.AddOperationLog(Message);
