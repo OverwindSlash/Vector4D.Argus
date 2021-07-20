@@ -59,6 +59,9 @@ namespace Argus.Calibration.ViewModels
 
         public void CalibrateTurntable(MainWindowViewModel mainWindowVm)
         {
+            mainWindowVm.AddOperationLog("开启双目视频流......");
+            string prepareStereoCmd = $"open_lucid_body_stereo_nodisp.sh";
+            prepareStereoCmd.InvokeRosMasterScript();
             mainWindowVm.AddOperationLog($"启动Master上的转台标定节点");
             string calibTurntableCmd = $"calibrate_turntable.sh";
             calibTurntableCmd.InvokeRosMasterScript();
