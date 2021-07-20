@@ -101,6 +101,31 @@ namespace Argus.Calibration.ViewModels
 
         public async Task Calibrate(MainWindowViewModel mainWindowVm)
         {
+
+             mainWindowVm.AddOperationLog("请等待机械臂移动至抓拍位置......");
+            // 0. Prepare robot arm movement environment.
+            await Task.Run(() =>
+            {
+                mainWindowVm.AddOperationLog($"启动Master上的机械臂控制节点");
+                string initArmCmd = $"init_arm_move.sh";
+                initArmCmd.InvokeRosMasterScript();
+            });
+
+            // 1. Move robot arms to snapshot positions.
+
+            // 1.1 Body stereo check only need move left arm to initial position
+            string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.BodyStereoArmPositionFile);
+            string[] positions = File.ReadAllText(filepath).Split("\n");
+
+            await Task.Run(() =>
+            {
+                mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
+                string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                moveLeftCmd.RunSync();
+            });
+
+            Thread.Sleep(10000);
+
             // await CheckPositionAsync(mainWindowVm);
             // 3. Find stereo corner.
             // string leftSnapshotDir = Path.Combine(SnapshotsDir, "left");

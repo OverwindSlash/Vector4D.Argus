@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using JetBrains.Annotations;
 using ReactiveUI;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Argus.Calibration.ViewModels
@@ -121,6 +122,8 @@ namespace Argus.Calibration.ViewModels
                     moveRightCmd.RunSync();
                 });
             }
+
+            Thread.Sleep(6000);
 
             // 2. Take snapshot.
             FsHelper.PurgeDirectory(SnapshotsDir);

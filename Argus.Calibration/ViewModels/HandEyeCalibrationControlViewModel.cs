@@ -132,6 +132,12 @@ namespace Argus.Calibration.ViewModels
                 string ip = CalibConfig.ArmToolsIps[(int) _stereoType];
                 //string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
                 // TODO: Add various arm tool stereo open scripts.
+                string leftArmCmd = $"Scripts/move_leftarm.sh '0.18762 -0.53628 0.49378 0.427 -1.746 -0.870'";        
+                leftArmCmd.RunSync();
+
+                string rightArmCmd = $"Scripts/move_rightarm.sh '-0.19141 -0.57062 0.19611 0.005 -0.063 0.750'";        
+                rightArmCmd.RunSync();
+
                 string prepareStereoCmd = $"open_right_arm_stereo.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }
@@ -216,6 +222,9 @@ namespace Argus.Calibration.ViewModels
              if (_stereoType  == StereoTypes.BodyStereo)
              {
                 isLeftArm = _operationArm == RobotArms.LeftArm ? true : false;
+             }else  {
+                 leftCalibScriptParam="ur10_leftarm_eye_on_hand";
+                 rightCalibScriptParam="ur10_rightarm_eye_on_hand";
              }
            
             string prepareScript = isLeftArm ? leftPrepareScript : rightPrepareScript;
@@ -259,7 +268,7 @@ namespace Argus.Calibration.ViewModels
                     // 2.3 Call script to perform preset postion handeye calibration.
                     string armControlTopic = isLeftArmTool ? "leftarm" : "rightarm";
                     // TODO: Temp solution for script param pass
-                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} {filepath} {armControlTopic}";
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} 'rightarm_arrester_calib_arm_preset_data.txt' {armControlTopic}";
                     //calibCmd = $"calibrate_body_stereo_preset_poses.sh";
                 }
 
