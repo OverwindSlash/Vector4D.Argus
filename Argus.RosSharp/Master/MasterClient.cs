@@ -105,8 +105,17 @@ namespace RosSharp.Master
                                                     _proxy.EndRegisterSubscriber, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
-                    return ((object[])task.Result[2]).Select(x => new Uri((string)x)).ToList();
+                    try
+                    {
+                        if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+                        return ((object[])task.Result[2]).Select(x => new Uri((string)x)).ToList();
+                    }
+                    catch (System.Exception)
+                    {
+                        
+                        return new List<Uri>();
+                     }
+               
                 });
         }
 
@@ -122,8 +131,16 @@ namespace RosSharp.Master
             return Task<object[]>.Factory.FromAsync(_proxy.BeginUnregisterSubscriber, _proxy.EndUnregisterSubscriber, callerId, topic, callerApi.ToString(), null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
-                    return (int)task.Result[2];
+                    try
+                    {
+                        if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+                        return (int)task.Result[2];
+                    }
+                    catch (System.Exception)
+                    {
+                        return 0;
+                    }
+                   
                 });
         }
 

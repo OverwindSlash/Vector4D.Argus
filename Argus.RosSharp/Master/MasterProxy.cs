@@ -75,7 +75,14 @@ namespace RosSharp.Master
         [XmlRpcEnd]
         public object[] EndRegisterSubscriber(IAsyncResult result)
         {
-            return (object[]) EndInvoke(result);
+            try
+            {
+                return (object[]) EndInvoke(result);
+            }
+            catch (Exception e)
+            {
+                 return new object[2]{StatusCode.Failure, e.Message};              
+            }            
         }
 
         [XmlRpcBegin("unregisterSubscriber")]
@@ -87,7 +94,14 @@ namespace RosSharp.Master
         [XmlRpcEnd]
         public object[] EndUnregisterSubscriber(IAsyncResult result)
         {
-            return (object[]) EndInvoke(result);
+            try
+            {
+                return (object[]) EndInvoke(result);
+            }
+            catch (Exception e)
+            {
+                 return new object[2]{StatusCode.Failure, e.Message};              
+            } 
         }
 
         [XmlRpcBegin("registerPublisher")]
