@@ -159,7 +159,15 @@ namespace RosSharp.Slave
         [XmlRpcEnd]
         public object[] EndRequestTopic(IAsyncResult result)
         {
-            return (object[]) EndInvoke(result);
+            try
+            {
+                 return (object[]) EndInvoke(result);
+            }
+            catch (System.Exception e)
+            {
+                return new object[2]{StatusCode.Failure, e.Message};
+
+            }           
         }
     }
 }

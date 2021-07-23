@@ -132,6 +132,10 @@ namespace Argus.Calibration.ViewModels
                 string ip = CalibConfig.ArmToolsIps[(int) _stereoType];
                 //string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
                 // TODO: Add various arm tool stereo open scripts.
+                string initTurntableCmd = $"init_arm_turntable_move.sh";
+                initTurntableCmd.InvokeRosMasterScript(); 
+
+                mainWindowViewModel.AddOperationLog("将臂移动至标定位置......");                
                 string leftArmCmd = $"Scripts/move_leftarm.sh '0.18762 -0.53628 0.49378 0.427 -1.746 -0.870'";        
                 leftArmCmd.RunSync();
 

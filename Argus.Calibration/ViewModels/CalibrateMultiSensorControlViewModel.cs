@@ -82,7 +82,9 @@ namespace Argus.Calibration.ViewModels
             await Task.Run(() =>
             {
                 mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
-                string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                //string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                //TODO
+                string moveLeftCmd = $"Scripts/move_leftarm.sh '-0.28851 -1.08640 0.14578 1.212 3.057 0.148'";
                 moveLeftCmd.RunSync();
             });
 
@@ -120,7 +122,9 @@ namespace Argus.Calibration.ViewModels
             await Task.Run(() =>
             {
                 mainWindowVm.AddOperationLog($"将左臂移动至 {positions[0]}");
-                string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                //string moveLeftCmd = $"Scripts/move_leftarm.sh '{positions[0]}'";
+                //TODO
+                string moveLeftCmd = $"Scripts/move_leftarm.sh '-0.28851 -1.08640 0.14578 1.212 3.057 0.148'";
                 moveLeftCmd.RunSync();
             });
 

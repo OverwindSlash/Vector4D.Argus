@@ -67,23 +67,23 @@ namespace RosSharp.Slave
             return Task<object[]>.Factory.FromAsync(_proxy.BeginGetBusStats, _proxy.EndGetBusStats, callerId, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]);
-                    
+                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+
                     var statistics = (object[])task.Result[2];
 
                     var ret = new BusStatistics();
 
                     if (statistics[0] is object[])
                     {
-                        ret.PublishStatistics = ((object[]) statistics[0])
+                        ret.PublishStatistics = ((object[])statistics[0])
                             .Cast<object[]>()
                             .Select(x => new PublishStatistic()
                             {
-                                TopicName = (string) x[0],
+                                TopicName = (string)x[0],
                                 MessageDataSent = (int)x[1],
-                                ConnectionData = ((object[]) x[2])
+                                ConnectionData = ((object[])x[2])
                                     .Cast<object[]>()
-                                    .Select(y=>new PublishConnectionData()
+                                    .Select(y => new PublishConnectionData()
                                     {
                                         ConnectionId = (int)y[0],
                                         BytesSent = (int)y[1],
@@ -99,10 +99,10 @@ namespace RosSharp.Slave
                             .Cast<object[]>()
                             .Select(x => new SubscirbeStatistic()
                             {
-                                TopicName = (string) x[0],
+                                TopicName = (string)x[0],
                                 ConnectionData = ((object[])x[1])
                                     .Cast<object[]>()
-                                    .Select(y=>new SubscribeConnectionData()
+                                    .Select(y => new SubscribeConnectionData()
                                     {
                                         ConnectionId = (int)y[0],
                                         BytesReceived = (int)y[1],
@@ -131,10 +131,10 @@ namespace RosSharp.Slave
             return Task<object[]>.Factory.FromAsync(_proxy.BeginGetBusInfo, _proxy.EndGetBusInfo, callerId, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) 
-                        throw new InvalidOperationException((string) task.Result[1]);
-                    
-                    var info = (object[]) task.Result[2];
+                    if ((StatusCode)task.Result[0] != StatusCode.Success)
+                        throw new InvalidOperationException((string)task.Result[1]);
+
+                    var info = (object[])task.Result[2];
                     return new BusInformation()
                     {
                         ConnectionId = (int)info[0],
@@ -157,8 +157,8 @@ namespace RosSharp.Slave
             return Task<object[]>.Factory.FromAsync(_proxy.BeginGetMasterUri, _proxy.EndGetMasterUri, callerId, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]);
-                    return new Uri((string) task.Result[2]);
+                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+                    return new Uri((string)task.Result[2]);
                 });
         }
 
@@ -171,7 +171,7 @@ namespace RosSharp.Slave
         public Task ShutdownAsync(string callerId, string msg)
         {
             return Task<object[]>.Factory.FromAsync(_proxy.BeginShutdown, _proxy.EndShutdown, callerId, msg, null)
-                .ContinueWith(task => { if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]); });
+                .ContinueWith(task => { if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]); });
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace RosSharp.Slave
             return Task<object[]>.Factory.FromAsync(_proxy.BeginGetPid, _proxy.EndGetPid, callerId, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]);
-                    return (int) task.Result[2];
+                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+                    return (int)task.Result[2];
                 });
         }
 
@@ -199,9 +199,9 @@ namespace RosSharp.Slave
             return Task<object[]>.Factory.FromAsync(_proxy.BeginGetSubscriptions, _proxy.EndGetSubscriptions, callerId, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]);
-                    return ((object[]) task.Result[2])
-                        .Select(x => new TopicInfo() {TopicName = ((string[]) x)[0], MessageType = ((string[]) x)[1]}).ToList();
+                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+                    return ((object[])task.Result[2])
+                        .Select(x => new TopicInfo() { TopicName = ((string[])x)[0], MessageType = ((string[])x)[1] }).ToList();
                 });
         }
 
@@ -215,9 +215,9 @@ namespace RosSharp.Slave
             return Task<object[]>.Factory.FromAsync(_proxy.BeginGetPublications, _proxy.EndGetPublications, callerId, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]);
-                    return ((object[]) task.Result[2])
-                        .Select(x => new TopicInfo() {TopicName = ((string[]) x)[0], MessageType = ((string[]) x)[1]}).ToList();
+                    if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]);
+                    return ((object[])task.Result[2])
+                        .Select(x => new TopicInfo() { TopicName = ((string[])x)[0], MessageType = ((string[])x)[1] }).ToList();
                 });
         }
 
@@ -231,7 +231,7 @@ namespace RosSharp.Slave
         public Task ParamUpdateAsync(string callerId, string parameterKey, object parameterValue)
         {
             return Task<object[]>.Factory.FromAsync(_proxy.BeginParamUpdate, _proxy.EndParamUpdate, callerId, parameterKey, parameterValue, null)
-                .ContinueWith(task => { if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]); });
+                .ContinueWith(task => { if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]); });
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace RosSharp.Slave
         public Task PublisherUpdateAsync(string callerId, string topic, string[] publishers)
         {
             return Task<object[]>.Factory.FromAsync(_proxy.BeginPublisherUpdate, _proxy.EndPublisherUpdate, callerId, topic, publishers, null)
-                .ContinueWith(task => { if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]); });
+                .ContinueWith(task => { if ((StatusCode)task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string)task.Result[1]); });
         }
 
         /// <summary>
@@ -257,20 +257,28 @@ namespace RosSharp.Slave
         public Task<TopicParam> RequestTopicAsync(string callerId, string topic, List<ProtocolInfo> infos)
         {
             var protocols = infos.Select(
-                info => new List<string>() {info.Protocol.ToString()}.Concat(info.ProtocolParams).ToArray()).ToArray();
+                info => new List<string>() { info.Protocol.ToString() }.Concat(info.ProtocolParams).ToArray()).ToArray();
 
             return Task<object[]>.Factory.FromAsync(_proxy.BeginRequestTopic, _proxy.EndRequestTopic, callerId, topic, protocols, null)
                 .ContinueWith(task =>
                 {
-                    if ((StatusCode) task.Result[0] != StatusCode.Success) throw new InvalidOperationException((string) task.Result[1]);
+                    if ((StatusCode)task.Result[0] != StatusCode.Success)
+                    {
+                        return new TopicParam
+                        {
+                            ProtocolName = "TCPROS",
+                            HostName = "192.168.1.15",
+                            PortNumber = 11311
+                        };
+                    }
+
                     return new TopicParam
                     {
-                        ProtocolName = (string) ((object[]) task.Result[2])[0],
-                        HostName = (string) ((object[]) task.Result[2])[1],
-                        PortNumber = (int) ((object[]) task.Result[2])[2]
+                        ProtocolName = (string)((object[])task.Result[2])[0],
+                        HostName = (string)((object[])task.Result[2])[1],
+                        PortNumber = (int)((object[])task.Result[2])[2]
                     };
                 });
-
         }
     }
 
@@ -343,7 +351,7 @@ namespace RosSharp.Slave
         public string TopicName { get; set; }
         public List<SubscribeConnectionData> ConnectionData { get; set; }
     }
-    
+
     public sealed class ServiceStatistic
     {
         public int NumRequests { get; set; }
@@ -358,7 +366,7 @@ namespace RosSharp.Slave
         public int NumSent { get; set; }
         public bool Connected { get; set; }
     }
-    
+
     public sealed class SubscribeConnectionData
     {
         public int ConnectionId { get; set; }
