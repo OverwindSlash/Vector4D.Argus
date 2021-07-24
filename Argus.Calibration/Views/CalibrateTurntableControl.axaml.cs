@@ -57,6 +57,12 @@ namespace Argus.Calibration.Views
             // });
         }
 
+        private void SaveResult_OnClick()
+        {
+            var viewModel = (CalibrateTurntableControlViewModel)DataContext!;
+            viewModel.SaveResult();
+        }
+
         private void Visual_OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
         {
             var viewModel = (CalibrateTurntableControlViewModel)DataContext!;

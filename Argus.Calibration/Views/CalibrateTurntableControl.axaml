@@ -23,6 +23,8 @@
             <!-- <TextBlock Text="{Binding CalibFile}" Width="300" HorizontalAlignment="Left" TextAlignment="Left" Margin="20, 20, 0, 0"></TextBlock>
             <Button Name="OpenRosCore" Content="Open ROS core" Click="OpenRosCore_OnClick"></Button>
             <Button Name="CloseRosCore" Content="Close ROS core" Click="CloseRosCore_OnClick"></Button> -->
+
+            <Button Name="SaveResult" Content="保存结果" Click="SaveResult_OnClick"></Button>
         </StackPanel>
     </Grid>
 </UserControl>

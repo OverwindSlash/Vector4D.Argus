@@ -31,7 +31,12 @@ namespace Argus.Calibration.Views
             var viewModel = (CalibrateMultiSensorControlViewModel)DataContext!;
             viewModel.initRos();
             viewModel.Calibrate(windowViewModel);
+        }
 
+        private void SaveResult_OnClick()
+        {
+            var viewModel = (CalibrateMultiSensorControlViewModel)DataContext!;
+            viewModel.SaveResult();
         }
 
         private void Visual_OnDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)

@@ -49,7 +49,7 @@ namespace Argus.Calibration.Views
             windowDataContext.AddOperationLog($"抓拍机载左目图像:{viewModel.CurrentDataCollectIndex}.png ......");            
             $"Scripts/take_photo_for_lidar.sh {viewModel.CurrentDataCollectIndex}".Bash();
 
-            windowDataContext.AddOperationLog("机载左目图像:{viewModel.CurrentDataCollectIndex}.png 抓拍完毕");
+            windowDataContext.AddOperationLog($"机载左目图像:{viewModel.CurrentDataCollectIndex}.png 抓拍完毕");
         }
 
         private void RecordLidarBag_OnClick(object? sender, RoutedEventArgs e)
@@ -59,10 +59,10 @@ namespace Argus.Calibration.Views
 
             var viewModel = (LidarCalibrationControlViewModel)DataContext!;
 
-            windowDataContext.AddOperationLog("录制激光雷达数据:{viewModel.CurrentDataCollectIndex}.bag ......");
+            windowDataContext.AddOperationLog($"录制激光雷达数据:{viewModel.CurrentDataCollectIndex}.bag ......");
             $"Scripts/record_lidar_bag.sh {viewModel.CurrentDataCollectIndex}".Bash();
             viewModel.IncreaceDataCollectIndex();
-            windowDataContext.AddOperationLog("激光雷达数据:{viewModel.CurrentDataCollectIndex}.bag 录制完毕");
+            windowDataContext.AddOperationLog($"激光雷达数据:{viewModel.CurrentDataCollectIndex}.bag 录制完毕");
         }
 
         private void AnnotatePhoto_OnClick(object? sender, RoutedEventArgs e)
@@ -72,10 +72,10 @@ namespace Argus.Calibration.Views
 
             var viewModel = (LidarCalibrationControlViewModel)DataContext!;
 
-            windowDataContext.AddOperationLog("标注机载左目图像:{viewModel.CurrentAnnoPhotoIndex}.png ......");
+            windowDataContext.AddOperationLog($"标注机载左目图像:{viewModel.CurrentAnnoPhotoIndex}.png ......");
             $"Scripts/annotate_photo.sh {viewModel.CurrentAnnoPhotoIndex}".Bash();
             viewModel.IncreaceAnnoPhotoIndex();
-            windowDataContext.AddOperationLog("机载左目图像:{viewModel.CurrentAnnoPhotoIndex}.png 标注完毕");
+            windowDataContext.AddOperationLog($"机载左目图像:{viewModel.CurrentAnnoPhotoIndex}.png 标注完毕");
         }
 
         private void Convert2Pcd_OnClick(object? sender, RoutedEventArgs e)
@@ -99,10 +99,10 @@ namespace Argus.Calibration.Views
             MainWindowViewModel windowDataContext = (MainWindowViewModel)window.DataContext!;
 
             var viewModel = (LidarCalibrationControlViewModel)DataContext!;
-            windowDataContext.AddOperationLog("标注点云文件:{viewModel.CurrentAnnoLidarIndex}.pcd ......");
+            windowDataContext.AddOperationLog($"标注点云文件:{viewModel.CurrentAnnoLidarIndex}.pcd ......");
             $"Scripts/annotate_lidar.sh {viewModel.CurrentAnnoLidarIndex}".Bash();
             viewModel.IncreaceAnnoLidarIndex();
-            windowDataContext.AddOperationLog("点云文件:{viewModel.CurrentAnnoLidarIndex}.pcd标注完毕");
+            windowDataContext.AddOperationLog($"点云文件:{viewModel.CurrentAnnoLidarIndex}.pcd标注完毕");
         }
 
         private void GetExt1_OnClick(object? sender, RoutedEventArgs e)

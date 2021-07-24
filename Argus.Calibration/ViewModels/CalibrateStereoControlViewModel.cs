@@ -48,7 +48,7 @@ namespace Argus.Calibration.ViewModels
                 CanCapture = value;
                 CanCalibrate = value;
             }
-        }
+        }        
 
         public bool IsInCalibration
         {
@@ -397,6 +397,20 @@ namespace Argus.Calibration.ViewModels
 
                 mainWindowVm.StereoCalibrated = true;
             });
+        }
+    
+        public void CopyStereoParam()
+        {            
+            bool isBodyStereo = (_stereoType == StereoTypes.BodyStereo);
+
+            string cmd = $"Scripts/copy_body_stereo_param.sh";
+            if (!isBodyStereo)
+            {
+                // TODO
+                cmd = $"Scripts/copy_rightarm_stereo_param.sh";
+            }
+
+            cmd.RunSync();
         }
     }
 }

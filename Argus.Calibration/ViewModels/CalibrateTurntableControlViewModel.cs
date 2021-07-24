@@ -65,7 +65,7 @@ namespace Argus.Calibration.ViewModels
             mainWindowVm.AddOperationLog($"启动Master上的转台标定节点");
             string calibTurntableCmd = $"calibrate_turntable.sh";
             calibTurntableCmd.InvokeRosMasterScript();
-        }
+        }        
 
         public void Dispose()
         {
@@ -77,6 +77,12 @@ namespace Argus.Calibration.ViewModels
             // 4. Clean up
             string cleanUpCmd = $"kill_all.sh";
             cleanUpCmd.InvokeRosMasterScript();
+        }
+
+        public void SaveResult()
+        {
+            string cmd = $"Scripts/copy_turntable_param.sh";
+            cmd.RunSync();
         }
     }
 }

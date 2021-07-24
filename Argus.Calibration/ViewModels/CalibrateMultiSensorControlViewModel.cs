@@ -50,6 +50,7 @@ namespace Argus.Calibration.ViewModels
                 Result = x.data;
             });
         }
+        
         public void Dispose()
         {
             if (_node != null)
@@ -163,6 +164,10 @@ namespace Argus.Calibration.ViewModels
             // });
         }
 
-
+        public void SaveResult()
+        {
+            string cmd = $"Scripts/copy_rs2stereo_param.sh";
+            cmd.RunSync();
+        }
     }
 }
