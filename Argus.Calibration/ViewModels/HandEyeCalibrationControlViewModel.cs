@@ -142,7 +142,7 @@ namespace Argus.Calibration.ViewModels
                 string rightArmCmd = $"Scripts/move_rightarm.sh '-0.19141 -0.57062 0.19611 0.005 -0.063 0.750'";        
                 rightArmCmd.RunSync();
 
-                string prepareStereoCmd = $"open_right_arm_stereo.sh";
+                string prepareStereoCmd = $"open_right_arm_stereo_nodisp.sh";
                 prepareStereoCmd.InvokeRosMasterScript();
             }
 

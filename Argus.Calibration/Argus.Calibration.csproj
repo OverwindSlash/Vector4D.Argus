@@ -280,6 +280,18 @@
       <None Update="Scripts\snapshot_qc_body.sh">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+       <None Update="Scripts\copy_body_stereo_param.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+       <None Update="Scripts\copy_rightarm_stereo_param.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+       <None Update="Scripts\copy_rs2stereo_param.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+       <None Update="Scripts\copy_turntable_param.sh">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="Movement\leftarm_arrester_calib_arm_preset_data.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
