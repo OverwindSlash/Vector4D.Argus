@@ -5,21 +5,27 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Argus.Calibration.Views.HandEyeCalibrationControl"
              DetachedFromVisualTree="Visual_OnDetachedFromVisualTree">
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"/>
-      <RowDefinition Height="Auto"/>
-    </Grid.RowDefinitions>
-    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0, 8, 0, 0">
-      <Label HorizontalAlignment="Left" Content="自动手眼标定图像" Margin="400, 5, 0, 5"></Label>
-    </StackPanel>
-    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 8, 0, 0">
-        <Image VerticalAlignment ="Top" Name="LeftImage" Width="900" Height="675" Source="{Binding LeftImage}" Margin="5"></Image>
-        <StackPanel Orientation="Vertical">
-            <Button Name="HandEyeCalibrate" Width="120" HorizontalContentAlignment="Center" Content="开始手眼标定" Click="HandEyeCalibrate_OnClick"
-                    Margin="270, 180, 0, 0" IsEnabled="{Binding CanCalibrate}"></Button>
-            <TextBlock Text="{Binding Message}" Width="300" TextAlignment="Center" Margin="180, 20, 0, 0"></TextBlock>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0, 8, 0, 0">
+            <Label HorizontalAlignment="Left" Content="自动手眼标定图像" Margin="400, 5, 0, 5" />
         </StackPanel>
-    </StackPanel>
-  </Grid>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 8, 0, 0">
+            <Image VerticalAlignment="Top" Name="LeftImage" Width="900" Height="675" Source="{Binding LeftImage}" Margin="5" />
+            <StackPanel Orientation="Vertical">
+                <Button Name="HandEyeCalibrate" Width="120" HorizontalContentAlignment="Center" Content="开始手眼标定"
+                        Click="HandEyeCalibrate_OnClick"
+                        Margin="270, 180, 0, 0" IsEnabled="{Binding CanCalibrate}" />
+                <TextBlock Text="{Binding Message}" Width="300" TextAlignment="Center" Margin="180, 20, 0, 0" />
+                <Border Background="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Top" Width="600" Height="400">
+                    <TextBlock Text="{Binding Result}" Width="600" HorizontalAlignment="Left" TextAlignment="Left"
+                               Margin="20, 20, 0, 0" />
+                </Border>
+                <Button Name="SaveResult" Content="保存结果" HorizontalAlignment="Center" Click="SaveResult_OnClick" Margin="0, 20, 0, 0"></Button>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
 </UserControl>

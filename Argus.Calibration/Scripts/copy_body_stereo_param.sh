@@ -6,4 +6,5 @@ cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/bod
 cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/body_all.xml ~/.ros/camera_info/body_all.xml
 
 # body stereo param for python
-cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/body.xml ~/RJ1300-Stereo/Arrester/body.xml
+cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/body.xml ~/RJ1300_Stereo/Arrester/body.xml
+cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/body.xml ~/RJ1300_Stereo/Cable/body.xml

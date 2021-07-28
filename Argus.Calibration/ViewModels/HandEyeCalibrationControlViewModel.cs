@@ -319,5 +319,83 @@ namespace Argus.Calibration.ViewModels
                 mockFi.CopyTo(rightArmCalibFile);
             }
         }
+
+        public void SaveResult()
+        {
+            string cmd = string.Empty;
+            bool isLeftArmTool = (int) _stereoType % 2 == 0;
+            
+            if (_stereoType != StereoTypes.BodyStereo)
+            {
+                if (isLeftArmTool)
+                {
+                    cmd = $"Scripts/update_left_eoh_urdf.sh";
+                }
+                else
+                {
+                    cmd = $"Scripts/update_right_eoh_urdf.sh";
+                }
+            }
+            else
+            {
+                string pattern;
+                if (isLeftArmTool)
+                {
+                    pattern = "Scripts/update_leftarm_urdf.sh";
+                }
+                else
+                {
+                    pattern = "Scripts/update_rightarm_urdf.sh";
+                }
+                
+                switch (_stereoType)
+                {
+                    case StereoTypes.ArresterToolLeftStereo:
+                        cmd = $"{pattern} 'ArresterTool_LeftArm'";
+                        break;
+                    case StereoTypes.ArresterToolRightStereo:
+                        cmd = $"{pattern} 'ArresterTool_RightArm'";
+                        break;
+                    case StereoTypes.NutInstallToolLeftStereo:
+                        cmd = $"{pattern} 'NutInstallationTool_LeftArm'";
+                        break;
+                    case StereoTypes.NutInstallToolRightStereo:
+                        cmd = $"{pattern} 'NutInstallationTool_RightArm'";
+                        break;
+                    case StereoTypes.NutDestroyToolLeftStereo:
+                        cmd = $"{pattern} 'NutDestroyTool_LeftArm'";
+                        break;
+                    case StereoTypes.NutDestroyToolRightStereo:
+                        cmd = $"{pattern} 'NutDestroyTool_RightArm'";
+                        break;
+                    case StereoTypes.StripWireToolLeftStereo:
+                        cmd = $"{pattern} 'StripWireTool_LeftArm'";
+                        break;
+                    case StereoTypes.StripWireToolRightStereo:
+                        cmd = $"{pattern} 'StripWireTool_RightArm'";
+                        break;
+                    case StereoTypes.ClampWireToolLeftStereo:
+                        cmd = $"{pattern} 'ClampWireTool_LeftArm'";
+                        break;
+                    case StereoTypes.ClampWireToolRightStereo:
+                        cmd = $"{pattern} 'ClampWireTool_RightArm'";
+                        break;
+                    case StereoTypes.ClawToolLeftStereo:
+                        cmd = $"{pattern} 'ClawTool_LeftArm'";
+                        break;
+                    case StereoTypes.ClawToolRightStereo:
+                        cmd = $"{pattern} 'ClawTool_RightArm'";
+                        break;
+                    case StereoTypes.CutWireToolLeftStereo:
+                        cmd = $"{pattern} 'CutWireTool_LeftArm'";
+                        break;
+                    case StereoTypes.CutWireToolRightStereo:
+                        cmd = $"{pattern} 'CutWireTool_RightArm'";
+                        break;
+                }
+            }
+
+            cmd.RunSync();
+        }
     }
 }
