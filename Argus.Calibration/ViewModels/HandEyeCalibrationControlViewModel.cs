@@ -325,15 +325,15 @@ namespace Argus.Calibration.ViewModels
             string cmd = string.Empty;
             bool isLeftArmTool = (int) _stereoType % 2 == 0;
             
-            if (_stereoType != StereoTypes.BodyStereo)
+            if (_stereoType == StereoTypes.BodyStereo)
             {
                 if (isLeftArmTool)
                 {
-                    cmd = $"Scripts/update_left_eoh_urdf.sh";
+                    cmd = $"Scripts/update_left_eob_urdf.sh";
                 }
                 else
                 {
-                    cmd = $"Scripts/update_right_eoh_urdf.sh";
+                    cmd = $"Scripts/update_right_eob_urdf.sh";
                 }
             }
             else

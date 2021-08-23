@@ -406,8 +406,15 @@ namespace Argus.Calibration.ViewModels
             string cmd = $"Scripts/copy_body_stereo_param.sh";
             if (!isBodyStereo)
             {
-                // TODO
-                cmd = $"Scripts/copy_rightarm_stereo_param.sh";
+                 bool isLeftArmTool = (int)_stereoType % 2 == 0;
+                 if (isLeftArmTool)
+                 {
+                     cmd = $"Scripts/copy_leftarm_stereo_param.sh";
+                 }
+                 else
+                 {
+                     cmd = $"Scripts/copy_rightarm_stereo_param.sh";
+                 }                
             }
 
             cmd.RunSync();

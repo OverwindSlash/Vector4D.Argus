@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 5
+
 # body stereo param for Argus
 cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/body_left.yaml ~/.ros/camera_info/body_left.yaml
 cp -f ~/Vector4D.Argus/Argus.Calibration/bin/Debug/net5.0/CalibrationResults/body_right.yaml ~/.ros/camera_info/body_right.yaml
