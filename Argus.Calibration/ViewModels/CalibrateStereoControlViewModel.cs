@@ -395,6 +395,8 @@ namespace Argus.Calibration.ViewModels
                 IsInCalibration = false;
                 IsStereoCalibrated = true;
 
+                CopyStereoParam();
+
                 mainWindowVm.StereoCalibrated = true;
             });
         }

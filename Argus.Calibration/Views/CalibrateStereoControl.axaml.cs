@@ -39,7 +39,7 @@ namespace Argus.Calibration.Views
 
             var viewModel = (CalibrateStereoControlViewModel)DataContext!;
             viewModel.CalibrateStereo(windowViewModel);
-            viewModel.CopyStereoParam();
+            //viewModel.CopyStereoParam();
         }
 
         private void Cancel_OnClick(object? sender, RoutedEventArgs e)
