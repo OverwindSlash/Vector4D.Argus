@@ -7,7 +7,7 @@
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="Argus.Calibration.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Argus 视觉终端标定工具  (Ver. 1.0.114)" Width="1920" Height="1080"
+        Title="Argus 视觉终端标定工具  (Ver. 1.0.117)" Width="1920" Height="1080"
         CanResize="False"
         TransparencyLevelHint="Transparent"
         Background="Transparent"

@@ -193,7 +193,7 @@ namespace Argus.StereoCalibration
             Mat<float> mapRightY = undistortParams.mapRightY;
 
             // Show result.
-            ShowStereoCalibrationResult(leftImages, rightImages, mapLeftX, mapLeftY, mapRightX, mapRightY);
+            // ShowStereoCalibrationResult(leftImages, rightImages, mapLeftX, mapLeftY, mapRightX, mapRightY);
 
             CalibrationResult result = new CalibrationResult()
             {
