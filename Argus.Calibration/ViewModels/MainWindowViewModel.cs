@@ -26,6 +26,8 @@ namespace Argus.Calibration.ViewModels
         private int _selectedToolType;
         private bool _turntableCalibrated;
 
+        public string RobotName { get; set; }
+
         public bool StereoCalibrated
         {
             get => _stereoCalibrated;
@@ -67,6 +69,7 @@ namespace Argus.Calibration.ViewModels
             RightArmCalibrated = true;
             SelectedToolType = 0;
 
+            RobotName = "A1";
             //$"Scripts/init_roscore.sh".Bash();
         }
 

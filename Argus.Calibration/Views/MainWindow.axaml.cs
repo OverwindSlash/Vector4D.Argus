@@ -100,6 +100,8 @@ namespace Argus.Calibration.Views
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
             _workArea.Children.Add(control);
             
+            var viewModel = (MainWindowViewModel)DataContext!;
+            control.SetRobotName(viewModel.RobotName);
             control.SetArm(RobotArms.LeftArm);
             control.SetStereoTypes(StereoTypes.BodyStereo);
         }
@@ -120,7 +122,9 @@ namespace Argus.Calibration.Views
             CalibrateTurntableControl control = new CalibrateTurntableControl();
             _workArea.Children.Add(control);
 
-            control.CalibrateTurntable();
+            var viewModel = (MainWindowViewModel)DataContext;
+
+            control.CalibrateTurntable(viewModel.RobotName);
         }
         private void ShowRealSenseCalibControl(object? sender, RoutedEventArgs e)
         {
@@ -128,7 +132,8 @@ namespace Argus.Calibration.Views
             CalibrateMultiSensorControl control = new CalibrateMultiSensorControl();
             _workArea.Children.Add(control);
 
-            control.CalibrateRealSense();
+            var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
+            control.CalibrateRealSense(viewModel.RobotName);
         }
         private void ShowCalibrateArmStereoControl(object? sender, RoutedEventArgs e)
         {

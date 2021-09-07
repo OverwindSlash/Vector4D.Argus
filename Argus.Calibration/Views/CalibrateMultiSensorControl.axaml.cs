@@ -23,13 +23,14 @@ namespace Argus.Calibration.Views
         }
 
 
-        public void CalibrateRealSense()
+        public void CalibrateRealSense(string robotName)
         {
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
 
             var viewModel = (CalibrateMultiSensorControlViewModel)DataContext!;
             viewModel.initRos();
+            viewModel.RobotName = robotName;
             viewModel.Calibrate(windowViewModel);
         }
 

@@ -42,6 +42,18 @@ namespace Argus.Calibration.Views
             viewModel.SetStereoTypes(stereoType, windowDataContext);
         }
 
+        private void MoveTurntablePrepos_OnClick(object? sender, RoutedEventArgs e)
+        {
+            var window = (MainWindow)this.Parent.Parent.Parent.Parent;
+            var windowViewModel = (MainWindowViewModel)window.DataContext!;
+
+            var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
+
+            ComboBox combo = this.FindControl<ComboBox>("PrePosition");            
+
+            viewModel.MoveTurntable(combo.SelectedIndex, windowViewModel);
+        }
+
         private void HandEyeCalibrate_OnClick(object? sender, RoutedEventArgs e)
         {
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
@@ -55,6 +67,18 @@ namespace Argus.Calibration.Views
         {
             var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
             viewModel.SaveResult();
+        }
+
+        internal void SetRobotName(string robotName)
+        {
+            var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
+            viewModel.RobotName = robotName;
+        }
+
+        internal void SetPresetPos(int presetPosIndex)
+        {
+            var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
+            viewModel.PresetPos = presetPosIndex;
         }
     }
 }

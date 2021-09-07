@@ -95,7 +95,9 @@
                 </Menu>
             </StackPanel>
             <StackPanel x:Name="Toolbar" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1">
-                <Button Width="36" Height="36" Margin="5,2,2,2" Click="ShowCheckStereoImagesControlAsync"
+                <TextBlock Height="36" Text="机器人编号" Margin="5,12,2,2" VerticalAlignment="Center"/>
+                <TextBox Height="36" Text="{Binding RobotName}" Margin="2,2,2,2"/>
+                <Button Width="36" Height="36" Margin="12,2,2,2" Click="ShowCheckStereoImagesControlAsync"
                         ToolTip.Tip="检查机载标定图像">
                     <PathIcon Data="{StaticResource check_position}" />
                 </Button>

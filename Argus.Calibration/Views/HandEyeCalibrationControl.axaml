@@ -16,9 +16,17 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 8, 0, 0">
             <Image VerticalAlignment="Top" Name="LeftImage" Width="900" Height="675" Source="{Binding LeftImage}" Margin="5" />
             <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <ComboBox Name="PrePosition" Width="170" Height="36" Margin="2,2,2,2" SelectedIndex="{Binding PresetPos}">
+                        <ComboBoxItem>预置位0（转台0位）</ComboBoxItem>
+                        <ComboBoxItem>预置位a（抓线）</ComboBoxItem>
+                        <ComboBoxItem>预置位b（穿线）</ComboBoxItem>
+                    </ComboBox>
+                    <Button Name="MoveTurntablePrepos" Margin="12,2,2,2" Content="移动转台" Click="MoveTurntablePrepos_OnClick" />
+                </StackPanel>                
                 <Button Name="HandEyeCalibrate" Width="120" HorizontalContentAlignment="Center" Content="开始手眼标定"
                         Click="HandEyeCalibrate_OnClick"
-                        Margin="270, 180, 0, 0" IsEnabled="{Binding CanCalibrate}" />
+                        Margin="240, 180, 0, 0" IsEnabled="{Binding CanCalibrate}" />
                 <TextBlock Text="{Binding Message}" Width="300" TextAlignment="Center" Margin="180, 20, 0, 0" />
                 <Border Background="DarkGray" HorizontalAlignment="Center" VerticalAlignment="Top" Width="600" Height="400">
                     <TextBlock Text="{Binding Result}" Width="600" HorizontalAlignment="Left" TextAlignment="Left"

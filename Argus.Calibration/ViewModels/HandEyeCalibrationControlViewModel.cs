@@ -63,8 +63,36 @@ namespace Argus.Calibration.ViewModels
 
         public bool CanCalibrate => (IsTopicAccessable && !IsInCalibration);
 
+        public string RobotName { get; set; }
+
+        public int PresetPos { get; set; }
+
         public HandEyeCalibrationControlViewModel()
         {
+            PresetPos = 1;
+        }
+
+        public void MoveTurntable(int selectedIndex, MainWindowViewModel windowViewModel)
+        {
+            windowViewModel.AddOperationLog("初始化转台位置......");
+            string initTurntableCmd = $"init_eob_turntable_move.sh";
+
+            if (selectedIndex == 0)
+            {
+                initTurntableCmd += " reset_turnable.launch";
+            }
+
+            if (selectedIndex == 1)
+            {
+                initTurntableCmd += " a.launch";
+            }
+
+            if (selectedIndex == 2)
+            {
+                initTurntableCmd += " b.launch";
+            }
+
+            initTurntableCmd.InvokeRosMasterScript(); 
         }
 
         public void Dispose()
@@ -103,11 +131,7 @@ namespace Argus.Calibration.ViewModels
             {
                 string prepareStereoCmd = $"open_lucid_body_stereo_nodisp.sh";
                 //string prepareStereoCmd = $"open_qc_body_stereo.sh";
-                prepareStereoCmd.InvokeRosMasterScript();
-
-                mainWindowViewModel.AddOperationLog("初始化转台位置......");
-                string initTurntableCmd = $"init_eob_turntable_move.sh";
-                initTurntableCmd.InvokeRosMasterScript(); 
+                prepareStereoCmd.InvokeRosMasterScript();                
 
                 mainWindowViewModel.AddOperationLog("将臂移动至标定位置......");
                 string moveArmCmd1 = $"Scripts/move_leftarm.sh '-0.24651 -1.01253 -0.01062 1.767 2.480 -0.090'";
@@ -329,11 +353,11 @@ namespace Argus.Calibration.ViewModels
             {
                 if (isLeftArmTool)
                 {
-                    cmd = $"Scripts/update_left_eob_urdf.sh";
+                    cmd = $"Scripts/update_left_eob_urdf.sh {RobotName} {PresetPos}";
                 }
                 else
                 {
-                    cmd = $"Scripts/update_right_eob_urdf.sh";
+                    cmd = $"Scripts/update_right_eob_urdf.sh {RobotName} {PresetPos}";
                 }
             }
             else

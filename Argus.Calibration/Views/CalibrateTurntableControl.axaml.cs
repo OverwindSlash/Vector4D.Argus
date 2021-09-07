@@ -35,7 +35,7 @@ namespace Argus.Calibration.Views
             $"Scripts/process_stopper.sh roscore".Bash();
         }
 
-        public void CalibrateTurntable()
+        public void CalibrateTurntable(string robotName)
         {
             var window = (MainWindow)this.Parent.Parent.Parent.Parent;
             var windowViewModel = (MainWindowViewModel)window.DataContext!;
@@ -43,6 +43,7 @@ namespace Argus.Calibration.Views
             var viewModel = (CalibrateTurntableControlViewModel)DataContext!;
 
             viewModel.initRos();
+            viewModel.RobotName = robotName;
             viewModel.CalibrateTurntable(windowViewModel);
 
             // Ros.TopicTimeout = viewModel.CalibConfig.TopicTimeout;

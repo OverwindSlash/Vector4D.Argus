@@ -27,9 +27,13 @@ namespace Argus.Calibration.ViewModels
             get => result;
             set => this.RaiseAndSetIfChanged(ref result, value);
         }
+        
+        public string RobotName { get; set; }
+
         public CalibrateMultiSensorControlViewModel()
         {
         }
+
         public void initRos()
         {
             // Thread.Sleep(5000);
@@ -166,7 +170,7 @@ namespace Argus.Calibration.ViewModels
 
         public void SaveResult()
         {
-            string cmd = $"Scripts/copy_rs2stereo_param.sh";
+            string cmd = $"Scripts/copy_rs2stereo_param.sh {RobotName}";
             cmd.RunSync();
         }
     }

@@ -30,10 +30,13 @@ namespace Argus.Calibration.ViewModels
             set => this.RaiseAndSetIfChanged(ref _calibFile, value);
         }
 
+        public string RobotName { get; set; }
+
         public CalibrateTurntableControlViewModel()
         {
 
         }
+        
         public void initRos()
         {
             // Thread.Sleep(5000);
@@ -81,7 +84,7 @@ namespace Argus.Calibration.ViewModels
 
         public void SaveResult()
         {
-            string cmd = $"Scripts/copy_turntable_param.sh";
+            string cmd = $"Scripts/copy_turntable_param.sh {RobotName}";
             cmd.RunSync();
         }
     }
