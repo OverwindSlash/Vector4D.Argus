@@ -32,6 +32,7 @@ namespace Argus.Calibration.ViewModels
 
         public CalibrateMultiSensorControlViewModel()
         {
+            result = "标定结果将显示在界面上，请耐心等待...";
         }
 
         public void initRos()

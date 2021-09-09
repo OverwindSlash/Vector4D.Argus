@@ -409,13 +409,15 @@ namespace Argus.Calibration.ViewModels
             if (!isBodyStereo)
             {
                  bool isLeftArmTool = (int)_stereoType % 2 == 0;
+                 string stereoName = CalibConfig.ArmToolsNames[(int)_stereoType];  
+
                  if (isLeftArmTool)
-                 {
-                     cmd = $"Scripts/copy_leftarm_stereo_param.sh";
+                 {                     
+                     cmd = $"Scripts/copy_leftarm_stereo_param.sh {stereoName}";
                  }
                  else
                  {
-                     cmd = $"Scripts/copy_rightarm_stereo_param.sh";
+                     cmd = $"Scripts/copy_rightarm_stereo_param.sh {stereoName}";
                  }                
             }
 

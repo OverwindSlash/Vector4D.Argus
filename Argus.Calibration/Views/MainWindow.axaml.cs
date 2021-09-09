@@ -132,7 +132,7 @@ namespace Argus.Calibration.Views
             CalibrateMultiSensorControl control = new CalibrateMultiSensorControl();
             _workArea.Children.Add(control);
 
-            var viewModel = (HandEyeCalibrationControlViewModel)DataContext!;
+            var viewModel = (MainWindowViewModel)DataContext!;
             control.CalibrateRealSense(viewModel.RobotName);
         }
         private void ShowCalibrateArmStereoControl(object? sender, RoutedEventArgs e)
