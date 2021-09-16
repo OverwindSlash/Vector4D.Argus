@@ -2,6 +2,9 @@
 
 robot=$1
 
-# body stereo 2 realsense
-mkdir -p ~/jhd/v3/install/share/scene/data/parameters/$1
-cp -f ~/.ros/turntable_0_0_calibration.txt ~/jhd/v3/install/share/scene/data/parameters/$1/calibration_data.txt
+$index=1
+while read LINE
+do
+    sed '1c $LINE' ~/jhd/v3/install/share/scene/data/parameters/$robot/calibration_data.txt
+    ((index++))
+done <  ~/jhd/v3/install/share/scene/data/parameters/$robot/turnable/turnable.txt

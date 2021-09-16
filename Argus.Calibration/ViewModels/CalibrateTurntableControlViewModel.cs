@@ -84,8 +84,11 @@ namespace Argus.Calibration.ViewModels
 
         public void SaveResult()
         {
-            string cmd = $"Scripts/copy_turntable_param.sh {RobotName}";
-            cmd.RunSync();
+            string updateCmd = $"Scripts/update_turntable_urdf.sh  {RobotName}";
+            updateCmd.RunSync();
+
+            //string cmd = $"Scripts/copy_turntable_param.sh {RobotName}";
+            //cmd.RunSync();
         }
     }
 }
