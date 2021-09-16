@@ -1,8 +1,8 @@
 ﻿{
   "Eth_LeftArm_XyzPath": "/robot/joint[@name='Global_camera_link_joint2']/origin/@xyz",
   "Eth_LeftArm_RpyPath": "/robot/joint[@name='Global_camera_link_joint2']/origin/@rpy",
-  "Eth_RightArm_XyzPath": "",
-  "Eth_RightArm_RpyPath": "",
+  "Eth_RightArm_XyzPath": "/robot/joint[@name='Global_camera_link_joint2']/origin/@xyz",
+  "Eth_RightArm_RpyPath": "/robot/joint[@name='Global_camera_link_joint2']/origin/@rpy",
   "Turntable_XyzPath": "/robot/joint[@name='camera_Link_world_joint']/origin/@xyz",
   "Turntable_RpyPath": "/robot/joint[@name='camera_Link_world_joint']/origin/@rpy",
   "Realsense_XyzPath": "/robot/joint[@name='rs_camera_Link_camera_Link_joint']/origin/@xyz",
