@@ -69,7 +69,7 @@ namespace Argus.Calibration.ViewModels
 
         public HandEyeCalibrationControlViewModel()
         {
-            PresetPos = 1;
+            PresetPos = 0;
         }
 
         public void MoveTurntable(int selectedIndex, MainWindowViewModel windowViewModel)
@@ -347,7 +347,7 @@ namespace Argus.Calibration.ViewModels
         public void SaveResult()
         {
             string cmd = string.Empty;
-            bool isLeftArmTool = (int) _stereoType % 2 == 0;
+            bool isLeftArmTool = (_operationArm == RobotArms.LeftArm);
             
             if (_stereoType == StereoTypes.BodyStereo)
             {

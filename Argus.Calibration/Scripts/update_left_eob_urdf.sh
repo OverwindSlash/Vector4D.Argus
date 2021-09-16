@@ -3,8 +3,6 @@
 robot=$1
 preset=$2
 
-if [ $preset == 1 ]
-
 if test $[preset] -eq 1
 then
     pos=a

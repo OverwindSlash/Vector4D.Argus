@@ -111,7 +111,9 @@ namespace Argus.Calibration.Views
             _workArea.Children.Clear();
             HandEyeCalibrationControl control = new HandEyeCalibrationControl();
             _workArea.Children.Add(control);
-            
+
+            var viewModel = (MainWindowViewModel)DataContext!;
+            control.SetRobotName(viewModel.RobotName);
             control.SetArm(RobotArms.RightArm);
             control.SetStereoTypes(StereoTypes.BodyStereo);
         }

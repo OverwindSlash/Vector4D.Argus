@@ -1,11 +1,9 @@
 #!/bin/bash
 
-#!/bin/bash
-
 robot=$1
 preset=$2
 
-if [ $preset == 1 ]
+pos=0
 
 if test $[preset] -eq 1
 then
