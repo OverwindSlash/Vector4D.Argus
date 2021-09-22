@@ -117,7 +117,7 @@ namespace Argus.Calibration.ViewModels
             _operationArm = arm;
         }
 
-        public void SetStereoTypes(StereoTypes stereoType, MainWindowViewModel mainWindowViewModel)
+        public void SetStereoTypes(StereoTypes stereoType, MainWindowViewModel mainWin`dowViewModel)
         {
             _stereoType = stereoType;
 
@@ -131,7 +131,10 @@ namespace Argus.Calibration.ViewModels
             {
                 string prepareStereoCmd = $"open_lucid_body_stereo_nodisp.sh";
                 //string prepareStereoCmd = $"open_qc_body_stereo.sh";
-                prepareStereoCmd.InvokeRosMasterScript();                
+                prepareStereoCmd.InvokeRosMasterScript();
+
+                string initArmMoveCmd = $"init_arm_move.sh";
+                initArmMoveCmd.InvokeRosMasterScript();           
 
                 mainWindowViewModel.AddOperationLog("将臂移动至标定位置......");
                 string moveArmCmd1 = $"Scripts/move_leftarm.sh '-0.24651 -1.01253 -0.01062 1.767 2.480 -0.090'";
