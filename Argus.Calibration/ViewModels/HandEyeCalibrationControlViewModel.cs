@@ -117,7 +117,7 @@ namespace Argus.Calibration.ViewModels
             _operationArm = arm;
         }
 
-        public void SetStereoTypes(StereoTypes stereoType, MainWindowViewModel mainWin`dowViewModel)
+        public void SetStereoTypes(StereoTypes stereoType, MainWindowViewModel mainWindowViewModel)
         {
             _stereoType = stereoType;
 
