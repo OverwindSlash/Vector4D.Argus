@@ -160,13 +160,28 @@ namespace Argus.Calibration.ViewModels
                 //string prepareStereoCmd = $"open_arm_stereo.sh '{ip}' '{toolPrefix}'";
                 // TODO: Add various arm tool stereo open scripts.
                 string initTurntableCmd = $"init_arm_turntable_move.sh";
-                initTurntableCmd.InvokeRosMasterScript(); 
+                initTurntableCmd.InvokeRosMasterScript();
 
-                mainWindowViewModel.AddOperationLog("将臂移动至标定位置......");                
-                string leftArmCmd = $"Scripts/move_leftarm.sh '0.18762 -0.53628 0.49378 0.427 -1.746 -0.870'";        
-                leftArmCmd.RunSync();
+                mainWindowViewModel.AddOperationLog("将臂移动至标定位置......");
 
-                string rightArmCmd = $"Scripts/move_rightarm.sh '-0.19141 -0.57062 0.19611 0.005 -0.063 0.750'";        
+                string filepath = Path.Combine(CalibConfig.MovementFileDir,
+                CalibConfig.ArmToolsPresetFiles[(int) _stereoType]);
+                string[] positions = File.ReadAllText(filepath).Split("\n");
+
+                string leftArmCmd;
+                string rightArmCmd;
+
+                if (isLeftArmTool)
+                {
+                    leftArmCmd = $"Scripts/move_leftarm.sh {positions[1]}";
+                    rightArmCmd = $"Scripts/move_rightarm.sh {positions[0]}";
+                }
+                else
+                {
+                    leftArmCmd = $"Scripts/move_leftarm.sh {positions[0]}";
+                    rightArmCmd = $"Scripts/move_rightarm.sh {positions[1]}";
+                }
+                leftArmCmd.RunSync();                
                 rightArmCmd.RunSync();
 
                 string prepareStereoCmd = $"open_right_arm_stereo_nodisp.sh";
@@ -282,8 +297,7 @@ namespace Argus.Calibration.ViewModels
                 if (_stereoType != StereoTypes.BodyStereo)
                 {
                     // 2.1 Load arm tool preset file.
-                    string filepath = Path.Combine(CalibConfig.MovementFileDir,
-                        CalibConfig.ArmToolsPresetFiles[(int) _stereoType]);
+                    string filepath = Path.Combine(CalibConfig.MovementFileDir, CalibConfig.ArmToolsPresetFiles[(int) _stereoType]);
                     string[] positions = File.ReadAllText(filepath).Split("\n");
 
                     bool isLeftArmTool = (int) _stereoType % 2 == 0; // Is left or right arm tool
@@ -296,10 +310,16 @@ namespace Argus.Calibration.ViewModels
                     string moveNonToolArmTask = $"Scripts/{moveNonToolArmCmd} '{positions[0]}'";
                     moveNonToolArmTask.RunSync();
 
-                    // 2.3 Call script to perform preset postion handeye calibration.
+                    // 2.3 Move arm which attach tool to init position.
+                    string toolPrefix = !isLeftArmTool ? "左" : "右";
+                    mainWindowVm.AddOperationLog($"将{toolPrefix}臂移动至 {positions[1]}");
+                    string moveToolArmTask = $"Scripts/{moveToolArmCmd} '{positions[1]}'";
+                    moveToolArmTask.RunSync();
+
+                    // 2.4 Call script to perform preset postion handeye calibration.
                     string armControlTopic = isLeftArmTool ? "leftarm" : "rightarm";
                     // TODO: Temp solution for script param pass
-                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} 'rightarm_arrester_calib_arm_preset_data.txt' {armControlTopic}";
+                    calibCmd = $"calibrate_body_stereo_preset_poses.sh {calibScriptParam} {CalibConfig.ArmToolsPresetFiles[(int) _stereoType]} {armControlTopic}";
                     //calibCmd = $"calibrate_body_stereo_preset_poses.sh";
                 }
 
