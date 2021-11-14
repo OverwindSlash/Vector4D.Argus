@@ -370,7 +370,7 @@ namespace Argus.Calibration.ViewModels
         public void SaveResult()
         {
             string cmd = string.Empty;
-            bool isLeftArmTool = (_operationArm == RobotArms.LeftArm);
+            bool isLeftArmTool = (int)_stereoType % 2 == 0;
             
             if (_stereoType == StereoTypes.BodyStereo)
             {
